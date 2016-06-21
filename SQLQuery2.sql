@@ -1,0 +1,1 @@
+insert into testtable values('Richard', 'Castanza', 17,'Union City,CA');
