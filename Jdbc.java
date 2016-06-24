@@ -11,7 +11,7 @@ public class Main {
 
     static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     static final String USERNAME = "sa";
-    static final String PASSWORD = "root";
+    static final String PASSWORD = "newpassword";
 
     static final String DB_URL = "jdbc:sqlserver://SSR-JANET\\SQLEXPRESS//:1433;"
             + "databaseName=testdb;"
