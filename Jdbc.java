@@ -13,7 +13,7 @@ public class Main {
     static final String USERNAME = "sa";
     static final String PASSWORD = "newpassword";
 
-    static final String DB_URL = "jdbc:sqlserver://SSR-JANET\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSR-JANET\\SQLEXPRESS//:1343;"
             + "databaseName=testdb;"
             + "integratedSecurity=true;";
 
