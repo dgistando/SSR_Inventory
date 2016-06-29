@@ -2,6 +2,7 @@ package inventory;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -19,8 +20,12 @@ import java.util.ResourceBundle;
  */
 public class Controller implements Initializable{
 
+    @FXML
+    Button Btnlogin;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        assert Btnlogin != null : "Button Btnlogin not found";
 
     }
 }

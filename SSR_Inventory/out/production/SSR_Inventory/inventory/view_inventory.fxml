@@ -1,6 +1,25 @@
 <?import javafx.scene.layout.GridPane?>
 
-    <GridPane>
+<?import javafx.scene.layout.BorderPane?>
 
+<BorderPane alignment="center" xmlns="https://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+    <top><!--Put the image/logo here. Or put the logo with modified text to say inventory-->
 
-    </GridPane>
+    </top>
+
+    <center><!--put the table here. Then above that, put options in the drawing -->
+
+    </center>
+
+    <left><!---->
+
+    </left>
+
+    <right>
+
+    </right>
+
+    <bottom>
+
+    </bottom>
+</BorderPane>
