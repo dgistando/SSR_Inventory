@@ -19,16 +19,8 @@ import java.util.ResourceBundle;
  */
 public class Controller implements Initializable{
 
-    @FXML
-    ImageView imageView;
-    Image img;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        assert imageView != null:"the image might not exist";
-        img = new Image("file:logo.png");
-        imageView = new ImageView(img);
-
 
     }
 }
