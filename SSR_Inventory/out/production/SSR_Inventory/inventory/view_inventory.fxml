@@ -1,25 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
-
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.Image?>
+<?import javax.swing.text.html.ImageView?>
 
-<BorderPane alignment="center" xmlns="https://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
-    <top><!--Put the image/logo here. Or put the logo with modified text to say inventory-->
+<SplitPane dividerPositions="0.11809045226130653" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+         <children>
 
-    </top>
+         </children>
+    </AnchorPane>
 
-    <center><!--put the table here. Then above that, put options in the drawing -->
-
-    </center>
-
-    <left><!---->
-
-    </left>
-
-    <right>
-
-    </right>
-
-    <bottom>
-
-    </bottom>
-</BorderPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+         <children>
+            <TabPane fx:id="TPinventory" prefHeight="348.0" prefWidth="598.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Untitled Tab 1">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                <Tab text="Untitled Tab 2">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                <Tab>
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+    </AnchorPane>
+  </items>
+</SplitPane>

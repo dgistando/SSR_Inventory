@@ -5,18 +5,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.Image?>
+<?import javax.swing.text.html.ImageView?>
 
-<SplitPane dividerPositions="0.11809045226130653" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane dividerPositions="0.11809045226130653" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <ChoiceBox layoutX="564.0" layoutY="18.0" prefHeight="25.0" prefWidth="34.0" />
+
          </children>
     </AnchorPane>
 
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <TabPane prefHeight="348.0" prefWidth="598.0" tabClosingPolicy="UNAVAILABLE" fx:id="TPinventory">
+            <TabPane fx:id="TPinventory" prefHeight="348.0" prefWidth="598.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Untitled Tab 1">
                   <content>
@@ -27,6 +29,15 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                   </content>
+                </Tab>
+                <Tab>
+                    <contextMenu>
+                        <ContextMenu>
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                            </items>
+                        </ContextMenu>
+                    </contextMenu>
                 </Tab>
               </tabs>
             </TabPane>
