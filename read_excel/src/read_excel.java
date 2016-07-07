@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class read_excel {
 
     public static void main(String[] args) throws IOException{
-        File file = new File("src/test.xls");
+        File file = new File("src/06.22.2016A.xls");
         FileInputStream inputStream = new FileInputStream(file);
 
         Workbook workbook = new HSSFWorkbook(inputStream);
@@ -37,7 +37,7 @@ public class read_excel {
 
 
                 while(cell.getColumnIndex()-1 > i && i!=-9999){
-                    System.out.print(" blank ");
+                    System.out.print(" \n ");
                     i++;
                 }
 
