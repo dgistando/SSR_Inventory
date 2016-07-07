@@ -5,11 +5,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.codehaus.groovy.tools.shell.IO;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 /**
@@ -17,56 +15,81 @@ import java.util.Iterator;
  */
 public class read_excel {
 
-    public static void main(String[] args) throws IOException{
-        File file = new File("src/06.22.2016A.xls");
-        FileInputStream inputStream = new FileInputStream(file);
+    public static void main(String[] args){
+        read_file("06.22.2016A");
+        // create_file();
+    }
 
-        Workbook workbook = new HSSFWorkbook(inputStream);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.iterator();
+    public static void create_file(){
 
-        int i = -9999;
-
-        while(rowIterator.hasNext()){
-            Row nextRow = rowIterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
+        try {
+            Workbook outputBook = new HSSFWorkbook();
+            Sheet sheet1 = outputBook.createSheet("firstsheet");
+            Sheet sheet2 = outputBook.createSheet("secondsheet");
 
 
-            while (cellIterator.hasNext()){
-                Cell cell = cellIterator.next();
-
-
-                while(cell.getColumnIndex()-1 > i && i!=-9999){
-                    System.out.print(" \n ");
-                    i++;
-                }
-
-               // System.out.print(cell.getCellType());
-                switch (cell.getCellType()){
-                    case Cell.CELL_TYPE_NUMERIC:
-                        System.out.print(cell.getNumericCellValue());
-                        break;
-                    case Cell.CELL_TYPE_BOOLEAN:
-                        System.out.print(cell.getBooleanCellValue());
-                        break;
-                    case Cell.CELL_TYPE_FORMULA:
-                        System.out.print(cell.getCellFormula());
-                        break;
-
-                    case Cell.CELL_TYPE_STRING:
-                        System.out.print(cell.getRichStringCellValue());
-                        break;
-                    default:
-                }
-
-
-
-                System.out.print(" ");
-                i = cell.getColumnIndex();
-            }
-            System.out.println("");
+            FileOutputStream fileout = new FileOutputStream("test.xls");
+            outputBook.write(fileout);
+            fileout.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
+    }
 
+    public static void read_file(String location) {
+
+        //06.22.2016A
+        try {
+            File file = new File("src/"+location+".xls");
+            FileInputStream inputStream = new FileInputStream(file);
+
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            int i = -9999;
+
+            while (rowIterator.hasNext()) {
+                Row nextRow = rowIterator.next();
+                Iterator<Cell> cellIterator = nextRow.cellIterator();
+
+
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+
+
+                    while (cell.getColumnIndex() - 1 > i && i != -9999) {
+                        System.out.print(" \n ");
+                        i++;
+                    }
+
+                    // System.out.print(cell.getCellType());
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            System.out.print(cell.getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_BOOLEAN:
+                            System.out.print(cell.getBooleanCellValue());
+                            break;
+                        case Cell.CELL_TYPE_FORMULA:
+                            System.out.print(cell.getCellFormula());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            System.out.print(cell.getStringCellValue());
+                            break;
+                        default:
+                    }
+
+
+                    System.out.print(" ");
+                    i = cell.getColumnIndex();
+                }
+                System.out.println("");
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
 }
