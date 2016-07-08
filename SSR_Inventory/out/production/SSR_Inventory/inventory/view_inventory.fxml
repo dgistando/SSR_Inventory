@@ -8,10 +8,10 @@
 <?import javafx.scene.image.Image?>
 <?import javax.swing.text.html.ImageView?>
 
-<AnchorPane  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
          <children>
 
-            <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
               <tabs>
 
                 <Tab text="Inventory">
@@ -19,7 +19,9 @@
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <HBox>
-                                    <Label text="the test"/>
+                                   <children>
+                                       <Label text="the test" />
+                                   </children>
                                 </HBox>
                                <TableView layoutY="30.0" prefWidth="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                  <columns>
@@ -32,26 +34,43 @@
                   </content>
 
                 </Tab>
-                <Tab text="Untitled Tab 2">
+                <Tab fx:id="CMTab" text="Untitled Tab 2">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane  fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                       <children>
+                           <HBox>
+                              <children>
+                                  <Label text="this is a new tab" fx:id="label"/>
+                              </children>
+                           </HBox>
+                        <Button layoutX="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="53.0" text="Button" alignment="CENTER" fx:id="button"/>
+                       </children>
+                    </AnchorPane>
                   </content>
                 </Tab>
               </tabs>
             </TabPane>
 
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
 
-            <MenuButton alignment="CENTER_RIGHT" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Menu" AnchorPane.rightAnchor="0.0">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-                  <Menu mnemonicParsing="false" text="Unspecified Menu">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
-              </items>
-            </MenuButton>
 
          </children>
 </AnchorPane>
