@@ -16,7 +16,7 @@ import java.util.Iterator;
 public class read_excel {
 
     public static void main(String[] args){
-        read_file("06.22.2016A");
+        read_file("07.04.2016A");
         // create_file();
     }
 
@@ -38,6 +38,7 @@ public class read_excel {
 
     public static void read_file(String location) {
 
+        //07.04.2016A
         //06.22.2016A
         try {
             File file = new File("src/"+location+".xls");
@@ -48,6 +49,7 @@ public class read_excel {
             Iterator<Row> rowIterator = sheet.iterator();
 
             int i = -9999;
+            String temp="";
 
             while (rowIterator.hasNext()) {
                 Row nextRow = rowIterator.next();
@@ -66,7 +68,7 @@ public class read_excel {
                     // System.out.print(cell.getCellType());
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_NUMERIC:
-                            System.out.print(cell.getNumericCellValue());
+                           // System.out.print(cell.getNumericCellValue());
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
                             System.out.print(cell.getBooleanCellValue());
@@ -75,14 +77,37 @@ public class read_excel {
                             System.out.print(cell.getCellFormula());
                             break;
                         case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue());
+                            temp = cell.getStringCellValue();
+
+                            if(cell.getColumnIndex()+1 == 3){
+                                String BoxAndWeight="";
+                                System.out.println("\n"+temp.substring(0,temp.lastIndexOf("-")));//custom label
+                                BoxAndWeight = temp.substring(temp.lastIndexOf("-")+2,temp.length());//weight and box size
+
+                                BoxAndWeight = BoxAndWeight.replaceAll("\\p{Punct}*","");
+                               // BoxAndWeight = BoxAndWeight.replace("");
+                                System.out.println(BoxAndWeight);
+
+                                if(BoxAndWeight.contains("\\d+X\\d+X\\d+")){
+                                    System.out.print("There is a box");
+                                }
+                            }else{
+                                System.out.print(cell.getStringCellValue());
+                            }
+
                             break;
                         default:
                     }
 
 
+
+
                     System.out.print(" ");
                     i = cell.getColumnIndex();
+
+                    if(i+1>3){
+                        break;
+                    }
                 }
                 System.out.println("");
             }

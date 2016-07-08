@@ -20,15 +20,27 @@
                             <children>
                                 <HBox>
                                    <children>
-                                       <Label text="the test" />
+                                       <Label text="Rows Dispayed:   " />
+                                        <ComboBox prefWidth="50.0">
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                  <items>
+                                                    <MenuItem mnemonicParsing="false" text="first Action" />
+                                                      <MenuItem mnemonicParsing="false" text="second Action" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu>
+                                        </ComboBox>
                                    </children>
                                 </HBox>
+
                                <TableView layoutY="30.0" prefWidth="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                                  <columns>
                                    <TableColumn prefWidth="75.0" text="C1" />
                                    <TableColumn prefWidth="75.0" text="C2" />
                                  </columns>
                                </TableView>
+
                             </children>
                          </AnchorPane>
                   </content>
@@ -36,14 +48,14 @@
                 </Tab>
                 <Tab fx:id="CMTab" text="Untitled Tab 2">
                   <content>
-                    <AnchorPane  fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                        <children>
                            <HBox>
                               <children>
-                                  <Label text="this is a new tab" fx:id="label"/>
+                                  <Label fx:id="label" text="this is a new tab" />
                               </children>
                            </HBox>
-                        <Button layoutX="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="53.0" text="Button" alignment="CENTER" fx:id="button"/>
+                        <Button fx:id="button" alignment="CENTER" layoutX="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="53.0" text="Button" />
                        </children>
                     </AnchorPane>
                   </content>

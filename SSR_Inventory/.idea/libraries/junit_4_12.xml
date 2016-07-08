@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="junit-4.12">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/junit-4.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/poi-3.14-20160307.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/poi-excelant-3.14-20160307.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/poi-ooxml-3.14-20160307.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/poi-scratchpad-3.14-20160307.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SSR_InventoryJars/xmlbeans-2.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
