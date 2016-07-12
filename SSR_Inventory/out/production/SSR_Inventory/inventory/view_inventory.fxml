@@ -12,7 +12,7 @@
          <children>
 
             <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
-              <tabs>
+              <!--<tabs>
 
                 <Tab text="Inventory">
                     <content>
@@ -22,14 +22,14 @@
                                    <children>
                                        <Label text="Rows Dispayed:   " />
                                         <ComboBox prefWidth="50.0">
-                                 <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" text="first Action" />
-                                          <MenuItem mnemonicParsing="false" text="second Action" />
-                                      </items>
-                                    </ContextMenu>
-                                 </contextMenu>
+                                             <contextMenu>
+                                                <ContextMenu>
+                                                  <items>
+                                                    <MenuItem mnemonicParsing="false" text="first Action" />
+                                                      <MenuItem mnemonicParsing="false" text="second Action" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu>
                                         </ComboBox>
                                    </children>
                                 </HBox>
@@ -60,7 +60,7 @@
                     </AnchorPane>
                   </content>
                 </Tab>
-              </tabs>
+              </tabs>!-->
             </TabPane>
 
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

@@ -5,6 +5,7 @@ import java.io.*;
 /**
  * Created by SSR on 6/30/2016.
  */
+
 public class DBHelper {
     static Connection conn = null;
     static Statement stat = null;
@@ -21,6 +22,11 @@ public class DBHelper {
 
     public DBHelper(){
         try{
+
+            if(!conn.isClosed()){
+                return;
+            }
+
             Class.forName(JDBC_DRIVER);
             DriverManager.getConnection("");
 

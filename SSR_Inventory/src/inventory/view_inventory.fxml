@@ -12,7 +12,7 @@
          <children>
 
             <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
-              <tabs>
+              <!--<tabs>
 
                 <Tab text="Inventory">
                     <content>
@@ -60,7 +60,7 @@
                     </AnchorPane>
                   </content>
                 </Tab>
-              </tabs>
+              </tabs>!-->
             </TabPane>
 
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
