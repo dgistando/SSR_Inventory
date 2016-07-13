@@ -38,11 +38,13 @@ public class Inventory_Controller implements Initializable{
 
     @FXML
     TabPane TPinventory;
-
+    @FXML
+    AnchorPane pane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert TPinventory != null : "tabpane TPinventory doesn't exist";
+        assert pane != null:"not here";
 
         Tab InventoryTable = new Tab("Inventory");
         InventoryTable.setContent(GetInventoryContent(new Random().nextInt(10)));
@@ -84,18 +86,21 @@ public class Inventory_Controller implements Initializable{
                 //System.out.println("you clicked menu");
             }
         });
-
+        */
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
                         System.out.println("tab changed");
-                        pane.setVisible(false);
-                        pane.setVisible(true);
+                        //pane.setMinHeight();
+                        //pane.setMinWidth(pane.getScene().getWidth());
+
+                        //pane.getScene().getWindow().setHeight(pane.getScene().getHeight()+39);
+                        //pane.getScene().getWindow().setWidth(pane.getScene().getWidth()+16);
                     }
                 }
         );
-
+        /*
         button.setOnAction(event -> {
             label.setText("feiwfjwiefj epijrpi4jpi2jpi \n oneunfeowfu \n enufnewfoewunfoeufoeu \ndepiwfjpijwpiwjepfij");
         });

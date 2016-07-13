@@ -8,7 +8,7 @@
 <?import javafx.scene.image.Image?>
 <?import javax.swing.text.html.ImageView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
          <children>
 
             <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">

@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -39,26 +40,25 @@ public class Controller implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         assert Btnlogin != null : "Button Btnlogin not found";
 
+
         Btnlogin.setOnAction(e-> {
-            Stage stage;
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("view_inventory.fxml"));
+                //Scene scene = new Scene(root,450,450);
 
-            TabPane TPinventory = new TabPane();
+                //TPinventory.getTabs().addAll(InventoryTable, InventoryTable1);
 
-            Tab InventoryTable1 = new Tab("Inventory1");
-            InventoryTable1.setContent(getInventoryContent(new Random().nextInt(10)));
-
-
-            //TPinventory.getTabs().addAll(InventoryTable, InventoryTable1);
-
-
-            stage = new Stage();
-            stage.setTitle("SSR_Inventory");
-            stage.setScene(new Scene(getMainContent(), 450, 450));
-            stage.show();
+                Stage stage = new Stage();
+                stage.setTitle("SSR_Inventory");
+                stage.setScene(new Scene(getMainContent(), 450, 450));
+                stage.show();
 
 
-            //hide this current window
-            ((Node) (e.getSource())).getScene().getWindow().hide();
+                //hide this current window
+                ((Node) (e.getSource())).getScene().getWindow().hide();
+            }catch (IOException err){
+                err.printStackTrace();
+            }
         });
 
     }
@@ -82,8 +82,8 @@ public class Controller implements Initializable{
 
     private ComboBox initSearch(){
         ComboBox search = new ComboBox();
-        search.resize(100,100);
         search.setMinWidth(Integer.MAX_VALUE);
+        search.resize(100,100);
 
         return search;
     }
@@ -127,15 +127,30 @@ public class Controller implements Initializable{
 
     private Pane getInventoryContent(int i){
         AnchorPane InventoryPane = new AnchorPane();
-        TableView<Items> Table = new TableView<Items>();
-        InventoryTable table1 = new InventoryTable();
+        TableView<String> Table = new TableView<String>();
+        Table.setEditable(true);
 
-        Table = table1.getAllInventory(Table);
+        //InventoryTable table1 = new InventoryTable();
+
+        //Table = table1.getAllInventory(Table);
         Table.setMinWidth(Integer.MAX_VALUE);
         Table.setMinHeight(Integer.MAX_VALUE);
 
-        InventoryPane.getChildren().addAll(Table);
+
+        ObservableList items = FXCollections.observableArrayList(
+                new Items("first thing"),
+                new Items("second thing")
+        );
+
+        TableColumn<String,String> labelColumn = new TableColumn<String,String>("CustomLabel");
+        labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
+
+        //Table.setItems(items);
+        Table.getColumns().add(labelColumn);
+        Table.setItems(items);
+        InventoryPane.getChildren().add(Table);
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
         return InventoryPane;
     }
+
 }
