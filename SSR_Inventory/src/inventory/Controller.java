@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,20 +65,27 @@ public class Controller implements Initializable{
 
     private AnchorPane getMainContent(){
         AnchorPane Pane = new AnchorPane();
+        ComboBox searchBox = initSearch();
         TabPane TP = getTabContent();
         TP.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         //TP.setPadding(new Insets(50,0,0,0));//this adds an untouchable space under the padding.
 
-        Pane.getChildren().addAll(getMenuContent(),TP);
 
+        Pane.getChildren().addAll(getMenuContent(),TP,searchBox);
 
         AnchorPane.setTopAnchor(Pane.getChildren().get(1),50.0);
         AnchorPane.setLeftAnchor(Pane.getChildren().get(1),0.0);
+        AnchorPane.setTopAnchor(Pane.getChildren().get(2),27.0);
+        AnchorPane.setLeftAnchor(Pane.getChildren().get(2),0.0);
         return Pane;
     }
 
-    private ComboBox searchBox(){
+    private ComboBox initSearch(){
+        ComboBox search = new ComboBox();
+        search.resize(100,100);
+        search.setMinWidth(Integer.MAX_VALUE);
 
+        return search;
     }
 
     private MenuBar getMenuContent(){
@@ -104,7 +112,7 @@ public class Controller implements Initializable{
         InventoryTable.setContent(getInventoryContent(new Random().nextInt(10)));
 
         Tab ImportTab = new Tab("Import");
-        ImportTab.setContent(getInventoryContent(new Random().nextInt(10)));
+        //ImportTab.setContent(getInventoryContent(new Random().nextInt(10)));
 
         Tab SalesTab = new Tab("Sales");
         SalesTab.setContent(getInventoryContent(new Random().nextInt(10)));
