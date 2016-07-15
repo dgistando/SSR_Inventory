@@ -2,6 +2,7 @@ package inventory;
 
 import com.sun.javafx.scene.control.skin.ButtonBarSkin;
 import com.sun.javafx.scene.control.skin.ContextMenuContent;
+import com.sun.scenario.effect.InvertMask;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,12 +15,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -39,36 +41,33 @@ public class Inventory_Controller implements Initializable{
     @FXML
     TabPane TPinventory;
     @FXML
-    AnchorPane pane;
+    BorderPane pane;
+    @FXML
+    Tab Inventorytb,Importtb,Salestb,Historytb;
+    @FXML
+    ComboBox SearchBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert TPinventory != null : "tabpane TPinventory doesn't exist";
         assert pane != null:"not here";
+        assert Inventorytb != null : "";
+        assert Importtb != null : "";
+        assert Salestb != null : "";
+        assert Historytb != null : "";
+        assert SearchBox != null : "";
 
-        Tab InventoryTable = new Tab("Inventory");
-        InventoryTable.setContent(GetInventoryContent(new Random().nextInt(10)));
+        SearchBox = initSearch(SearchBox);
 
+        Inventorytb.setText("Inventory");
+        Importtb.setText("Import");
+        Salestb.setText("Sales");
+        Historytb.setText("History");
 
-        Tab InventoryTable1 = new Tab("Inventory1");
-        InventoryTable1.setContent(GetInventoryContent(new Random().nextInt(10)));
-
-
-        TPinventory.getTabs().addAll(InventoryTable,InventoryTable1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Inventorytb.setContent(getInventoryContent(new Random().nextInt(10)));
+        Importtb.setContent(getInventoryContent(new Random().nextInt(10)));
+        //Salestb.setContent(getInventoryContent(new Random().nextInt(10)));
+        Historytb.setContent(getInventoryContent(new Random().nextInt(10)));
 
 
         /*assert CMinventory != null : "tabpane CMinventory doesn't exist";
@@ -113,7 +112,7 @@ public class Inventory_Controller implements Initializable{
         tab.setContent(box);
         //makes the image on the tab(upsidedown triangle)
         //tab.setGraphic();
-        TPinventory.getTabs().add(tab);*/
+        TPinventory.getTabs().add(tab);
     }
 
     private Pane GetInventoryContent(int i){
@@ -134,5 +133,92 @@ public class Inventory_Controller implements Initializable{
 //        border.setBottom(createButtonBox());  // Uses an HBox, no sizing
 
         return border;
+    }
+
+    private AnchorPane getMainContent(){
+        AnchorPane Pane = new AnchorPane();
+        ComboBox searchBox = initSearch();
+        TabPane TP = getTabContent();
+        TP.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        //TP.setPadding(new Insets(50,0,0,0));//this adds an untouchable space under the padding.
+
+
+        Pane.getChildren().addAll(getMenuContent(),TP,searchBox);
+
+        AnchorPane.setTopAnchor(Pane.getChildren().get(1),50.0);
+        AnchorPane.setLeftAnchor(Pane.getChildren().get(1),0.0);
+        AnchorPane.setTopAnchor(Pane.getChildren().get(2),27.0);
+        AnchorPane.setLeftAnchor(Pane.getChildren().get(2),0.0);
+        return Pane;*/
+    }
+
+    private ComboBox initSearch(ComboBox search){
+        search.setMinWidth(Integer.MAX_VALUE);
+        return search;
+    }
+
+    private MenuBar getMenuContent(){
+        MenuBar menuBar = new MenuBar();
+        menuBar.setMinWidth(Integer.MAX_VALUE);
+
+        Menu File = new Menu("File");
+        MenuItem Exit = new MenuItem("Exit");
+        File.getItems().addAll(Exit);
+
+        Menu Edit = new Menu("Edit");
+        Menu View = new Menu("View");
+
+        menuBar.getMenus().addAll(File,Edit,View);
+
+        return menuBar;
+    }
+
+    private TabPane getTabContent(){
+        TabPane tabPane = new TabPane();
+        tabPane.setMinWidth(Integer.MAX_VALUE);
+
+        Tab InventoryTable = new Tab("Inventory");
+        InventoryTable.setContent(getInventoryContent(new Random().nextInt(10)));
+
+        Tab ImportTab = new Tab("Import");
+        //ImportTab.setContent(getInventoryContent(new Random().nextInt(10)));
+
+        Tab SalesTab = new Tab("Sales");
+        SalesTab.setContent(getInventoryContent(new Random().nextInt(10)));
+
+        Tab HistoryTab = new Tab("History");
+        HistoryTab.setContent(getInventoryContent(new Random().nextInt(10)));
+
+
+        tabPane.getTabs().addAll(InventoryTable,ImportTab,SalesTab,HistoryTab);
+        return tabPane;
+    }
+
+    private Pane getInventoryContent(int i){
+        AnchorPane InventoryPane = new AnchorPane();
+        TableView<String> Table = new TableView<String>();
+        Table.setEditable(true);
+
+        //InventoryTable table1 = new InventoryTable();
+
+        //Table = table1.getAllInventory(Table);
+        Table.setMinWidth(Integer.MAX_VALUE);
+        Table.setMinHeight(Integer.MAX_VALUE);
+
+
+        /*ObservableList items = FXCollections.observableArrayList(
+                new Items("first thing"),
+                new Items("second thing")
+        );*/
+
+        TableColumn<String,String> labelColumn = new TableColumn<String,String>("CustomLabel");
+        labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
+
+        //Table.setItems(items);
+        Table.getColumns().add(labelColumn);
+        //Table.setItems(items);
+        InventoryPane.getChildren().add(Table);
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
+        return InventoryPane;
     }
 }

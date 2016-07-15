@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -8,11 +9,12 @@
 <?import javafx.scene.image.Image?>
 <?import javax.swing.text.html.ImageView?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
-         <children>
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
 
-            <TabPane fx:id="TPinventory" prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
-              <!--<tabs>
+
+       <!--<bottom>
+               <TabPane prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
+              <tabs>
 
                 <Tab text="Inventory">
                     <content>
@@ -60,9 +62,14 @@
                     </AnchorPane>
                   </content>
                 </Tab>
-              </tabs>!-->
+              </tabs>
             </TabPane>
+       </bottom>
+   !-->
 
+
+
+    <top>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
@@ -82,7 +89,46 @@
           </Menu>
         </menus>
       </MenuBar>
+    </top>
 
+    <center>
+        <AnchorPane BorderPane.alignment="CENTER">
+           <children>
+               <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                   <ComboBox fx:id="SearchBox" promptText="testtext">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                   </ComboBox>
+                </children>
+               </HBox>
+   
+               <TabPane fx:id="TPinventory" prefHeight="375.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                   <tabs>
+                       <Tab fx:id="Inventorytb">
 
-         </children>
-</AnchorPane>
+                    </Tab>
+   
+                       <Tab fx:id="Importtb">
+
+                    </Tab>
+   
+                       <Tab fx:id="Salestb">
+
+                    </Tab>
+   
+                       <Tab fx:id="Historytb">
+
+                    </Tab>
+                   </tabs>
+               </TabPane>
+           </children>
+
+        </AnchorPane>
+    </center>
+
+   <bottom>
+
+   </bottom>
+</BorderPane>

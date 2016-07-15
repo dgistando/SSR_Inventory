@@ -1,6 +1,7 @@
 package inventory;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
@@ -43,28 +44,21 @@ public class DBHelper {
     }
 
     public ObservableList<Items> getAllItems(){
+        ObservableList<Items> list=  null;
 
         try {
-            ArrayList<Items> list = new ArrayList<Items>();
-
             sql = "SELECT * FROM inventory;";
             rs = stat.executeQuery(sql);
 
-            while(rs.next()){
-                list.add(
-                        new Items(
-                                rs.getString(0),
-                                rs.getString(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getString(4),
-                                rs.getDate(5),
-                                rs.getString(6)
-                                ));
-            }
-
-        }catch (SQLException e){
+            /*while(rs.next()){
+             list = FXCollections.observableList(
+                    new Items();
+                    );
+            }*/
+        }
+            catch (SQLException e){
             e.printStackTrace();
         }
+        return list;
     }
 }

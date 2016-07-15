@@ -20,10 +20,10 @@ public class InventoryTable {
     DBHelper dbHelper;
 
     public InventoryTable() {
-        items = FXCollections.observableArrayList(
+        /*items = FXCollections.observableArrayList(
                 new Items("first thing"),
                 new Items("second thing")
-        );
+        );*/
         //dbHelper = new DBHelper();
         //items = BDHelper.getallitmes or something like this; // do something like this here.
     }
