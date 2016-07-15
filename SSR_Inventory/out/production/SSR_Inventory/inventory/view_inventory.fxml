@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -8,6 +9,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.image.Image?>
 <?import javax.swing.text.html.ImageView?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
 
 <BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
 
@@ -92,43 +95,92 @@
     </top>
 
     <center>
-        <AnchorPane BorderPane.alignment="CENTER">
-           <children>
-               <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <children>
-                   <ComboBox fx:id="SearchBox" promptText="testtext">
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                   </ComboBox>
-                </children>
-               </HBox>
-   
-               <TabPane fx:id="TPinventory" prefHeight="375.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                   <tabs>
-                       <Tab fx:id="Inventorytb">
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+         <items>
+             <ComboBox fx:id="SearchBox" prefHeight="25.0" prefWidth="Infinity" SplitPane.resizableWithParent="false">
 
-                    </Tab>
-   
-                       <Tab fx:id="Importtb">
+             </ComboBox>
+              <TabPane fx:id="TPinventory">
+                  <tabs>
+                  <Tab fx:id="Inventorytb">
 
-                    </Tab>
-   
-                       <Tab fx:id="Salestb">
+                  </Tab>
+                    <Tab fx:id="Importtb">
+                     <content>
+                        <AnchorPane>
+                           <children>
+                               <Label text="Click browse to add an excel sheet" />
+                              <Button layoutY="17.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="600.0" text="Browse...">
+                                 <graphic>
+                                    <TextField prefHeight="25.0" prefWidth="506.0" />
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </AnchorPane>
+                     </content></Tab>
+                  <Tab fx:id="Salestb">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <LineChart layoutY="13.0" prefHeight="300.0" prefWidth="500.0">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </children></AnchorPane>
+                    </content>
+                  </Tab>
+                  <Tab fx:id="Historytb">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView layoutX="15.0" layoutY="14.0" prefHeight="200.0" prefWidth="227.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="Name" />
+                                  <TableColumn editable="false" prefWidth="75.0" text="Edits" />
+                                    <TableColumn editable="false" prefWidth="75.0" text="Date" />
+                                </columns>
+                              </TableView>
+                           </children></AnchorPane>
+                    </content>
+                  </Tab>
+      
+                        </tabs>
+              </TabPane>
+         </items>
+      </SplitPane>
 
-                    </Tab>
-   
-                       <Tab fx:id="Historytb">
+        <!--<TabPane fx:id="TPinventory" minWidth="Infinity" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab fx:id="Inventorytb">
 
-                    </Tab>
-                   </tabs>
-               </TabPane>
-           </children>
+            </Tab>
 
-        </AnchorPane>
+            <Tab fx:id="Importtb">
+
+            </Tab>
+
+            <Tab fx:id="Salestb">
+
+            </Tab>
+
+            <Tab fx:id="Historytb">
+
+            </Tab>
+        </tabs>
+    </TabPane>!-->
+
     </center>
 
-   <bottom>
-
-   </bottom>
+   <!--<bottom>
+       <HBox>
+           <children>
+               <ComboBox fx:id="SearchBox" minWidth="Infinity" promptText="testtext">
+               </ComboBox>
+           </children>
+       </HBox>
+   </bottom>!-->
 </BorderPane>

@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.*;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -19,6 +20,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -27,6 +30,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import java.awt.*;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +54,13 @@ public class Inventory_Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert TPinventory != null : "tabpane TPinventory doesn't exist";
-        assert pane != null:"not here";
+        assert pane != null : "not here";
         assert Inventorytb != null : "";
         assert Importtb != null : "";
         assert Salestb != null : "";
         assert Historytb != null : "";
         assert SearchBox != null : "";
+
 
         SearchBox = initSearch(SearchBox);
 
@@ -65,27 +70,10 @@ public class Inventory_Controller implements Initializable{
         Historytb.setText("History");
 
         Inventorytb.setContent(getInventoryContent(new Random().nextInt(10)));
-        Importtb.setContent(getInventoryContent(new Random().nextInt(10)));
+        //Importtb.setContent(getInventoryContent(new Random().nextInt(10)));
         //Salestb.setContent(getInventoryContent(new Random().nextInt(10)));
-        Historytb.setContent(getInventoryContent(new Random().nextInt(10)));
+        //Historytb.setContent(getInventoryContent(new Random().nextInt(10)));
 
-
-        /*assert CMinventory != null : "tabpane CMinventory doesn't exist";
-        assert CMTab != null : "the tab doesn't  exist";
-        assert pane != null : "";
-        assert button != null : "dd";
-        assert label != null :" dd";
-
-        /*TPinventory.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if(event.getButton() == MouseButton.PRIMARY){
-                    System.out.println("you clicked this left");
-                }
-                //System.out.println("you clicked menu");
-            }
-        });
-        */
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
                     @Override
@@ -99,61 +87,30 @@ public class Inventory_Controller implements Initializable{
                     }
                 }
         );
-        /*
-        button.setOnAction(event -> {
-            label.setText("feiwfjwiefj epijrpi4jpi2jpi \n oneunfeowfu \n enufnewfoewunfoeufoeu \ndepiwfjpijwpiwjepfij");
+
+        pane.getScene().setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    success = true;
+                    String filePath = null;
+                    for (File file:db.getFiles()) {
+                        filePath = file.getAbsolutePath();
+                        System.out.println(filePath);
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+
         });
-        /*Tab tab = new Tab();
-        HBox box = new HBox();
-        ContextMenu cm = new ContextMenu();
-        cm.getItems().add(new MenuItem("some text", new Circle(5.0,Color.RED)));
-        box.getChildren().add(new ContextMenuContent(cm));
-        box.getChildren().add(new Button("text on button"));
-        tab.setContent(box);
-        //makes the image on the tab(upsidedown triangle)
-        //tab.setGraphic();
-        TPinventory.getTabs().add(tab);
-    }
 
-    private Pane GetInventoryContent(int i){
-        BorderPane border = new BorderPane();
-        border.setPadding(new Insets(20,0,20,20));
-
-        ListView<String> lvList = new ListView<String>();
-        ObservableList<String> items = FXCollections.observableArrayList(
-                "Hot dog", "Hamburger", "French fries",
-                "Carrot sticks", "Chicken salad");
-        lvList.setItems(items);
-        lvList.setMaxHeight(Control.USE_PREF_SIZE);
-        lvList.setPrefWidth(150.0);
-
-        border.setLeft(lvList);
-        border.setBottom(new Button(""+i));
-  // Uses a tile pane for sizing
-//        border.setBottom(createButtonBox());  // Uses an HBox, no sizing
-
-        return border;
-    }
-
-    private AnchorPane getMainContent(){
-        AnchorPane Pane = new AnchorPane();
-        ComboBox searchBox = initSearch();
-        TabPane TP = getTabContent();
-        TP.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        //TP.setPadding(new Insets(50,0,0,0));//this adds an untouchable space under the padding.
-
-
-        Pane.getChildren().addAll(getMenuContent(),TP,searchBox);
-
-        AnchorPane.setTopAnchor(Pane.getChildren().get(1),50.0);
-        AnchorPane.setLeftAnchor(Pane.getChildren().get(1),0.0);
-        AnchorPane.setTopAnchor(Pane.getChildren().get(2),27.0);
-        AnchorPane.setLeftAnchor(Pane.getChildren().get(2),0.0);
-        return Pane;*/
     }
 
     private ComboBox initSearch(ComboBox search){
-        search.setMinWidth(Integer.MAX_VALUE);
+        //search.setMinWidth(Integer.MAX_VALUE);
         return search;
     }
 
@@ -221,4 +178,5 @@ public class Inventory_Controller implements Initializable{
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
         return InventoryPane;
     }
+
 }
