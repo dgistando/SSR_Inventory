@@ -19,6 +19,7 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
     private int caretPos;
 
     public AutoCompleteComboBoxListener(final ComboBox comboBox) {
+        System.out.print("Autocomplete constructor called");
         this.comboBox = comboBox;
         sb = new StringBuilder();
         data = comboBox.getItems();

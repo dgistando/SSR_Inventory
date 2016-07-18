@@ -1,46 +1,32 @@
 package inventory;
 
-import com.sun.javafx.scene.control.skin.ButtonBarSkin;
-import com.sun.javafx.scene.control.skin.ContextMenuContent;
-import com.sun.scenario.effect.InvertMask;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.*;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
-import java.io.File;
+
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Random;
 import java.util.ResourceBundle;
 
 /**
  * Created by SSR on 6/29/2016.
  */
-public class Inventory_Controller implements Initializable{
+public class Inventory_Controller implements Initializable,EventHandler<ActionEvent>{
 
     @FXML
     TabPane TPinventory;
@@ -49,7 +35,9 @@ public class Inventory_Controller implements Initializable{
     @FXML
     Tab Inventorytb,Importtb,Salestb,Historytb;
     @FXML
-    ComboBox SearchBox;
+    TextField SearchBox;
+
+    AutoCompleteComboBoxListener listener;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,7 +50,9 @@ public class Inventory_Controller implements Initializable{
         assert SearchBox != null : "";
 
 
-        SearchBox = initSearch(SearchBox);
+        ObservableList<String> testd = FXCollections.observableArrayList("ff","vfv","a","aab","aba","bba","aaaaaaaaab","zxcv","qwertyuiopasdfghjklzxcvbnm");
+
+
 
         Inventorytb.setText("Inventory");
         Importtb.setText("Import");
@@ -88,7 +78,7 @@ public class Inventory_Controller implements Initializable{
                 }
         );
 
-        pane.getScene().setOnDragDropped(new EventHandler<DragEvent>() {
+        /*pane.getScene().setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
@@ -105,9 +95,10 @@ public class Inventory_Controller implements Initializable{
                 event.consume();
             }
 
-        });
+        });*/
 
     }
+
 
     private ComboBox initSearch(ComboBox search){
         //search.setMinWidth(Integer.MAX_VALUE);
@@ -179,4 +170,8 @@ public class Inventory_Controller implements Initializable{
         return InventoryPane;
     }
 
+    @Override
+    public void handle(ActionEvent event) {
+        System.out.print("rg");
+    }
 }
