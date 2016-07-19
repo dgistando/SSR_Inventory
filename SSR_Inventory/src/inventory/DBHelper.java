@@ -17,30 +17,46 @@ public class DBHelper {
     static Statement stat = null;
     static String sql = null;
     static ResultSet rs;
+    static int attempts = 1;
 
     static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    static final String USERNAME = "";
-    static final String PASSWORD = "";
+    static final String USERNAME = "testlogin";
+    static final String PASSWORD = "Register#2";
 
-    static final String DB_URL = "jdbc:sqlserver://SSR-JANET\\SQLEXPRESS//:1343;"
+    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
                                 + "databaseName=testdb;"
                                 + "integratedSecurity=true;";
 
     public DBHelper(){
-        try{
+        Connection conn = null;
+        Statement stat = null;
+        String sql = null;
+        ResultSet rs = null;
+    }
 
-            if(!conn.isClosed()){
-                return;
+    protected boolean credentialLogin(){
+        try {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            stat = conn.createStatement();
+
+            if (!conn.isClosed()) {
+                System.out.println("The Connection is opened and you are logged in " + attempts);
+                return true;
             }
 
-            Class.forName(JDBC_DRIVER);
-            DriverManager.getConnection("");
-
         }catch (SQLException e){
-            e.printStackTrace();
+            System.out.println("Login failed"+attempts);
+            return false;
+            //e.printStackTrace();
         }catch (ClassNotFoundException e){
-            e.printStackTrace();
+            System.out.println("Login failed"+attempts);
+            return false;
+            //e.printStackTrace();
+        }finally {
+            attempts++;
         }
+        return false;
     }
 
     public ObservableList<Items> getAllItems(){

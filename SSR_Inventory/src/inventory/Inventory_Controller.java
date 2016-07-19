@@ -35,9 +35,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     Tab Inventorytb,Importtb,Salestb,Historytb;
     @FXML
-    TextField SearchBox;
+    TextField SearchBox1;
+    @FXML
+    SplitPane splitPane;
 
-    AutoCompleteComboBoxListener listener;
+    AutoCompleteTextField SearchBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -48,10 +50,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert Salestb != null : "";
         assert Historytb != null : "";
         assert SearchBox != null : "";
-
+        assert splitPane != null : "";
 
         ObservableList<String> testd = FXCollections.observableArrayList("ff","vfv","a","aab","aba","bba","aaaaaaaaab","zxcv","qwertyuiopasdfghjklzxcvbnm");
+        SearchBox = new AutoCompleteTextField();
+        SearchBox.getEntries().addAll(testd);
 
+        splitPane.getItems().add(0,SearchBox);
 
 
         Inventorytb.setText("Inventory");
@@ -144,26 +149,17 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
     private Pane getInventoryContent(int i){
         AnchorPane InventoryPane = new AnchorPane();
-        TableView<String> Table = new TableView<String>();
+        TableView<String> Table = new InventoryTable();
         Table.setEditable(true);
 
-        //InventoryTable table1 = new InventoryTable();
-
-        //Table = table1.getAllInventory(Table);
         Table.setMinWidth(Integer.MAX_VALUE);
         Table.setMinHeight(Integer.MAX_VALUE);
 
-
-        /*ObservableList items = FXCollections.observableArrayList(
-                new Items("first thing"),
-                new Items("second thing")
-        );*/
-
-        TableColumn<String,String> labelColumn = new TableColumn<String,String>("CustomLabel");
-        labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
+        //TableColumn<String,String> labelColumn = new TableColumn<String,String>("CustomLabel");
+        //labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
 
         //Table.setItems(items);
-        Table.getColumns().add(labelColumn);
+        //Table.getColumns().add(labelColumn);
         //Table.setItems(items);
         InventoryPane.getChildren().add(Table);
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);

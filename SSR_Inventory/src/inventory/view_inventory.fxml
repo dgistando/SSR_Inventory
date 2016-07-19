@@ -96,11 +96,12 @@
     </top>
 
     <center>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+      <SplitPane fx:id="splitPane" dividerPositions="0.5" orientation="VERTICAL">
          <items>
-             <TextField fx:id="SearchBox" editable="true" prefHeight="25.0" prefWidth="Infinity" SplitPane.resizableWithParent="false">
+             <!--<TextField editable="true" prefHeight="25.0" prefWidth="Infinity" SplitPane.resizableWithParent="false">
 
-             </TextField>
+             </TextField>!-->
+
               <TabPane fx:id="TPinventory">
                   <tabs>
                   <Tab fx:id="Inventorytb">

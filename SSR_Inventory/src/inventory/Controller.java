@@ -19,6 +19,7 @@ import org.apache.poi.ss.formula.functions.T;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -36,13 +37,22 @@ public class Controller implements Initializable{
     @FXML
     Button Btnlogin;
 
+    DBHelper dbHelper;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert Btnlogin != null : "Button Btnlogin not found";
+        dbHelper = new DBHelper();
 
 
         Btnlogin.setOnAction(e-> {
             try {
+
+                if(!LoginPass()){
+                    System.out.print("failed to login");
+                    return;
+                }
+
                 Parent root = FXMLLoader.load(getClass().getResource("view_inventory.fxml"));
                 //Scene scene = new Scene(root,450,450);
 
@@ -61,6 +71,10 @@ public class Controller implements Initializable{
             }
         });
 
+    }
+
+    private boolean LoginPass(){
+        return dbHelper.credentialLogin();
     }
 
 
