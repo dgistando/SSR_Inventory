@@ -4,8 +4,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.*;
+import java.util.Date;
 
 /**
  * Created by SSR on 7/12/2016.
@@ -13,16 +13,22 @@ import java.text.SimpleDateFormat;
 public class Items {
     SimpleStringProperty custom_label, notes;
     SimpleBooleanProperty defective, returns, incomplete;
-    DateFormat date;
+    Date date;
     SimpleIntegerProperty quantity;
 
-    public Items(String _custom_label, Integer _quantity, boolean _defective, boolean _returns, boolean _incomplete, DateFormat _date, String _notes){
+    public Items(){
+
+    }
+
+    public Items(String _custom_label, Integer _quantity, boolean _defective, boolean _returns, boolean _incomplete, java.sql.Date _date, String _notes){
         custom_label = new SimpleStringProperty(this, "",_custom_label);
         quantity = new SimpleIntegerProperty(this, "",_quantity);
         defective = new SimpleBooleanProperty(this, "",_defective);
         returns = new SimpleBooleanProperty(this, "",_returns);
         incomplete = new SimpleBooleanProperty(this, "",_incomplete);
-
+        date = _date;
+        //try{setDate(_date);}catch(ParseException e){e.printStackTrace();}
+        notes = new SimpleStringProperty(this,"",_notes);
     }
 
     public String getCustom_label(){
@@ -65,12 +71,13 @@ public class Items {
         incomplete = newvalue;
     }
 
-    private DateFormat getDate(){
+    private Date getDate(){
         return date;
     }
 
-    private void setDate(DateFormat newvalue){
-       date = newvalue;
+    private void setDate(String newvalue) throws ParseException{
+       DateFormat df =  new SimpleDateFormat("dd/mm/yyyy");
+        date = df.parse(newvalue);
     }
 
     private SimpleIntegerProperty getQuantity(){

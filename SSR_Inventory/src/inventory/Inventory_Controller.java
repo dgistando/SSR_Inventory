@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,7 +65,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Salestb.setText("Sales");
         Historytb.setText("History");
 
-        Inventorytb.setContent(getInventoryContent(new Random().nextInt(10)));
+        getInventoryContent(0);
+        //Inventorytb.setContent(getInventoryContent(new Random().nextInt(10)));
         //Importtb.setContent(getInventoryContent(new Random().nextInt(10)));
         //Salestb.setContent(getInventoryContent(new Random().nextInt(10)));
         //Historytb.setContent(getInventoryContent(new Random().nextInt(10)));
@@ -131,39 +133,51 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         tabPane.setMinWidth(Integer.MAX_VALUE);
 
         Tab InventoryTable = new Tab("Inventory");
-        InventoryTable.setContent(getInventoryContent(new Random().nextInt(10)));
+        //InventoryTable.setContent(getInventoryContent(new Random().nextInt(10)));
 
         Tab ImportTab = new Tab("Import");
         //ImportTab.setContent(getInventoryContent(new Random().nextInt(10)));
 
         Tab SalesTab = new Tab("Sales");
-        SalesTab.setContent(getInventoryContent(new Random().nextInt(10)));
+        //SalesTab.setContent(getInventoryContent(new Random().nextInt(10)));
 
         Tab HistoryTab = new Tab("History");
-        HistoryTab.setContent(getInventoryContent(new Random().nextInt(10)));
+        //HistoryTab.setContent(getInventoryContent(new Random().nextInt(10)));
 
 
         tabPane.getTabs().addAll(InventoryTable,ImportTab,SalesTab,HistoryTab);
         return tabPane;
     }
 
-    private Pane getInventoryContent(int i){
+    private void getInventoryContent(int i){
         AnchorPane InventoryPane = new AnchorPane();
-        TableView<String> Table = new InventoryTable();
-        Table.setEditable(true);
+        InventoryTable table = new InventoryTable();
+        table.setEditable(true);
 
-        Table.setMinWidth(Integer.MAX_VALUE);
-        Table.setMinHeight(Integer.MAX_VALUE);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setMinHeight(Integer.MAX_VALUE);
 
-        //TableColumn<String,String> labelColumn = new TableColumn<String,String>("CustomLabel");
-        //labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
+        Region veil = new Region();
+        veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
+        ProgressIndicator p = new ProgressIndicator();
+        p.setMaxSize(150,150);
 
-        //Table.setItems(items);
-        //Table.getColumns().add(labelColumn);
-        //Table.setItems(items);
-        InventoryPane.getChildren().add(Table);
+        table.getAllInventory();
+
+        Task<ObservableList<Items>> task = new GetInventoryTask();
+        p.progressProperty().bind(task.progressProperty());
+        veil.visibleProperty().bind(task.runningProperty());
+        p.visibleProperty().bind(task.runningProperty());
+        table.itemsProperty().bind(task.valueProperty());
+
+        InventoryPane.getChildren().add(table);
+
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
-        return InventoryPane;
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(0),0.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(0),0.0);
+
+        Inventorytb.setContent(InventoryPane);
+        new Thread(task).start();
     }
 
     @Override

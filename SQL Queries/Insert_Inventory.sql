@@ -1,0 +1,1 @@
+INSERT INTO Inventory VALUES('#Example',4,0,0,0,'2016-07-5','These are some notes about the example part');

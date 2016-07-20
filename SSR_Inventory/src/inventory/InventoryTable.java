@@ -2,11 +2,15 @@ package inventory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
+
+import static inventory.Controller.dbHelper;
 
 /**
  * This table class gives the possibility of adding dynamic instances
@@ -20,11 +24,6 @@ public class InventoryTable extends TableView{
     DBHelper dbHelper;
 
     public InventoryTable() {
-
-        TableColumn<Items,String> labelColumn = new TableColumn<Items,String>("CustomLabel");
-        labelColumn.setCellValueFactory(new PropertyValueFactory<>("CustomLabel"));
-
-        this.getColumns().addAll(labelColumn);
         /*items = FXCollections.observableArrayList(
                 new Items("first thing"),
                 new Items("second thing")
@@ -34,14 +33,32 @@ public class InventoryTable extends TableView{
     }
 
     public void getAllInventory(){
-
         //make database call to fill the items list
+        TableColumn<Items,String> labelColumn = new TableColumn<Items,String>("Custom Label");
+        labelColumn.setCellValueFactory(new PropertyValueFactory<>("Custom Label"));
+        labelColumn.setMinWidth(200.0);
 
-        //tableView.setItems();
+        TableColumn<Items,Integer> quantityColumn = new TableColumn<Items,Integer>("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
+        quantityColumn.setPrefWidth(60.0);
+        quantityColumn.setMaxWidth(60.0);
+        quantityColumn.setMinWidth(60.0);
+
+        TableColumn<Items,Boolean> incompleteColumn = new TableColumn<Items,Boolean>("Incomplete");
+        incompleteColumn.setCellValueFactory(new PropertyValueFactory<>("Incomplete"));
+        incompleteColumn.setMinWidth(incompleteColumn.getWidth());
+        incompleteColumn.setMaxWidth(incompleteColumn.getWidth());
+
+        TableColumn<Items,Boolean> returnsColumn = new TableColumn<Items,Boolean>("Returns");
+        returnsColumn.setCellValueFactory(new PropertyValueFactory<>("Returns"));
+        returnsColumn.setMinWidth(returnsColumn.getWidth());
+        returnsColumn.setMaxWidth(returnsColumn.getWidth());
+
+        TableColumn<Items,String> notesColumn = new TableColumn<Items,String>("Notes");
+        notesColumn.setCellValueFactory(new PropertyValueFactory<>("Notes"));
+
+        this.getColumns().addAll(labelColumn,quantityColumn,incompleteColumn,returnsColumn,notesColumn);
+
     }
-
-
-
-
 
 }

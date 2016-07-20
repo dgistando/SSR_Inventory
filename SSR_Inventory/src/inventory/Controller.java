@@ -37,7 +37,7 @@ public class Controller implements Initializable{
     @FXML
     Button Btnlogin;
 
-    DBHelper dbHelper;
+    public static DBHelper dbHelper;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
