@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -21,8 +22,11 @@ import javafx.scene.layout.*;
 
 import java.net.URL;
 
+import java.sql.Date;
 import java.util.Random;
 import java.util.ResourceBundle;
+
+import static inventory.Controller.dbHelper;
 
 /**
  * Created by SSR on 6/29/2016.
@@ -155,7 +159,6 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         table.setEditable(true);
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setMinHeight(Integer.MAX_VALUE);
 
         Region veil = new Region();
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
@@ -170,12 +173,17 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         p.visibleProperty().bind(task.runningProperty());
         table.itemsProperty().bind(task.valueProperty());
 
-        InventoryPane.getChildren().add(table);
+        InventoryPane.getChildren().addAll(table,veil,p);
 
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(0),0.0);
+        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(0),0.0);
 
+        /*ObservableList<Items> items = FXCollections.observableArrayList();
+        items.add(new Items("example",4,false,false,false,new Date(0),"somenotes"));
+
+        table.setItems(items);*/
         Inventorytb.setContent(InventoryPane);
         new Thread(task).start();
     }

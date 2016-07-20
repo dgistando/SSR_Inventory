@@ -35,27 +35,27 @@ public class InventoryTable extends TableView{
     public void getAllInventory(){
         //make database call to fill the items list
         TableColumn<Items,String> labelColumn = new TableColumn<Items,String>("Custom Label");
-        labelColumn.setCellValueFactory(new PropertyValueFactory<>("Custom Label"));
+        labelColumn.setCellValueFactory(new PropertyValueFactory<Items,String>("customLabel"));
         labelColumn.setMinWidth(200.0);
 
         TableColumn<Items,Integer> quantityColumn = new TableColumn<Items,Integer>("Quantity");
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
-        quantityColumn.setPrefWidth(60.0);
-        quantityColumn.setMaxWidth(60.0);
-        quantityColumn.setMinWidth(60.0);
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("quantity"));
+        //quantityColumn.setPrefWidth(60.0);
+        //quantityColumn.setMaxWidth(60.0);
+        //quantityColumn.setMinWidth(60.0);
 
         TableColumn<Items,Boolean> incompleteColumn = new TableColumn<Items,Boolean>("Incomplete");
-        incompleteColumn.setCellValueFactory(new PropertyValueFactory<>("Incomplete"));
-        incompleteColumn.setMinWidth(incompleteColumn.getWidth());
-        incompleteColumn.setMaxWidth(incompleteColumn.getWidth());
+        incompleteColumn.setCellValueFactory(new PropertyValueFactory<Items,Boolean>("incomplete"));
+        //incompleteColumn.setMinWidth(incompleteColumn.getWidth());
+        //incompleteColumn.setMaxWidth(incompleteColumn.getWidth());
 
         TableColumn<Items,Boolean> returnsColumn = new TableColumn<Items,Boolean>("Returns");
-        returnsColumn.setCellValueFactory(new PropertyValueFactory<>("Returns"));
-        returnsColumn.setMinWidth(returnsColumn.getWidth());
-        returnsColumn.setMaxWidth(returnsColumn.getWidth());
+        returnsColumn.setCellValueFactory(new PropertyValueFactory<Items,Boolean>("returns"));
+        //returnsColumn.setMinWidth(returnsColumn.getWidth());
+        //returnsColumn.setMaxWidth(returnsColumn.getWidth());
 
         TableColumn<Items,String> notesColumn = new TableColumn<Items,String>("Notes");
-        notesColumn.setCellValueFactory(new PropertyValueFactory<>("Notes"));
+        notesColumn.setCellValueFactory(new PropertyValueFactory<Items,String>("notes"));
 
         this.getColumns().addAll(labelColumn,quantityColumn,incompleteColumn,returnsColumn,notesColumn);
 
