@@ -20,10 +20,10 @@ public class DBHelper{
     static int attempts = 1;
 
     static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    static final String USERNAME = "testlogin";
-    static final String PASSWORD = "Register#2";
+    static final String USERNAME = "SSR_Janet";
+    static final String PASSWORD = "Password#2";
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
     public DBHelper() {
@@ -69,7 +69,7 @@ public class DBHelper{
 
                 while(rs.next()){
                     list.add(new Items(rs.getString(1),rs.getInt(2),rs.getBoolean(3),rs.getBoolean(4),rs.getBoolean(5),rs.getDate(6),rs.getString(7)));
-                    System.out.println(rs.getString(1));
+                    System.out.println(rs.getString(1)+" "+rs.getString(2));
                 }
             }
             catch (SQLException e){

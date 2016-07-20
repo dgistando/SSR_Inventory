@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Menu;
@@ -60,6 +61,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         ObservableList<String> testd = FXCollections.observableArrayList("ff","vfv","a","aab","aba","bba","aaaaaaaaab","zxcv","qwertyuiopasdfghjklzxcvbnm");
         SearchBox = new AutoCompleteTextField();
         SearchBox.getEntries().addAll(testd);
+        SearchBox.setPromptText("Search");
 
         splitPane.getItems().add(0,SearchBox);
 
@@ -132,26 +134,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         return menuBar;
     }
 
-    private TabPane getTabContent(){
-        TabPane tabPane = new TabPane();
-        tabPane.setMinWidth(Integer.MAX_VALUE);
 
-        Tab InventoryTable = new Tab("Inventory");
-        //InventoryTable.setContent(getInventoryContent(new Random().nextInt(10)));
-
-        Tab ImportTab = new Tab("Import");
-        //ImportTab.setContent(getInventoryContent(new Random().nextInt(10)));
-
-        Tab SalesTab = new Tab("Sales");
-        //SalesTab.setContent(getInventoryContent(new Random().nextInt(10)));
-
-        Tab HistoryTab = new Tab("History");
-        //HistoryTab.setContent(getInventoryContent(new Random().nextInt(10)));
-
-
-        tabPane.getTabs().addAll(InventoryTable,ImportTab,SalesTab,HistoryTab);
-        return tabPane;
-    }
 
     private void getInventoryContent(int i){
         AnchorPane InventoryPane = new AnchorPane();
@@ -173,12 +156,20 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         p.visibleProperty().bind(task.runningProperty());
         table.itemsProperty().bind(task.valueProperty());
 
-        InventoryPane.getChildren().addAll(table,veil,p);
+
+
+        InventoryPane.getChildren().addAll(table,veil,p,getInventoryFilters());
 
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(0),0.0);
+
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(3),0.0);
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(3),0.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(3),0.0);
+
+
 
         /*ObservableList<Items> items = FXCollections.observableArrayList();
         items.add(new Items("example",4,false,false,false,new Date(0),"somenotes"));
@@ -186,6 +177,65 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         table.setItems(items);*/
         Inventorytb.setContent(InventoryPane);
         new Thread(task).start();
+    }
+
+    private GridPane getInventoryFilters(){
+        final int NUMBER_OF_COLUMNS = 6;
+
+        GridPane filters = new GridPane();
+        filters.setMaxHeight(50.0);
+        filters.setPrefHeight(50.0);
+        filters.setMinHeight(50.0);
+        filters.setHgap(5.0);
+
+        filters.setStyle("-fx-background-color: rgba(0,0,0,0.3)");
+
+        Label rowsLabel = new Label("Rows: ");
+        filters.setRowIndex(rowsLabel,0);
+        filters.setColumnIndex(rowsLabel,0);
+
+        ComboBox<Integer> numRows = new ComboBox<Integer>(FXCollections.observableArrayList(25,50,75,100));
+        numRows.setPrefWidth(75.0);
+        filters.setRowIndex(numRows,0);
+        filters.setColumnIndex(numRows,1);
+
+
+        Label filterLabel = new Label("Filters: ");
+        filters.setRowIndex(filterLabel,0);
+        filters.setColumnIndex(filterLabel,2);
+
+        ComboBox<String> filterCombobox = new ComboBox<String>(FXCollections.observableArrayList("All","Incomplete","Returns","Unverified","Verified","Net Saleable"));
+        filters.setRowIndex(filterCombobox,0);
+        filters.setColumnIndex(filterCombobox,3);
+
+        Label dateRange = new Label("Date Range: ");
+        filters.setRowIndex(dateRange,0);
+        filters.setColumnIndex(dateRange,4);
+
+        DatePicker from = new DatePicker();
+        from.setPromptText("From");
+        filters.setRowIndex(from,0);
+        filters.setColumnIndex(from,5);
+
+        DatePicker to = new DatePicker();
+        to.setPromptText("To");
+        filters.setRowIndex(to,1);
+        filters.setColumnIndex(to,5);
+
+
+        //for(int i=0;i<NUMBER_OF_COLUMNS;i++){
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPercentWidth(100/NUMBER_OF_COLUMNS);
+          //  col.setHalignment();
+            filters.getColumnConstraints().add(col);
+      //  }
+
+        filters.getChildren().addAll(rowsLabel, numRows, filterLabel, filterCombobox, dateRange, from, to);
+
+
+        filters.setMargin(filters.getChildren().get(1),new Insets(0,40,0,0));
+        filters.setMargin(filters.getChildren().get(3),new Insets(0,40,0,0));
+        return filters;
     }
 
     @Override

@@ -40,19 +40,19 @@ public class InventoryTable extends TableView{
 
         TableColumn<Items,Integer> quantityColumn = new TableColumn<Items,Integer>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("quantity"));
-        //quantityColumn.setPrefWidth(60.0);
-        //quantityColumn.setMaxWidth(60.0);
-        //quantityColumn.setMinWidth(60.0);
+        quantityColumn.setPrefWidth(60.0);
+        quantityColumn.setMaxWidth(60.0);
+        quantityColumn.setMinWidth(60.0);
 
         TableColumn<Items,Boolean> incompleteColumn = new TableColumn<Items,Boolean>("Incomplete");
         incompleteColumn.setCellValueFactory(new PropertyValueFactory<Items,Boolean>("incomplete"));
-        //incompleteColumn.setMinWidth(incompleteColumn.getWidth());
-        //incompleteColumn.setMaxWidth(incompleteColumn.getWidth());
+        incompleteColumn.setMinWidth(incompleteColumn.getWidth());
+        incompleteColumn.setMaxWidth(incompleteColumn.getWidth());
 
         TableColumn<Items,Boolean> returnsColumn = new TableColumn<Items,Boolean>("Returns");
         returnsColumn.setCellValueFactory(new PropertyValueFactory<Items,Boolean>("returns"));
-        //returnsColumn.setMinWidth(returnsColumn.getWidth());
-        //returnsColumn.setMaxWidth(returnsColumn.getWidth());
+        returnsColumn.setMinWidth(returnsColumn.getWidth());
+        returnsColumn.setMaxWidth(returnsColumn.getWidth());
 
         TableColumn<Items,String> notesColumn = new TableColumn<Items,String>("Notes");
         notesColumn.setCellValueFactory(new PropertyValueFactory<Items,String>("notes"));
