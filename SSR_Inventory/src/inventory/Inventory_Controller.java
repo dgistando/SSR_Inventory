@@ -146,7 +146,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Region veil = new Region();
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
         ProgressIndicator p = new ProgressIndicator();
-        p.setMaxSize(150,150);
+        //p.setPrefSize(150,150);
+        p.setMaxSize(100,100);
 
         table.getAllInventory();
 
@@ -169,7 +170,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(3),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(3),0.0);
 
-
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(2),150.0);
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),150.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),150.0);
+        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),150.0);
 
         /*ObservableList<Items> items = FXCollections.observableArrayList();
         items.add(new Items("example",4,false,false,false,new Date(0),"somenotes"));
@@ -183,10 +187,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         final int NUMBER_OF_COLUMNS = 6;
 
         GridPane filters = new GridPane();
+        filters.setGridLinesVisible(true);
         filters.setMaxHeight(50.0);
         filters.setPrefHeight(50.0);
         filters.setMinHeight(50.0);
-        filters.setHgap(5.0);
+        filters.setBorder(new Border());
+        filters.setHgap(10.0);
+        filters.setVgap(5.0);
 
         filters.setStyle("-fx-background-color: rgba(0,0,0,0.3)");
 
@@ -199,8 +206,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setRowIndex(numRows,0);
         filters.setColumnIndex(numRows,1);
 
-
-        Label filterLabel = new Label("Filters: ");
+        Label filterLabel = new Label("Filters:");
         filters.setRowIndex(filterLabel,0);
         filters.setColumnIndex(filterLabel,2);
 
@@ -208,7 +214,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setRowIndex(filterCombobox,0);
         filters.setColumnIndex(filterCombobox,3);
 
-        Label dateRange = new Label("Date Range: ");
+        Label dateRange = new Label("Date Range:");
         filters.setRowIndex(dateRange,0);
         filters.setColumnIndex(dateRange,4);
 
@@ -222,19 +228,65 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setRowIndex(to,1);
         filters.setColumnIndex(to,5);
 
+        HBox emptySpace = new HBox();
+        filters.setRowIndex(emptySpace,0);
+        filters.setColumnIndex(emptySpace,6);
 
-        //for(int i=0;i<NUMBER_OF_COLUMNS;i++){
+        Label visibleItems = new Label("#-# of #");
+        filters.setRowIndex(visibleItems,0);
+        filters.setColumnIndex(visibleItems,7);
+
+        Button pageForward = new Button("<-");
+        filters.setRowIndex(pageForward,0);
+        filters.setColumnIndex(pageForward,8);
+
+        Button pageBack = new Button("->");
+        filters.setRowIndex(pageBack,0);
+        filters.setColumnIndex(pageBack,9);
+
+        Button refresh = new Button("refresh");
+        filters.setRowIndex(refresh,0);
+        filters.setColumnIndex(refresh,10);
+
+        Label changesMade = new Label("# Unsaved Changes!");
+        filters.setRowIndex(changesMade,1);
+        filters.setColumnIndex(changesMade,0);
+        changesMade.setStyle("-fx-text-fill:#FF3200");
+        changesMade.setVisible(false);
+
+        Button save = new Button("save");
+        filters.setRowIndex(save,1);
+        filters.setColumnIndex(save,1);
+        save.setPrefWidth(50);
+        save.setVisible(false);
+
+
+        ColumnConstraints col6 = new ColumnConstraints();
+        col6.setHgrow(Priority.ALWAYS);
+        col6.setFillWidth(true);
+        filters.getColumnConstraints().addAll(new ColumnConstraints(),
+                                            new ColumnConstraints()
+                                            ,new ColumnConstraints()
+                                            ,new ColumnConstraints()
+                                            ,new ColumnConstraints()
+                                            ,new ColumnConstraints()
+                                            ,col6);
+
+        /*double[] arr = {5,21.7,5,21.7,5,21.7};
+        for(int i=0;i<NUMBER_OF_COLUMNS;i++){
             ColumnConstraints col = new ColumnConstraints();
-            col.setPercentWidth(100/NUMBER_OF_COLUMNS);
-          //  col.setHalignment();
+            col.setPercentWidth(arr[i]);
+         //   col.setHalignment();
             filters.getColumnConstraints().add(col);
-      //  }
+        }*/
 
-        filters.getChildren().addAll(rowsLabel, numRows, filterLabel, filterCombobox, dateRange, from, to);
+        //                              0           1         2             3             4        5   6        7             8           9         10         11       12
+        filters.getChildren().addAll(rowsLabel, numRows, filterLabel, filterCombobox, dateRange, from, to, visibleItems, pageForward, pageBack, refresh, changesMade, save);
 
 
-        filters.setMargin(filters.getChildren().get(1),new Insets(0,40,0,0));
-        filters.setMargin(filters.getChildren().get(3),new Insets(0,40,0,0));
+        filters.setMargin(filters.getChildren().get(1),new Insets(0,30,0,0));
+        filters.setMargin(filters.getChildren().get(3),new Insets(0,30,0,0));
+        filters.setMargin(filters.getChildren().get(5),new Insets(0,30,0,0));
         return filters;
     }
 

@@ -13,7 +13,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
 
 
        <!--<bottom>
@@ -78,25 +78,40 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+                <MenuItem mnemonicParsing="false" text="Settings" />
+                <MenuItem mnemonicParsing="false" text="Print..." />
+                <MenuItem mnemonicParsing="false" text="Logout" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="View">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Minimize" />
+                    <MenuItem mnemonicParsing="false" text="FullScreen" />
+                </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
+                <MenuItem mnemonicParsing="false" text="Undo" />
+                <MenuItem mnemonicParsing="false" text="Redo" />
+                <MenuItem mnemonicParsing="false" text="Copy" />
+                <MenuItem mnemonicParsing="false" text="Paste" />
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+                <MenuItem mnemonicParsing="false" text="About" />
+                <MenuItem mnemonicParsing="false" text="FAQs" />
+                <MenuItem mnemonicParsing="false" text="Report an issue" />
             </items>
           </Menu>
+
         </menus>
       </MenuBar>
     </top>
 
     <center>
-      <SplitPane fx:id="splitPane" dividerPositions="0.5" orientation="VERTICAL">
+      <SplitPane fx:id="splitPane" orientation="VERTICAL">
          <items>
              <!--<TextField editable="true" prefHeight="25.0" prefWidth="Infinity" SplitPane.resizableWithParent="false">
 
@@ -109,38 +124,44 @@
                   </Tab>
                     <Tab fx:id="Importtb">
                      <content>
-                        <ScrollPane prefViewportHeight="487.0" prefViewportWidth="600.0">
-                           <content>
-                              <AnchorPane prefHeight="487.0" prefWidth="600.0">
-                                 <children>
-                                     <Label layoutX="4.0" layoutY="50" text="Click browse to add an excel sheet" />
-                                    <TextField layoutY="74.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="107.0" />
-                                    <Button layoutX="157.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
-                                    <Button layoutX="496.0" layoutY="74.0" mnemonicParsing="false" text="img" AnchorPane.rightAnchor="65.0" />
-                                    <Label layoutX="4.0" layoutY="99.0" text="Review Imports" />
-                                    <ChoiceBox layoutX="4.0" layoutY="116.0" prefWidth="150.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
-                                    <Label layoutY="6.0" text="Import Type" />
-                                    <RadioButton layoutX="4.0" layoutY="23.0" mnemonicParsing="false" text="Sales" />
-                                    <RadioButton layoutX="79.0" layoutY="23.0" mnemonicParsing="false" text="New Inventory" />
-                                    <Text fontSmoothingType="LCD" layoutX="9.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type&#9;&#9;:&#10;Date&#9;&#9;:&#10;Source&#9;:&#10;Size&#9;&#9;:" wrappingWidth="85.13671875" />
-                                    <Label layoutX="82.0" layoutY="141.0" text="Label" />
-                                    <Label layoutX="82.0" layoutY="157.0" text="Label" />
-                                    <Label layoutX="82.0" layoutY="173.0" text="Label" />
-                                    <Label layoutX="82.0" layoutY="190.0" text="Label" />
-                                    <Label layoutX="9.0" layoutY="270.0" text="Label" />
-                                    <ListView layoutX="4.0" layoutY="287.0" prefHeight="200.0" prefWidth="200.0" />
-                                    <TableView layoutX="211.0" layoutY="144.0" prefHeight="200.0" prefWidth="200.0">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
-                                      </columns>
-                                    </TableView>
-      
-      
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </ScrollPane>
+                         <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+                            <items>
+                                     <AnchorPane prefHeight="300.0" prefWidth="598.0">
+                                        <children>
+                                            <Label layoutX="4.0" layoutY="50" text="Click browse to add an excel sheet" />
+                                           <TextField layoutY="74.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="107.0" />
+                                           <Button layoutX="157.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
+                                           <Button layoutX="496.0" layoutY="74.0" mnemonicParsing="false" text="img" AnchorPane.rightAnchor="65.0" />
+                                           <Label layoutX="4.0" layoutY="99.0" text="Review Imports" />
+                                           <ChoiceBox layoutX="4.0" layoutY="116.0" prefWidth="150.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
+                                           <Label layoutY="6.0" text="Import Type" />
+                                           <RadioButton layoutX="4.0" layoutY="23.0" mnemonicParsing="false" text="Sales" />
+                                           <RadioButton layoutX="79.0" layoutY="23.0" mnemonicParsing="false" text="New Inventory" />
+                                           <Text fontSmoothingType="LCD" layoutX="9.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type&#9;&#9;:&#10;Date&#9;&#9;:&#10;Source&#9;:&#10;Size&#9;&#9;:" wrappingWidth="85.13671875" />
+                                           <Label layoutX="82.0" layoutY="141.0" text="Label" />
+                                           <Label layoutX="82.0" layoutY="157.0" text="Label" />
+                                           <Label layoutX="82.0" layoutY="173.0" text="Label" />
+                                           <Label layoutX="82.0" layoutY="190.0" text="Label" />
+   
+   
+                                           <TableView layoutX="211.0" layoutY="144.0" prefHeight="200.0" prefWidth="200.0">
+                                             <columns>
+                                               <TableColumn prefWidth="75.0" text="C1" />
+                                               <TableColumn prefWidth="75.0" text="C2" />
+                                             </columns>
+                                           </TableView>
+   
+   
+                                        </children>
+                                     </AnchorPane>
+                                    <ScrollPane hbarPolicy="NEVER" prefViewportHeight="487.0" prefViewportWidth="600.0">
+                                        <content>
+                                            <Label text="Label" />
+                                            <ListView layoutX="4.0" layoutY="287.0" minHeight="200" prefHeight="200.0" prefWidth="200.0" />
+                                      </content>
+                                   </ScrollPane>
+                            </items>
+                         </SplitPane>
                      </content></Tab>
                   <Tab fx:id="Salestb">
                     <content>

@@ -37,6 +37,7 @@ public class InventoryTable extends TableView{
         TableColumn<Items,String> labelColumn = new TableColumn<Items,String>("Custom Label");
         labelColumn.setCellValueFactory(new PropertyValueFactory<Items,String>("customLabel"));
         labelColumn.setMinWidth(200.0);
+        labelColumn.setMaxWidth(300.0);
 
         TableColumn<Items,Integer> quantityColumn = new TableColumn<Items,Integer>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("quantity"));

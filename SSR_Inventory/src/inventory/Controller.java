@@ -60,7 +60,7 @@ public class Controller implements Initializable{
 
                 Stage stage = new Stage();
                 stage.setTitle("SSR_Inventory");
-                stage.setScene(new Scene(root, 600, 400));
+                stage.setScene(new Scene(root, 600, 600));
                 stage.show();
 
 

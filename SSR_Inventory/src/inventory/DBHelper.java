@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by SSR on 6/30/2016.
@@ -40,7 +41,12 @@ public class DBHelper{
             stat = conn.createStatement();
 
             if (!conn.isClosed()) {
-                System.out.println("The Connection is opened and you are logged in " + attempts);
+                /*System.out.println("The Connection is opened and you are logged in " + attempts);
+
+                for(int i=0;i<200;i++) {
+                    sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+new Random().nextInt(55)+",0,"+(i%2)+",0,'"+(2016+i)+"-07-5','These are some notes about the example"+(i+new Random().nextInt(85))+"part');";
+                    stat.executeUpdate(sql);
+                }*/
                 return true;
             }
 
