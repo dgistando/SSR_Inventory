@@ -1,6 +1,8 @@
 package inventory;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -81,7 +83,7 @@ public class AutoCompleteTextField extends TextField
     private void populatePopup(List<String> searchResult) {
         List<CustomMenuItem> menuItems = new LinkedList<>();
         // If you'd like more entries, modify this line.
-        int maxEntries = 10;
+        int maxEntries = 20;
         int count = Math.min(searchResult.size(), maxEntries);
         for (int i = 0; i < count; i++) {
             final String result = searchResult.get(i);
@@ -91,6 +93,8 @@ public class AutoCompleteTextField extends TextField
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     setText(result);
+                    System.out.println("You have selected: "+ result);
+
                     entriesPopup.hide();
                 }
             });
@@ -98,6 +102,20 @@ public class AutoCompleteTextField extends TextField
         }
         entriesPopup.getItems().clear();
         entriesPopup.getItems().addAll(menuItems);
+
+    }
+
+    public void setSearchContent(ObservableList<Items> content){
+        ObservableList<String> searchContent = FXCollections.observableArrayList();
+
+        for(Items entity : content) {
+            searchContent.add(entity.getCustomLabel() + " other stuff");
+        }
+
+        this.getEntries().addAll(searchContent);
+    }
+
+    public void openProduct(){
 
     }
 }

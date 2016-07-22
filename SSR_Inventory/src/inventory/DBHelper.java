@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static inventory.Inventory_Controller.SearchBox;
+
 /**
  * Created by SSR on 6/30/2016.
  */
@@ -77,10 +79,13 @@ public class DBHelper{
                     list.add(new Items(rs.getString(1),rs.getInt(2),rs.getBoolean(3),rs.getBoolean(4),rs.getBoolean(5),rs.getDate(6),rs.getString(7)));
                     System.out.println(rs.getString(1)+" "+rs.getString(2));
                 }
+
+
             }
             catch (SQLException e){
             e.printStackTrace();
         }
+        SearchBox.setSearchContent(list);
         return list;
     }
 }

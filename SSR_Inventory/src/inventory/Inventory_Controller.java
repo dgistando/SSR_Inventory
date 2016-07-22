@@ -35,17 +35,17 @@ import static inventory.Controller.dbHelper;
 public class Inventory_Controller implements Initializable,EventHandler<ActionEvent>{
 
     @FXML
-    TabPane TPinventory;
+    private TabPane TPinventory;
     @FXML
-    BorderPane pane;
+    private BorderPane pane;
     @FXML
-    Tab Inventorytb,Importtb,Salestb,Historytb;
+    private Tab Inventorytb,Importtb,Salestb,Historytb;
     @FXML
-    TextField SearchBox1;
+    private TextField SearchBox1;
     @FXML
-    SplitPane splitPane;
+    private SplitPane splitPane;
 
-    AutoCompleteTextField SearchBox;
+    public static AutoCompleteTextField SearchBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,7 +60,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         ObservableList<String> testd = FXCollections.observableArrayList("ff","vfv","a","aab","aba","bba","aaaaaaaaab","zxcv","qwertyuiopasdfghjklzxcvbnm");
         SearchBox = new AutoCompleteTextField();
-        SearchBox.getEntries().addAll(testd);
+        //SearchBox.getEntries().addAll(testd);
         SearchBox.setPromptText("Search");
 
         splitPane.getItems().add(0,SearchBox);
@@ -158,10 +158,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         table.itemsProperty().bind(task.valueProperty());
 
 
-
         InventoryPane.getChildren().addAll(table,veil,p,getInventoryFilters());
 
-        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),50.0);
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),75.0);
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(0),0.0);
@@ -188,10 +187,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         GridPane filters = new GridPane();
         filters.setGridLinesVisible(true);
-        filters.setMaxHeight(50.0);
-        filters.setPrefHeight(50.0);
-        filters.setMinHeight(50.0);
-        filters.setBorder(new Border());
+        filters.setMaxHeight(75.0);
+        filters.setPrefHeight(75.0);
+        filters.setMinHeight(75.0);
+        //added the padding
+        filters.setPadding(new Insets(10,10,10,10));
         filters.setHgap(10.0);
         filters.setVgap(5.0);
 
@@ -289,6 +289,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setMargin(filters.getChildren().get(5),new Insets(0,30,0,0));
         return filters;
     }
+
 
     @Override
     public void handle(ActionEvent event) {

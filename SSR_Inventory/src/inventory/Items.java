@@ -67,7 +67,6 @@ public class Items {
     public void setCustomLabel(String input){
         customLabel.set(input);
     }
-
     public void setQuantity(Integer newQuantity){
         quantity.set(newQuantity);
     }
