@@ -23,10 +23,10 @@ public class DBHelper{
     static int attempts = 1;
 
     static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    static final String USERNAME = "SSR_Janet";
-    static final String PASSWORD = "Password#2";
+    static final String USERNAME = "testlogin";
+    static final String PASSWORD = "Register#2";
 
-    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
     public DBHelper() {
@@ -43,9 +43,9 @@ public class DBHelper{
             stat = conn.createStatement();
 
             if (!conn.isClosed()) {
-                /*System.out.println("The Connection is opened and you are logged in " + attempts);
+                System.out.println("The Connection is opened and you are logged in " + attempts);
 
-                for(int i=0;i<200;i++) {
+                /*for(int i=0;i<200;i++) {
                     sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+new Random().nextInt(55)+",0,"+(i%2)+",0,'"+(2016+i)+"-07-5','These are some notes about the example"+(i+new Random().nextInt(85))+"part');";
                     stat.executeUpdate(sql);
                 }*/

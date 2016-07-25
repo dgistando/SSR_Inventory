@@ -23,7 +23,6 @@ import static inventory.Controller.dbHelper;
  */
 public class InventoryTable extends TableView{
     ObservableList<Items> items;
-    DBHelper dbHelper;
 
     public InventoryTable() {
         /*items = FXCollections.observableArrayList(
@@ -36,7 +35,7 @@ public class InventoryTable extends TableView{
 
     public void getAllInventory(){this.getColumns().addAll(getLabelColumn(),getQuantityColumn(),getIncompleteColumn(),getReturnsColumn(),getNotesColumn());}
 
-    public void getReturnsInventory(){this.getColumns().addAll(getLabelColumn(),getQuantityColumn());}
+   // public void getReturnsInventory(){this.getColumns().addAll(getLabelColumn(),getQuantityColumn());}
 
     private TableColumn<Items,String> getLabelColumn(){
         TableColumn<Items,String> labelColumn = new TableColumn<Items,String>("Custom Label");
@@ -74,7 +73,7 @@ public class InventoryTable extends TableView{
     private TableColumn<Items,String> getNotesColumn(){
         TableColumn<Items,String> notesColumn = new TableColumn<Items,String>("Notes");
         notesColumn.setCellValueFactory(new PropertyValueFactory<Items,String>("notes"));
-        return getNotesColumn();
+        return notesColumn;
     }
 
     private TableColumn<Items,Date> getDateColumn(){

@@ -5,12 +5,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import sun.management.snmp.jvmmib.JvmThreadInstanceTableMeta;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -33,6 +39,9 @@ public class AutoCompleteTextField extends TextField
     /** The popup used to select an entry. */
     private ContextMenu entriesPopup;
 
+    private Items chosenItem;
+    private ObservableList<Items> items;
+
     /** Construct a new AutoCompleteTextField. */
     public AutoCompleteTextField() {
         super();
@@ -45,6 +54,15 @@ public class AutoCompleteTextField extends TextField
                     entriesPopup.hide();
                 } else {
                     LinkedList<String> searchResult = new LinkedList<>();
+                    //System.out.println(getText());
+
+                    for(String entity : entries){
+                        if(entity.contains(getText())){
+                            searchResult.add(entity);
+                            //System.out.println(entity);
+                        }
+                    }
+
                     searchResult.addAll(entries.subSet(getText(), getText() + Character.MAX_VALUE));
                     if (entries.size() > 0) {
                         populatePopup(searchResult);
@@ -94,7 +112,7 @@ public class AutoCompleteTextField extends TextField
                 public void handle(ActionEvent actionEvent) {
                     setText(result);
                     System.out.println("You have selected: "+ result);
-
+                    openProduct(result);
                     entriesPopup.hide();
                 }
             });
@@ -109,13 +127,39 @@ public class AutoCompleteTextField extends TextField
         ObservableList<String> searchContent = FXCollections.observableArrayList();
 
         for(Items entity : content) {
-            searchContent.add(entity.getCustomLabel() + " other stuff");
+            searchContent.add(entity.getCustomLabel() + "");
         }
 
+        items.addAll(content);
         this.getEntries().addAll(searchContent);
     }
 
-    public void openProduct(){
+    public void openProduct(String Product){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("product_information.fxml"));
+            //Scene scene = new Scene(root,450,450);
 
+            setChosenItem(Product);
+            Stage stage = new Stage();
+            stage.setTitle(Product);
+            stage.setScene(new Scene(root, 360, 475));
+            stage.setResizable(false);
+            stage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public Items getChosenItem(){
+        return chosenItem;
+    }
+
+    public void setChosenItem(String Chosen){
+
+        for(Items pick : items){
+            if(pick.getCustomLabel().equals(Chosen)){
+                chosenItem = pick;
+            }
+        }
     }
 }

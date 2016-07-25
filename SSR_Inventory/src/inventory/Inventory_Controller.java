@@ -58,13 +58,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert SearchBox != null : "";
         assert splitPane != null : "";
 
-        ObservableList<String> testd = FXCollections.observableArrayList("ff","vfv","a","aab","aba","bba","aaaaaaaaab","zxcv","qwertyuiopasdfghjklzxcvbnm");
         SearchBox = new AutoCompleteTextField();
-        //SearchBox.getEntries().addAll(testd);
         SearchBox.setPromptText("Search");
 
         splitPane.getItems().add(0,SearchBox);
-
 
         Inventorytb.setText("Inventory");
         Importtb.setText("Import");

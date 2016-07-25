@@ -21,6 +21,7 @@ public class GetInventoryTask extends Task<ObservableList<Items>> {
             Thread.sleep(5);
         }
 
+
         return dbHelper.getAllItems();
     }
 }
