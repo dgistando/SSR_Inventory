@@ -127,10 +127,10 @@ public class AutoCompleteTextField extends TextField
         ObservableList<String> searchContent = FXCollections.observableArrayList();
 
         for(Items entity : content) {
-            searchContent.add(entity.getCustomLabel() + "");
+            searchContent.add(entity.getCustomLabel());
         }
 
-        items.addAll(content);
+        items = content;
         this.getEntries().addAll(searchContent);
     }
 
