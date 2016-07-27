@@ -33,7 +33,7 @@ public class InventoryTable extends TableView{
         //items = BDHelper.getallitmes or something like this; // do something like this here.
     }
 
-    public void getAllInventory(){this.getColumns().addAll(getLabelColumn(),getNetSaleable(),getReturnsColumn(),getDefectiveColumn(),getIncompleteColumn(),getReturnsColumn());}
+    public void getAllInventory(){this.getColumns().addAll(getLabelColumn(),getNetSaleable(),getReturnsColumn(),getDefectiveColumn(),getIncompleteColumn(),getReturnsColumn(),getNotesColumn());}
 
    // public void getReturnsInventory(){this.getColumns().addAll(getLabelColumn(),getQuantityColumn());}
 
@@ -48,9 +48,9 @@ public class InventoryTable extends TableView{
     private TableColumn<Items,Integer> getQuantityColumn(){
         TableColumn<Items,Integer> quantityColumn = new TableColumn<Items,Integer>("Quantity");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("quantity"));
-        quantityColumn.setPrefWidth(60.0);
-        quantityColumn.setMaxWidth(60.0);
-        quantityColumn.setMinWidth(60.0);
+        quantityColumn.setPrefWidth(120.0);
+        quantityColumn.setMaxWidth(120.0);
+        quantityColumn.setMinWidth(120.0);
         return quantityColumn;
     }
 
@@ -58,9 +58,9 @@ public class InventoryTable extends TableView{
     private TableColumn<Items,Integer> getNetSaleable(){
         TableColumn<Items,Integer> netSaleableColumn = new TableColumn<Items,Integer>("Net Saleable");
         netSaleableColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("netSaleable"));
-        netSaleableColumn.setPrefWidth(60.0);
-        netSaleableColumn.setMaxWidth(60.0);
-        netSaleableColumn.setMinWidth(60.0);
+        netSaleableColumn.setPrefWidth(120.0);
+        netSaleableColumn.setMaxWidth(120.0);
+        netSaleableColumn.setMinWidth(120.0);
         return netSaleableColumn;
     }
 
@@ -68,16 +68,16 @@ public class InventoryTable extends TableView{
     private TableColumn<Items,Integer> getDefectiveColumn(){
         TableColumn<Items,Integer> defectiveColumn = new TableColumn<Items,Integer>("Defective");
         defectiveColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("defective"));
-        defectiveColumn.setMinWidth(60);
-        defectiveColumn.setMaxWidth(60);
+        defectiveColumn.setMinWidth(120);
+        defectiveColumn.setMaxWidth(120);
         return defectiveColumn;
     }
 
     private TableColumn<Items,Integer> getIncompleteColumn(){
-        TableColumn<Items,Integer> incompleteColumn = new TableColumn<Items,Integer>("Defective");
-        incompleteColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("defective"));
-        incompleteColumn.setMinWidth(60);
-        incompleteColumn.setMaxWidth(60);
+        TableColumn<Items,Integer> incompleteColumn = new TableColumn<Items,Integer>("Incomplete");
+        incompleteColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("incomplete"));
+        incompleteColumn.setMinWidth(120);
+        incompleteColumn.setMaxWidth(120);
         return incompleteColumn;
     }
 

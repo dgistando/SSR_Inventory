@@ -59,7 +59,8 @@ public class Controller implements Initializable{
                     return;
                 }
 
-                if(!LoginPass(username.getText(),password.getText())) {
+                //if(!LoginPass(username.getText(),password.getText())) {
+                if(!LoginPass("testlogin" ,"Register#2")) {
                         System.out.print("failed to login");
                         return;
                 }else {
