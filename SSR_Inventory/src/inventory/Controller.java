@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.apache.poi.ss.formula.functions.T;
+import sun.security.util.Password;
 
 import java.io.IOException;
 import java.net.URL;
@@ -36,36 +37,48 @@ public class Controller implements Initializable{
 
     @FXML
     Button Btnlogin;
+    @FXML
+    TextField username;
+    @FXML
+    PasswordField password;
 
     public static DBHelper dbHelper;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         assert Btnlogin != null : "Button Btnlogin not found";
+        assert username != null : "username texfield not found in FXML";
+        assert password != null : "password passwordfield not found";
         dbHelper = new DBHelper();
 
 
         Btnlogin.setOnAction(e-> {
             try {
 
-                if(!LoginPass()){
-                    System.out.print("failed to login");
+                if(username.getText().equals("") || password.getText().equals("")){
                     return;
                 }
 
-                Parent root = FXMLLoader.load(getClass().getResource("view_inventory.fxml"));
-                //Scene scene = new Scene(root,450,450);
-
-                //TPinventory.getTabs().addAll(InventoryTable, InventoryTable1);
-
-                Stage stage = new Stage();
-                stage.setTitle("SSR_Inventory");
-                stage.setScene(new Scene(root, 600, 600));
-                stage.show();
+                if(!LoginPass(username.getText(),password.getText())) {
+                        System.out.print("failed to login");
+                        return;
+                }else {
 
 
-                //hide this current window
-                ((Node) (e.getSource())).getScene().getWindow().hide();
+                    Parent root = FXMLLoader.load(getClass().getResource("view_inventory.fxml"));
+                    //Scene scene = new Scene(root,450,450);
+
+                    //TPinventory.getTabs().addAll(InventoryTable, InventoryTable1);
+
+                    Stage stage = new Stage();
+                    stage.setTitle("SSR_Inventory");
+                    stage.setScene(new Scene(root, 600, 600));
+                    stage.show();
+
+
+                    //hide this current window
+                    ((Node) (e.getSource())).getScene().getWindow().hide();
+                }
             }catch (IOException err){
                 err.printStackTrace();
             }
@@ -73,8 +86,8 @@ public class Controller implements Initializable{
 
     }
 
-    private boolean LoginPass(){
-        return dbHelper.credentialLogin();
+    private boolean LoginPass(String u, String p){
+        return dbHelper.credentialLogin(u,p);
     }
 
 
