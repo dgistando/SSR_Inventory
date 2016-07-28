@@ -2,6 +2,7 @@ package inventory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.apache.poi.ss.formula.functions.T;
@@ -60,7 +63,7 @@ public class Controller implements Initializable{
                 }
 
                 //if(!LoginPass(username.getText(),password.getText())) {
-                if(!LoginPass("testlogin" ,"Register#2")) {
+                if(!LoginPass("SSR_Janet" ,"Password#2")) {
                         System.out.print("failed to login");
                         return;
                 }else {
@@ -73,7 +76,7 @@ public class Controller implements Initializable{
 
                     Stage stage = new Stage();
                     stage.setTitle("SSR_Inventory");
-                    stage.setScene(new Scene(root, 600, 600));
+                    stage.setScene(new Scene(root, 750, 600));
                     stage.show();
 
 
@@ -82,6 +85,25 @@ public class Controller implements Initializable{
                 }
             }catch (IOException err){
                 err.printStackTrace();
+            }
+        });
+
+
+        username.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    password.requestFocus();
+                }
+            }
+        });
+
+        password.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER) && !username.getText().equals("") || !password.getText().equals("")){
+                    Btnlogin.fire();
+                }
             }
         });
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
@@ -12,8 +13,9 @@
 <?import javax.swing.text.html.ImageView?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.text.Text?>
+<?import java.net.URL?>
 
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
 
 
        <!--<bottom>
@@ -117,7 +119,7 @@
 
              </TextField>!-->
 
-              <TabPane fx:id="TPinventory">
+              <TabPane fx:id="TPinventory" tabClosingPolicy="UNAVAILABLE">
                   <tabs>
                   <Tab fx:id="Inventorytb">
 
@@ -128,36 +130,66 @@
                             <items>
                                      <AnchorPane prefHeight="300.0" prefWidth="598.0">
                                         <children>
-                                            <Label layoutX="4.0" layoutY="50" text="Click browse to add an excel sheet" />
-                                           <TextField layoutY="74.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="107.0" />
-                                           <Button layoutX="157.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
-                                           <Button layoutX="496.0" layoutY="74.0" mnemonicParsing="false" text="img" AnchorPane.rightAnchor="65.0" />
-                                           <Label layoutX="4.0" layoutY="99.0" text="Review Imports" />
-                                           <ChoiceBox layoutX="4.0" layoutY="116.0" prefWidth="150.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
-                                           <Label layoutY="6.0" text="Import Type" />
-                                           <RadioButton layoutX="4.0" layoutY="23.0" mnemonicParsing="false" text="Sales" />
-                                           <RadioButton layoutX="79.0" layoutY="23.0" mnemonicParsing="false" text="New Inventory" />
-                                           <Text fontSmoothingType="LCD" layoutX="9.0" layoutY="154.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type&#9;&#9;:&#10;Date&#9;&#9;:&#10;Source&#9;:&#10;Size&#9;&#9;:" wrappingWidth="85.13671875" />
-                                           <Label layoutX="82.0" layoutY="141.0" text="Label" />
-                                           <Label layoutX="82.0" layoutY="157.0" text="Label" />
-                                           <Label layoutX="82.0" layoutY="173.0" text="Label" />
-                                           <Label layoutX="82.0" layoutY="190.0" text="Label" />
-   
-   
-                                           <TableView layoutX="211.0" layoutY="144.0" prefHeight="200.0" prefWidth="200.0">
+                                            <Label layoutX="4.0" layoutY="61.0" text="Click browse to add an excel sheet">
+                                                <stylesheets>
+                                                    <URL value="@stylesheets/click_to_add.css" />
+                                                </stylesheets>
+                                            </Label>
+                                           <TextField layoutX="4.0" layoutY="87.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="107.0" />
+                                           <Button layoutX="157.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
+                                           <Button layoutX="496.0" layoutY="87.0" mnemonicParsing="false" text="img" AnchorPane.rightAnchor="65.0" />
+                                           <Label layoutX="2.0" layoutY="118.0" text="Review Imports">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+                                           <ChoiceBox layoutX="4.0" layoutY="144.0" prefWidth="150.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
+                                           <Label layoutY="6.0" text="Import Type">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+                                           <RadioButton layoutX="4.0" layoutY="32.0" mnemonicParsing="false" text="Sales" />
+                                           <RadioButton layoutX="61.0" layoutY="32.0" mnemonicParsing="false" text="New Inventory" />
+                                           <RadioButton layoutX="169.0" layoutY="32.0" mnemonicParsing="false" text="Receiving" />
+                                           <Text fx:id="importText" fontSmoothingType="LCD" layoutX="17.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type&#9;&#9;:&#10;Date&#9;&#9;:&#10;Source&#9;:&#10;Size&#9;&#9;:" wrappingWidth="85.13671875" />
+
+                                           <Label layoutX="110.0" layoutY="179.0" text="Label">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+                                           <Label layoutX="110.0" layoutY="200.0" text="Label">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+                                           <Label layoutX="110.0" layoutY="221.0" text="Label">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+                                           <Label layoutX="110.0" layoutY="242.0" text="Label">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/Import_common_font.css" />
+                                               </stylesheets>
+                                           </Label>
+
+
+                                           <TableView layoutX="272.0" layoutY="179.0" maxHeight="300" prefHeight="233.0" prefWidth="451.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="25.0">
                                              <columns>
                                                <TableColumn prefWidth="75.0" text="C1" />
                                                <TableColumn prefWidth="75.0" text="C2" />
                                              </columns>
                                            </TableView>
-   
-   
+
+
                                         </children>
                                      </AnchorPane>
                                     <ScrollPane hbarPolicy="NEVER" prefViewportHeight="487.0" prefViewportWidth="600.0">
                                         <content>
                                             <Label text="Label" />
-                                            <ListView layoutX="4.0" layoutY="287.0" minHeight="200" prefHeight="200.0" prefWidth="200.0" />
+                                            <ListView layoutX="4.0" layoutY="287.0" minHeight="155.0" prefHeight="155.0" prefWidth="200.0" />
                                       </content>
                                    </ScrollPane>
                             </items>

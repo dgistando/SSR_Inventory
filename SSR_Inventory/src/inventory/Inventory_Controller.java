@@ -19,6 +19,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 
 import java.net.URL;
@@ -44,6 +46,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private TextField SearchBox1;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    Text importText;
 
     public static AutoCompleteTextField SearchBox;
 
@@ -57,22 +61,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert Historytb != null : "";
         assert SearchBox != null : "";
         assert splitPane != null : "";
+        assert importText != null : "";
 
-        SearchBox = new AutoCompleteTextField();
-        SearchBox.setPromptText("Search");
-
-        splitPane.getItems().add(0,SearchBox);
-
-        Inventorytb.setText("Inventory");
-        Importtb.setText("Import");
-        Salestb.setText("Sales");
-        Historytb.setText("History");
-
-        getInventoryContent(0);
-        //Inventorytb.setContent(getInventoryContent(new Random().nextInt(10)));
-        //Importtb.setContent(getInventoryContent(new Random().nextInt(10)));
-        //Salestb.setContent(getInventoryContent(new Random().nextInt(10)));
-        //Historytb.setContent(getInventoryContent(new Random().nextInt(10)));
+        initSearch();
+        initTabPane();
 
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
@@ -110,9 +102,28 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
 
 
-    private ComboBox initSearch(ComboBox search){
-        //search.setMinWidth(Integer.MAX_VALUE);
-        return search;
+    private void initSearch(){
+        SearchBox = new AutoCompleteTextField();
+        SearchBox.setPromptText("Search");
+        SearchBox.setStyle("-fx-font: 15 Ariel");
+
+        splitPane.getItems().add(0,SearchBox);
+    }
+    private void initTabPane(){
+        Inventorytb.setText("Inventory");
+        Inventorytb.setStyle("-fx-font: 15 Ariel;-fx-font-weight: bold");
+        Importtb.setText("Import");
+        Importtb.setStyle("-fx-font: 15 Ariel;-fx-font-weight: bold");
+        Salestb.setText("Sales");
+        Salestb.setStyle("-fx-font: 15 Ariel;-fx-font-weight: bold");
+        Historytb.setText("History");
+        Historytb.setStyle("-fx-font: 15 Ariel;-fx-font-weight: bold");
+
+        getInventoryContent(0);
+        getImportContent();
+
+        TPinventory.setTabMinWidth(150);
+        TPinventory.setTabMinHeight(30);
     }
 
     private MenuBar getMenuContent(){
@@ -157,7 +168,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         InventoryPane.getChildren().addAll(table,veil,p,getInventoryFilters());
 
-        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),75.0);
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(0),100.0);
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(0),0.0);
         AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(0),0.0);
@@ -184,9 +195,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         GridPane filters = new GridPane();
         filters.setGridLinesVisible(true);
-        filters.setMaxHeight(75.0);
-        filters.setPrefHeight(75.0);
-        filters.setMinHeight(75.0);
+        filters.setMaxHeight(100.0);
+        filters.setPrefHeight(100.0);
+        filters.setMinHeight(100.0);
         //added the padding
         filters.setPadding(new Insets(10,10,10,10));
         filters.setHgap(10.0);
@@ -195,32 +206,39 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setStyle("-fx-background-color: rgba(0,0,0,0.3)");
 
         Label rowsLabel = new Label("Rows: ");
+        rowsLabel.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(rowsLabel,0);
         filters.setColumnIndex(rowsLabel,0);
 
         ComboBox<Integer> numRows = new ComboBox<Integer>(FXCollections.observableArrayList(25,50,75,100));
-        numRows.setPrefWidth(75.0);
+        numRows.setPrefWidth(100.0);
+        numRows.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(numRows,0);
         filters.setColumnIndex(numRows,1);
 
         Label filterLabel = new Label("Filters:");
+        filterLabel.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(filterLabel,0);
         filters.setColumnIndex(filterLabel,2);
 
         ComboBox<String> filterCombobox = new ComboBox<String>(FXCollections.observableArrayList("All","Incomplete","Returns","Unverified","Verified","Net Saleable"));
+        filterCombobox.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(filterCombobox,0);
         filters.setColumnIndex(filterCombobox,3);
 
         Label dateRange = new Label("Date Range:");
+        dateRange.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(dateRange,0);
         filters.setColumnIndex(dateRange,4);
 
         DatePicker from = new DatePicker();
+        from.setStyle("-fx-font: 16 Ariel");
         from.setPromptText("From");
         filters.setRowIndex(from,0);
         filters.setColumnIndex(from,5);
 
         DatePicker to = new DatePicker();
+        to.setStyle("-fx-font: 16 Ariel");
         to.setPromptText("To");
         filters.setRowIndex(to,1);
         filters.setColumnIndex(to,5);
@@ -229,7 +247,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filters.setRowIndex(emptySpace,0);
         filters.setColumnIndex(emptySpace,6);
 
-        Label visibleItems = new Label("#-# of #");
+        Label visibleItems = new Label("# - # of #");
+        visibleItems.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(visibleItems,0);
         filters.setColumnIndex(visibleItems,7);
 
@@ -248,7 +267,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Label changesMade = new Label("# Unsaved Changes!");
         filters.setRowIndex(changesMade,1);
         filters.setColumnIndex(changesMade,0);
-        changesMade.setStyle("-fx-text-fill:#FF3200");
+        changesMade.setStyle("-fx-text-fill:#FF3200;-fx-font-weight: bold");
         changesMade.setVisible(false);
 
         Button save = new Button("save");
@@ -287,6 +306,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         return filters;
     }
 
+    private void getImportContent(){
+        importText.setFont(Font.font("Ariel",16));
+    }
 
     @Override
     public void handle(ActionEvent event) {
