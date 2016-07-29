@@ -19,8 +19,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
+import org.junit.FixMethodOrder;
 
 
 import java.net.URL;
@@ -47,7 +50,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private SplitPane splitPane;
     @FXML
-    Text importText;
+    private Text importText;
+    @FXML
+    private ListView reviewList;
+    @FXML
+    private RadioButton radioSales,radioNewInventory,radioReceiving;
+    @FXML
+    private AnchorPane listReviewPane;
 
     public static AutoCompleteTextField SearchBox;
 
@@ -66,11 +75,16 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         initSearch();
         initTabPane();
 
+
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                        System.out.println("tab changed");
+                        System.out.print("tab changed");
+                        if(newValue == Importtb){
+                            System.out.print(" to import tab (initializing radio)");
+                            initRadio();
+                        }
                         //pane.setMinHeight();
                         //pane.setMinWidth(pane.getScene().getWidth());
 
@@ -124,6 +138,24 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         TPinventory.setTabMinWidth(150);
         TPinventory.setTabMinHeight(30);
+    }
+    private void initRadio(){
+        final ToggleGroup group = new ToggleGroup();
+        radioSales.setToggleGroup(group);;
+        radioNewInventory.setToggleGroup(group);
+        radioReceiving.setToggleGroup(group);
+
+        group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if(newValue == radioSales){
+                    System.out.print("\n radio initialized and selectd");
+                    getReviewListContent();
+                }
+            }
+        });
+
+        radioSales.setSelected(true);
     }
 
     private MenuBar getMenuContent(){
@@ -308,6 +340,64 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
     private void getImportContent(){
         importText.setFont(Font.font("Ariel",16));
+    }
+
+    private void getReviewListContent(){
+        ObservableList<Sales> data = FXCollections.observableArrayList();
+        data.add(new Sales("the title","John","Smith","United States","DU# 202 K (IS)","1LB 18X6X6",1));
+
+
+        reviewList = new ListView<Sales>();
+/*       Region veil = new Region();
+        veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
+        ProgressIndicator p = new ProgressIndicator();
+        //p.setPrefSize(150,150);
+        p.setMaxSize(100,100);
+
+       Task<ObservableList<Sales>> task = new GetSalesTask();
+        p.progressProperty().bind(task.progressProperty());
+        veil.visibleProperty().bind(task.runningProperty());
+        p.visibleProperty().bind(task.runningProperty());
+        reviewList.itemsProperty().bind(task.valueProperty());
+
+
+
+        listReviewPane.getChildren().addAll(veil,p);
+*/
+        reviewList.setItems(data);
+        reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
+                @Override
+                public ListCell<Sales> call(ListView<Sales> list) {
+                    return new Sales();
+                }
+            }
+        );
+
+        reviewList.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<String>() {
+                    public void changed(ObservableValue<? extends String> ov, String old_val, String new_val) {
+                        System.out.println("old val: "+ old_val + "new val: "+ new_val);
+                    }
+                });
+
+        /*reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
+            @Override
+            public ListCell<Sales> call(ListView<Sales> param) {
+                return new ListCell<Sales>(){
+                    @Override
+                    protected void updateItem(Sales item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item != null){
+                            VBox vBox = new VBox(new Text(item.getDate()));
+                            //HBox hBox = new HBox(new Label("[Graphic]"), vBox);
+                           // hBox.setSpacing(10);
+                            setGraphic(vBox);
+                        }
+                    }
+                };
+            }
+        });*/
+//        new Thread(task).start();
     }
 
     @Override

@@ -149,27 +149,27 @@
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
                                            </Label>
-                                           <RadioButton layoutX="4.0" layoutY="32.0" mnemonicParsing="false" text="Sales" />
-                                           <RadioButton layoutX="61.0" layoutY="32.0" mnemonicParsing="false" text="New Inventory" />
-                                           <RadioButton layoutX="169.0" layoutY="32.0" mnemonicParsing="false" text="Receiving" />
+                                           <RadioButton fx:id="radioSales" layoutX="4.0" layoutY="32.0" mnemonicParsing="false" text="Sales" />
+                                           <RadioButton fx:id="radioNewInventory" layoutX="61.0" layoutY="32.0" mnemonicParsing="false" text="New Inventory" />
+                                           <RadioButton fx:id="radioReceiving" layoutX="169.0" layoutY="32.0" mnemonicParsing="false" text="Receiving" />
                                            <Text fx:id="importText" fontSmoothingType="LCD" layoutX="17.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type&#9;&#9;:&#10;Date&#9;&#9;:&#10;Source&#9;:&#10;Size&#9;&#9;:" wrappingWidth="85.13671875" />
 
-                                           <Label layoutX="110.0" layoutY="179.0" text="Label">
+                                           <Label layoutX="110.0" layoutY="179.0" text="N/A">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
                                            </Label>
-                                           <Label layoutX="110.0" layoutY="200.0" text="Label">
+                                           <Label layoutX="110.0" layoutY="200.0" text="N/A">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
                                            </Label>
-                                           <Label layoutX="110.0" layoutY="221.0" text="Label">
+                                           <Label layoutX="110.0" layoutY="221.0" text="N/A">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
                                            </Label>
-                                           <Label layoutX="110.0" layoutY="242.0" text="Label">
+                                           <Label layoutX="110.0" layoutY="242.0" text="N/A">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
@@ -186,12 +186,12 @@
 
                                         </children>
                                      </AnchorPane>
-                                    <ScrollPane hbarPolicy="NEVER" prefViewportHeight="487.0" prefViewportWidth="600.0">
-                                        <content>
-                                            <Label text="Label" />
-                                            <ListView layoutX="4.0" layoutY="287.0" minHeight="155.0" prefHeight="155.0" prefWidth="200.0" />
-                                      </content>
-                                   </ScrollPane>
+                                    <AnchorPane  fx:id="listReviewPane" prefHeight="300.0" prefWidth="600.0">
+                                       <children>
+                                               <Label text="Record of Sales" />
+                                               <ListView fx:id="reviewList" layoutX="4.0" layoutY="287.0" minHeight="155.0" prefHeight="155.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" />
+                                       </children>
+                                   </AnchorPane>
                             </items>
                          </SplitPane>
                      </content></Tab>
