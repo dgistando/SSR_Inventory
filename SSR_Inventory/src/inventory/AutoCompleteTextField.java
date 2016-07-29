@@ -142,7 +142,7 @@ public class AutoCompleteTextField extends TextField
             setChosenItem(Product);
             Stage stage = new Stage();
             stage.setTitle(Product);
-            stage.setScene(new Scene(root, 360, 475));
+            stage.setScene(new Scene(root, 390, 505));
             stage.setResizable(false);
             stage.show();
         }catch (IOException e){

@@ -45,4 +45,8 @@
       <RowConstraints />
       <RowConstraints />
    </rowConstraints>
+
+    <stylesheets>
+        <URL value="@stylesheets/login.css"/>
+    </stylesheets>
 </GridPane>

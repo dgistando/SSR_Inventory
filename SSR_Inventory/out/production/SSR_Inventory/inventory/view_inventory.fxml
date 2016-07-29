@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import java.net.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.chart.*?>
@@ -135,9 +136,13 @@
                                                     <URL value="@stylesheets/click_to_add.css" />
                                                 </stylesheets>
                                             </Label>
-                                           <TextField layoutX="4.0" layoutY="87.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="107.0" />
+                                           <TextField layoutX="4.0" layoutY="87.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="115.0" />
                                            <Button layoutX="157.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
-                                           <Button layoutX="496.0" layoutY="87.0" mnemonicParsing="false" text="img" AnchorPane.rightAnchor="65.0" />
+                                           <Button id="img" fx:id="img" layoutX="670.0" layoutY="91.0" mnemonicParsing="false" text="Browse..." underline="true" AnchorPane.rightAnchor="65.0">
+                                               <stylesheets>
+                                                   <URL value="@stylesheets/astext.css" />
+                                               </stylesheets>
+                                           </Button>
                                            <Label layoutX="2.0" layoutY="118.0" text="Review Imports">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
@@ -176,7 +181,7 @@
                                            </Label>
 
 
-                                           <TableView layoutX="272.0" layoutY="179.0" maxHeight="300" prefHeight="233.0" prefWidth="451.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="25.0">
+                                           <TableView layoutX="272.0" layoutY="179.0" maxHeight="210" prefHeight="200.0" prefWidth="451.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="25.0">
                                              <columns>
                                                <TableColumn prefWidth="75.0" text="C1" />
                                                <TableColumn prefWidth="75.0" text="C2" />
@@ -186,9 +191,13 @@
 
                                         </children>
                                      </AnchorPane>
-                                    <AnchorPane  fx:id="listReviewPane" prefHeight="300.0" prefWidth="600.0">
+                                    <AnchorPane fx:id="listReviewPane" prefHeight="300.0" prefWidth="600.0">
                                        <children>
-                                               <Label text="Record of Sales" />
+                                               <Label text="Record of Sales">
+                                                   <stylesheets>
+                                                       <URL value="@stylesheets/Import_common_font.css" />
+                                                   </stylesheets>
+                                               </Label>
                                                <ListView fx:id="reviewList" layoutX="4.0" layoutY="287.0" minHeight="155.0" prefHeight="155.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" />
                                        </children>
                                    </AnchorPane>

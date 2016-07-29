@@ -347,8 +347,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         data.add(new Sales("the title","John","Smith","United States","DU# 202 K (IS)","1LB 18X6X6",1));
 
 
-        reviewList = new ListView<Sales>();
-/*       Region veil = new Region();
+        //reviewList = new ListView<Sales>();
+       Region veil = new Region();
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
         ProgressIndicator p = new ProgressIndicator();
         //p.setPrefSize(150,150);
@@ -363,8 +363,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
 
         listReviewPane.getChildren().addAll(veil,p);
-*/
-        reviewList.setItems(data);
+
         reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
                 @Override
                 public ListCell<Sales> call(ListView<Sales> list) {
@@ -374,8 +373,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         );
 
         reviewList.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<String>() {
-                    public void changed(ObservableValue<? extends String> ov, String old_val, String new_val) {
+                new ChangeListener<Sales>() {
+                    public void changed(ObservableValue<? extends Sales> ov, Sales old_val, Sales new_val) {
                         System.out.println("old val: "+ old_val + "new val: "+ new_val);
                     }
                 });
@@ -397,7 +396,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 };
             }
         });*/
-//        new Thread(task).start();
+        new Thread(task).start();
     }
 
     @Override

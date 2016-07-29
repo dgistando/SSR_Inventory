@@ -63,7 +63,7 @@ public class Controller implements Initializable{
                 }
 
                 //if(!LoginPass(username.getText(),password.getText())) {
-                if(!LoginPass("SSR_Janet" ,"Password#2")) {
+                if(!LoginPass("testlogin" ,"Register#2")) {
                         System.out.print("failed to login");
                         return;
                 }else {

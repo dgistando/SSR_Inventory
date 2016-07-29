@@ -1,0 +1,19 @@
+.button{
+    -fx-background-color:none;
+    -fx-border:none;
+    -fx-margin:0;
+    -fx-padding:0;
+    -fx-text-fill: #0000FF;
+}
+
+.button:focused, .button:hover {
+    /*-fx-background-color:
+    	rgb(255, 255, 255, 0.08),
+    	rgb(0, 0, 0, 0.8),
+        #090a0c,
+        linear-gradient(#4a5661 0%, #1f2429 20%, #1f242a 100%),
+        linear-gradient(#3f4950, #23282e),
+        radial-gradient(center 50% 0%, radius 100%, rgba(135,142,148,0.9),
+        rgba(255,255,255,0));*/
+     -fx-text-fill: red;
+}
