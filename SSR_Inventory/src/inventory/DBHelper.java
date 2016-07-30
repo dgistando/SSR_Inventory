@@ -27,7 +27,7 @@ public class DBHelper{
     private static String USERNAME = "";
     private static String PASSWORD = "";
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
     public DBHelper() {

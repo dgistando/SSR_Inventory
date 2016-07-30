@@ -3,6 +3,8 @@ package inventory;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,12 +20,13 @@ public class Sales extends ListCell<Sales>{
     private String firstName,lastName,country;
     private String customName,info;
     private int quantity;
+    private boolean verified;
 
     public Sales(){
-        this("","","","","","",0);
+        this("","","","","","",0,false);
     }
 
-    public Sales(String _date,String _firstName, String _lastName, String _country, String _customName, String _info, int _quantity){
+    public Sales(String _date,String _firstName, String _lastName, String _country, String _customName, String _info, int _quantity,boolean _verified){
         date = _date;
         firstName = _firstName;
         lastName = _lastName;
@@ -31,6 +34,7 @@ public class Sales extends ListCell<Sales>{
         customName = _customName;
         info = _info;
         quantity = _quantity;
+        verified = _verified;
     }
 
     public String getDate(){
@@ -61,6 +65,10 @@ public class Sales extends ListCell<Sales>{
         return country;
     }
 
+    public boolean isVerified() {
+        return verified;
+    }
+
     public void setDate(String date){
         this.date = date;
     }
@@ -89,6 +97,11 @@ public class Sales extends ListCell<Sales>{
         this.lastName = lastName;
     }
 
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+
     @Override
     protected void updateItem(Sales item, boolean empty) {
         super.updateItem(item, empty);
@@ -96,8 +109,23 @@ public class Sales extends ListCell<Sales>{
         if(item != null){
             VBox vBox = new VBox(new Text(item.getDate()), new Text("grjijr"));
             HBox hBox = new HBox();
-            Label l = new Label("{graphic}");
-            l.setAlignment(Pos.CENTER_RIGHT);
+            ImageView l = new ImageView();
+
+            String imageName;
+
+            if(item.isVerified()){
+                imageName="drawable/verified_image1.png";
+                Image image = new Image(Sales.class.getResourceAsStream(imageName));
+                l.setImage(image);
+                l.setStyle("-fx-background-color: #FFFF66");
+                hBox.setStyle("-fx-background-color: #FFFF66");
+            }else{
+                l.setVisible(false);
+            }
+
+
+
+            //l.setAlignment(Pos.CENTER_RIGHT);
             hBox.getChildren().addAll(vBox, l);
             hBox.setSpacing(10);
             hBox.setHgrow(hBox.getChildren().get(0), Priority.ALWAYS);

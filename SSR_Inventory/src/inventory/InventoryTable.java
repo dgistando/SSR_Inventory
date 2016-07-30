@@ -33,7 +33,7 @@ public class InventoryTable extends TableView{
         //items = BDHelper.getallitmes or something like this; // do something like this here.
     }
 
-    public void getAllInventory(){this.getColumns().addAll(getLabelColumn(),getNetSaleable(),getReturnsColumn(),getDefectiveColumn(),getIncompleteColumn(),getReturnsColumn(),getNotesColumn());}
+    public void getAllInventory(){this.getColumns().addAll(getLabelColumn(),getNetSaleable(),getReturnsColumn(),getDefectiveColumn(),getIncompleteColumn(),getNotesColumn());}
 
    // public void getReturnsInventory(){this.getColumns().addAll(getLabelColumn(),getQuantityColumn());}
 
@@ -90,8 +90,8 @@ public class InventoryTable extends TableView{
         TableColumn<Items,Integer> returnsColumn = new TableColumn<Items,Integer>("Returns");
         returnsColumn.setCellValueFactory(new PropertyValueFactory<Items,Integer>("returns"));
         returnsColumn.setStyle("-fx-font: 15 Ariel;");
-        returnsColumn.setMinWidth(returnsColumn.getWidth());
-        returnsColumn.setMaxWidth(returnsColumn.getWidth());
+        returnsColumn.setMinWidth(120);
+        returnsColumn.setMaxWidth(120);
         return returnsColumn;
     }
 

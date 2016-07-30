@@ -343,11 +343,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
 
     private void getReviewListContent(){
-        ObservableList<Sales> data = FXCollections.observableArrayList();
-        data.add(new Sales("the title","John","Smith","United States","DU# 202 K (IS)","1LB 18X6X6",1));
 
-
-        //reviewList = new ListView<Sales>();
        Region veil = new Region();
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
         ProgressIndicator p = new ProgressIndicator();

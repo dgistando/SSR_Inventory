@@ -10,7 +10,7 @@
 .label {
 	-fx-font-family: "Arial";
     -fx-font-size: 14;
-    -fx-text-fill: rgb(255, 255, 255, 0.4);
+    -fx-text-fill: rgb(0, 0, 0, 1);
     -fx-effect: dropshadow( one-pass-box , rgb(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
 }
 
@@ -27,8 +27,9 @@
         linear-gradient(#242a2e, #23282e),
         radial-gradient(center 50% 0%, radius 100%, rgba(135,142,148,0.9),
         rgba(255,255,255,0));
-    -fx-background-radius: 7, 6, 5, 4, 3, 5;
-    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
+    /*-fx-background-radius: 7, 6, 5, 4, 3, 5;
+    -fx-background-radius: 6, 5, 4, 3, 2, 4;
+    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;*/
 	-fx-font-family: "Arial";
     -fx-text-fill: white;
     -fx-font-size: 26;
@@ -41,8 +42,13 @@
     	rgb(255, 255, 255, 0.08),
     	rgb(0, 0, 0, 0.8),
         #090a0c,
-        linear-gradient(#4a5661 0%, #1f2429 20%, #1f242a 100%),
+     /* linear-gradient(#4a5661 0%, #1f2429 20%, #1f242a 100%),
         linear-gradient(#3f4950, #23282e),
+        radial-gradient(center 50% 0%, radius 100%, rgba(135,142,148,0.9),
+     */
+
+        linear-gradient(#e06b6b 20%, #9e0018 100%),
+        linear-gradient(#e06b6b, #9e0018),
         radial-gradient(center 50% 0%, radius 100%, rgba(135,142,148,0.9),
         rgba(255,255,255,0));
 }
