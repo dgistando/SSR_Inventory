@@ -5,7 +5,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.codehaus.groovy.tools.shell.IO;
 
 import java.io.*;
 import java.util.Iterator;
@@ -59,6 +58,23 @@ public class read_excel {
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
 
+                    if(cell.getCellType() == Cell.CELL_TYPE_STRING && nextRow.getRowNum() == 0 && cell.getStringCellValue().substring(0,3).equals("SSR")){
+                        //String[] arr = cell.getStringCellValue().split("\\p{Upper}\\p{Space}0|1",2);
+
+                        String[] arr  = cell.getStringCellValue().split(" ");
+
+                        if(arr.length == 2){
+                            //source is EBAY
+                        }
+
+                        System.out.println(arr[0] + " then " + arr[1]);
+                        if(cellIterator.hasNext()){
+                            cellIterator.next();
+                        }else{
+                            break;
+                        }
+                    }
+
 
                     while (cell.getColumnIndex() - 1 > i && i != -9999) {
                         System.out.print(" \n ");
@@ -92,7 +108,7 @@ public class read_excel {
                                     System.out.print("There is a box");
                                 }
                             }else{
-                                System.out.print(cell.getStringCellValue());
+                                System.out.print(cell.getStringCellValue()+"");
                             }
 
                             break;

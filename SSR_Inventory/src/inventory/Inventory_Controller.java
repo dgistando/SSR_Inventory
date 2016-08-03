@@ -24,6 +24,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import javafx.util.converter.ShortStringConverter;
 import org.junit.FixMethodOrder;
 
 
@@ -63,6 +65,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private AnchorPane listReviewPane;
     @FXML
     private Button browse,addButton;
+    @FXML
+    private ChoiceBox<Sales> filesAddedBox;
 
     public static AutoCompleteTextField SearchBox;
 
@@ -78,9 +82,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert splitPane != null : "";
         assert importText != null : "";
         assert browse != null : "";
+        assert filesAddedBox != null:"";
 
         initSearch();
         initTabPane();
+
 
 
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
@@ -351,8 +357,25 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
 
     private void getImportContent(){
+        StringConverter<Sales> sc = new StringConverter<Sales>() {
+            @Override
+            public String toString(Sales object) {
+                return object.getFile().getName().toString().substring(0,object.getFile().getName().toString().lastIndexOf('.'));
+            }
+
+            @Override
+            public Sales fromString(String string) {
+                return null;
+            }
+        };
+        filesAddedBox.setConverter(sc);
+
         importText.setFont(Font.font("Ariel",16));
         final FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Sales File");
+        fileChooser.getExtensionFilters().addAll(
+          new FileChooser.ExtensionFilter("XLS","*.xls")
+        );
         List<File> FileList = new ArrayList<File>();
 
         browse.setOnAction(event -> {
@@ -367,8 +390,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });
 
         addButton.setOnAction(event -> {
-
-
+            if(FileList != null) {
+                for (File file : FileList) {
+                    Sales sales = new Sales(file);
+                    filesAddedBox.getItems().add(sales);
+                }
+            }
+            fileLocationTextField.clear();
             FileList.clear();
         });
 
