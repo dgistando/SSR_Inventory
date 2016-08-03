@@ -12,28 +12,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
 /**
  * Created by SSR on 7/28/2016.
  */
 public class Sales extends ListCell<Sales>{
     private String date;
-    private String firstName,lastName,country;
-    private String customName,info;
-    private int quantity;
+    //plaanignng to put the Strings in order of the columns in table ie. first column in first name.
+    // first name, last name, country, custom name, info.
+    private ArrayList<String> information;
+    private ArrayList<Integer> quantity;
     private boolean verified;
 
     public Sales(){
-        this("","","","","","",0,false);
+        this("",0,false);
     }
 
-    public Sales(String _date,String _firstName, String _lastName, String _country, String _customName, String _info, int _quantity,boolean _verified){
+    public Sales(String _date, int _quantity,boolean _verified){
         date = _date;
-        firstName = _firstName;
-        lastName = _lastName;
-        country = _country;
-        customName = _customName;
-        info = _info;
-        quantity = _quantity;
+        information = new ArrayList<String>();
+        quantity = new ArrayList<Integer>();
         verified = _verified;
     }
 
@@ -41,28 +40,16 @@ public class Sales extends ListCell<Sales>{
         return date;
     }
 
-    public String getFirstName(){
-        return firstName;
+    public ArrayList<String> getInformation() {
+        return information;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setInformation(ArrayList<String> information) {
+        this.information = information;
     }
 
-    public String getInfo() {
-        return info;
-    }
-
-    public int getQuantity() {
+    public ArrayList<Integer> getAllQuantity() {
         return quantity;
-    }
-
-    public String getCustomName() {
-        return customName;
-    }
-
-    public String getCountry() {
-        return country;
     }
 
     public boolean isVerified() {
@@ -73,34 +60,13 @@ public class Sales extends ListCell<Sales>{
         this.date = date;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setCustomeName(String customName) {
-        this.customName = customName;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void addToQuantity(int quantity) {
+        this.quantity.add(quantity);
     }
 
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
-
 
     @Override
     protected void updateItem(Sales item, boolean empty) {

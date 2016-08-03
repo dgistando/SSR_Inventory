@@ -136,9 +136,9 @@
                                                     <URL value="@stylesheets/click_to_add.css" />
                                                 </stylesheets>
                                             </Label>
-                                           <TextField layoutX="4.0" layoutY="87.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="115.0" />
+                                           <TextField fx:id="fileLocationTextField" layoutX="4.0" layoutY="87.0" prefWidth="1" promptText="Location of File" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="115.0" editable="false"/>
                                            <Button layoutX="157.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Add" AnchorPane.rightAnchor="3.0" />
-                                           <Button id="img" fx:id="img" layoutX="670.0" layoutY="91.0" mnemonicParsing="false" text="Browse..." underline="true" AnchorPane.rightAnchor="65.0">
+                                           <Button id="img" fx:id="browse" layoutX="670.0" layoutY="91.0" mnemonicParsing="false" text="Browse..." underline="true" AnchorPane.rightAnchor="65.0">
                                                <stylesheets>
                                                    <URL value="@stylesheets/astext.css" />
                                                </stylesheets>

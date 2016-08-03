@@ -22,13 +22,17 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.junit.FixMethodOrder;
 
 
+import java.io.File;
 import java.net.URL;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -46,7 +50,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private Tab Inventorytb,Importtb,Salestb,Historytb;
     @FXML
-    private TextField SearchBox1;
+    private TextField SearchBox1,fileLocationTextField;
     @FXML
     private SplitPane splitPane;
     @FXML
@@ -57,6 +61,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private RadioButton radioSales,radioNewInventory,radioReceiving;
     @FXML
     private AnchorPane listReviewPane;
+    @FXML
+    private Button browse,addButton;
 
     public static AutoCompleteTextField SearchBox;
 
@@ -71,6 +77,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert SearchBox != null : "";
         assert splitPane != null : "";
         assert importText != null : "";
+        assert browse != null : "";
 
         initSearch();
         initTabPane();
@@ -237,7 +244,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         filters.setStyle("-fx-background-color: rgba(0,0,0,0.3)");
 
-        Label rowsLabel = new Label("Rows: ");
+        /*Label rowsLabel = new Label("Rows: ");
         rowsLabel.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(rowsLabel,0);
         filters.setColumnIndex(rowsLabel,0);
@@ -246,35 +253,40 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         numRows.setPrefWidth(100.0);
         numRows.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(numRows,0);
-        filters.setColumnIndex(numRows,1);
+        filters.setColumnIndex(numRows,1);*/
 
         Label filterLabel = new Label("Filters:");
         filterLabel.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(filterLabel,0);
-        filters.setColumnIndex(filterLabel,2);
+        filters.setColumnIndex(filterLabel,0);
 
         ComboBox<String> filterCombobox = new ComboBox<String>(FXCollections.observableArrayList("All","Incomplete","Returns","Unverified","Verified","Net Saleable"));
         filterCombobox.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(filterCombobox,0);
-        filters.setColumnIndex(filterCombobox,3);
+        filters.setColumnIndex(filterCombobox,1);
 
         Label dateRange = new Label("Date Range:");
         dateRange.setStyle("-fx-font: 16 Ariel");
         filters.setRowIndex(dateRange,0);
-        filters.setColumnIndex(dateRange,4);
+        filters.setColumnIndex(dateRange,2);
 
         DatePicker from = new DatePicker();
         from.setStyle("-fx-font: 16 Ariel");
         from.setPromptText("From");
         filters.setRowIndex(from,0);
-        filters.setColumnIndex(from,5);
+        filters.setColumnIndex(from,3);
 
         DatePicker to = new DatePicker();
         to.setStyle("-fx-font: 16 Ariel");
         to.setPromptText("To");
         filters.setRowIndex(to,1);
-        filters.setColumnIndex(to,5);
+        filters.setColumnIndex(to,3);
 
+        Button newItemButton = new Button("Add New Items");
+        filters.setRowIndex(newItemButton,1);
+        filters.setColumnIndex(newItemButton,4);
+
+        //dont change anything after this.
         HBox emptySpace = new HBox();
         filters.setRowIndex(emptySpace,0);
         filters.setColumnIndex(emptySpace,6);
@@ -328,18 +340,39 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             filters.getColumnConstraints().add(col);
         }*/
 
-        //                              0           1         2             3             4        5   6        7             8           9         10         11       12
-        filters.getChildren().addAll(rowsLabel, numRows, filterLabel, filterCombobox, dateRange, from, to, visibleItems, pageForward, pageBack, refresh, changesMade, save);
+        //                              0           1         2             3       4        5             6        7          8         9         10         11       12
+        filters.getChildren().addAll(filterLabel, filterCombobox, dateRange, from, to,newItemButton, visibleItems, pageForward, pageBack, refresh, changesMade, save);
 
 
         filters.setMargin(filters.getChildren().get(1),new Insets(0,30,0,0));
         filters.setMargin(filters.getChildren().get(3),new Insets(0,30,0,0));
-        filters.setMargin(filters.getChildren().get(5),new Insets(0,30,0,0));
+        filters.setMargin(filters.getChildren().get(5),new Insets(0,0,0,0));
         return filters;
     }
 
     private void getImportContent(){
         importText.setFont(Font.font("Ariel",16));
+        final FileChooser fileChooser = new FileChooser();
+        List<File> FileList = new ArrayList<File>();
+
+        browse.setOnAction(event -> {
+            FileList.addAll(fileChooser.showOpenMultipleDialog(splitPane.getScene().getWindow()));
+            if (FileList != null) {
+                for (File file : FileList) {
+                    System.out.println("browsed for: "+ file.getAbsolutePath().toString());
+                    fileLocationTextField.appendText("\""+file.getName().toString()+"\" , ");
+                }
+            }
+           fileLocationTextField.requestFocus();
+        });
+
+        addButton.setOnAction(event -> {
+
+
+            FileList.clear();
+        });
+
+
     }
 
     private void getReviewListContent(){
