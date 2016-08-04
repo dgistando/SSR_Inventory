@@ -18,7 +18,7 @@ public class GetSalesTask extends Task<ObservableList<Sales>> {
         }
 
         ObservableList<Sales> data = FXCollections.observableArrayList();
-        data.add(new Sales("SSR 07/04/2016",1,true));
+        data.add(new Sales("07/04/2016","EBAY",1,true));
 
         return data;
     }

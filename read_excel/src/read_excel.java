@@ -65,6 +65,9 @@ public class read_excel {
 
                         if(arr.length == 2){
                             //source is EBAY
+                        }else{
+                            source = arr[1];
+
                         }
 
                         System.out.println(arr[0] + " then " + arr[1]);

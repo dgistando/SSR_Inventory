@@ -28,9 +28,10 @@ import java.util.Iterator;
  */
 public class Sales extends ListCell<Sales>{
     private String date,source;
+    private char part;
     //plaanignng to put the Strings in order of the columns in table ie. first column in first name.
     // first name, last name, country, custom name, info.
-    private ArrayList<String> information;
+    private ArrayList<String> firstname,lastname,itemCode,country,information;
     private ArrayList<Integer> quantity;
     private boolean verified;
     private File file;
@@ -40,13 +41,16 @@ public class Sales extends ListCell<Sales>{
     }
 
     public Sales(File file){
+        firstname = lastname = itemCode = country =  information = new ArrayList<String>();
+        quantity = new ArrayList<Integer>();
+        setFile(file);
         importToSales(file);
     }
 
     public Sales(String _date,String _source, int _quantity,boolean _verified){
         date = _date;
         source = _source;
-        information = new ArrayList<String>();
+        firstname = lastname = itemCode = country = information = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
         verified = _verified;
     }
@@ -99,6 +103,14 @@ public class Sales extends ListCell<Sales>{
         this.verified = verified;
     }
 
+    public char getPart() {
+        return part;
+    }
+
+    public void setPart(char part) {
+        this.part = part;
+    }
+
     @Override
     protected void updateItem(Sales item, boolean empty) {
         super.updateItem(item, empty);
@@ -134,7 +146,7 @@ public class Sales extends ListCell<Sales>{
         try {
             FileInputStream inputStream = new FileInputStream(file);
 
-            System.out.print("READING FILE:"+file.getName().toString());
+            System.out.println("READING FILE: "+file.getName().toString());
 
             Workbook workbook = new HSSFWorkbook(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
@@ -143,15 +155,64 @@ public class Sales extends ListCell<Sales>{
             int i = -9999;
             String temp="";
 
+
+            Row nextRow = rowIterator.next();
+            Iterator<Cell> cellIterator = nextRow.cellIterator();
+
+            //gathering beginning information for each file.
+            if(cellIterator.hasNext()){
+                Cell cell = cellIterator.next();
+
+                if(cell.getCellType() == Cell.CELL_TYPE_STRING && nextRow.getRowNum() == 0 && cell.getStringCellValue().substring(0,3).equals("SSR")){
+                    //String[] arr = cell.getStringCellValue().split("\\p{Upper}\\p{Space}0|1",2);
+
+                    String[] arr  = cell.getStringCellValue().split(" ");
+
+                    if(arr.length == 2){
+                        setSource("EBAY");
+                    }else{
+                        setSource(arr[1]);
+                    }
+
+                    setDate(arr[arr.length-1]);
+                    setPart(getDate().charAt(getDate().length()-1));
+                    setDate(date.substring(0,date.length()-1));
+
+                    System.out.println(getSource() + " then " + getDate() + " part " + getPart());
+                }
+
+            }
+
+
             while (rowIterator.hasNext()) {
-                Row nextRow = rowIterator.next();
-                Iterator<Cell> cellIterator = nextRow.cellIterator();
+                nextRow = rowIterator.next();
+                cellIterator = nextRow.cellIterator();
 
-
-
+                String savedfirst="",savedlast="";
                 while (cellIterator.hasNext()) {
+
                     Cell cell = cellIterator.next();
 
+                    /*if(cell.getCellType() == Cell.CELL_TYPE_STRING && nextRow.getRowNum() == 0 && cell.getStringCellValue().substring(0,3).equals("SSR")){
+                        //String[] arr = cell.getStringCellValue().split("\\p{Upper}\\p{Space}0|1",2);
+
+                        String[] arr  = cell.getStringCellValue().split(" ");
+
+                        if(arr.length == 2){
+                            source = "EBAY";
+                        }else{
+                            source = arr[1];
+                        }
+
+                        date = arr[arr.length];
+
+                        System.out.println(arr[0] + " then " + arr[1]);
+                        if(cellIterator.hasNext()){
+                            cellIterator.next();
+                        }else{
+                            break;
+                        }
+                    }*/
 
 
                     while (cell.getColumnIndex() - 1 > i && i != -9999) {
@@ -162,6 +223,7 @@ public class Sales extends ListCell<Sales>{
                     // System.out.print(cell.getCellType());
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_NUMERIC:
+                            quantity.add((int)cell.getNumericCellValue());
                             // System.out.print(cell.getNumericCellValue());
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
@@ -173,13 +235,69 @@ public class Sales extends ListCell<Sales>{
                         case Cell.CELL_TYPE_STRING:
                             temp = cell.getStringCellValue();
 
+                            if(cell.getColumnIndex()+1 == 1){
+                                String[] arr;
+                                if(temp.contains(" ")) {
+                                    arr = temp.split("\\p{Space}");
 
-                            if(cell.getColumnIndex()+1 == 3){
-                                String BoxAndWeight="";
-                                System.out.println("\n"+temp.substring(0,temp.lastIndexOf("-")));//custom label
+                                    if (lastname.size() > 0 && temp.equals(" ")) {
+                                        //Name repeat case
+                                        if(savedlast.equals(lastname.get(lastname.size()-1)) && savedfirst.equals("-"))
+                                        {
+                                            firstname.add("");
+                                            lastname.add(lastname.get(lastname.size()-1));
+                                        }
+                                        else if(savedlast.equals(lastname.get(lastname.size()-1))  && savedfirst.equals(firstname.get(firstname.size()-1)))
+                                        {
+                                            firstname.add(firstname.get(firstname.size()-1));
+                                            lastname.add(lastname.get(lastname.size()-1));
+                                        }
+
+                                        System.out.println("FirstNames: " + "repeat" + "\nLastName: " + "repeat");
+                                    }else{
+                                        //Most common case
+                                        String allfirstnames = "";
+                                        for (int j = 0; j < arr.length - 1; j++) {
+                                            allfirstnames = allfirstnames + arr[j] + " ";
+                                        }
+                                        firstname.add(allfirstnames);
+                                        lastname.add(arr[arr.length-1]);
+
+                                        savedfirst = allfirstnames;
+                                        savedlast = arr[arr.length-1];
+
+                                        System.out.println("FirstNames: " + allfirstnames + "\nLastName" + arr[arr.length-1]);
+                                    }
+                                }else{
+                                    //case without spaces in name
+                                    savedfirst="-";
+                                    savedlast=temp;
+                                    firstname.add("");
+                                    lastname.add(temp);
+                                    System.out.println("FirstNames: "+ "" + "\nLastName" + temp);
+                                }
+
+                            } else if(cell.getColumnIndex()+1 == 2){
+                                country.add(temp);
+                                System.out.println("country: " + temp);
+                            }else if(cell.getColumnIndex()+1 == 3){
+                                String BoxAndWeight="", label = "";
+
+                                label = temp.substring(0,temp.lastIndexOf("-"));//custom label
+                                //figuring out if 100% and getting rid of instructions or other strange things
+                                if(label.contains("(")){
+                                    String[] arr = label.split("\\(",2);
+                                    if(arr[1].equals("100%) ")){
+                                        label = label + " (100%)";
+                                        itemCode.add(label);
+                                    }
+                                }
+
+                                System.out.println("label :  " + label);
+
                                 BoxAndWeight = temp.substring(temp.lastIndexOf("-")+2,temp.length());//weight and box size
-
                                 BoxAndWeight = BoxAndWeight.replaceAll("\\p{Punct}*","");
+
                                 // BoxAndWeight = BoxAndWeight.replace("");
                                 System.out.println(BoxAndWeight);
 
@@ -187,7 +305,7 @@ public class Sales extends ListCell<Sales>{
                                     System.out.print("There is a box");
                                 }
                             }else{
-                                System.out.print(cell.getStringCellValue());
+                                System.out.print(cell.getStringCellValue()+"");
                             }
 
                             break;
@@ -210,6 +328,5 @@ public class Sales extends ListCell<Sales>{
         }catch(IOException e){
             e.printStackTrace();
         }
-
     }
 }
