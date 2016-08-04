@@ -67,23 +67,16 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private Button browse,addButton;
     @FXML
     private ChoiceBox<Sales> filesAddedBox;
+    @FXML
+    private Label lquantity,ldate,lsource,lpart;
+    @FXML
+    private TableView importTable;
 
     public static AutoCompleteTextField SearchBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        assert TPinventory != null : "tabpane TPinventory doesn't exist";
-        assert pane != null : "not here";
-        assert Inventorytb != null : "";
-        assert Importtb != null : "";
-        assert Salestb != null : "";
-        assert Historytb != null : "";
-        assert SearchBox != null : "";
-        assert splitPane != null : "";
-        assert importText != null : "";
-        assert browse != null : "";
-        assert filesAddedBox != null:"";
-
+        initThings();
         initSearch();
         initTabPane();
 
@@ -128,6 +121,24 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
     }
 
+    private void initThings(){
+        assert TPinventory != null : "tabpane TPinventory doesn't exist";
+        assert pane != null : "not here";
+        assert Inventorytb != null : "";
+        assert Importtb != null : "";
+        assert Salestb != null : "";
+        assert Historytb != null : "";
+        assert SearchBox != null : "";
+        assert splitPane != null : "";
+        assert importText != null : "";
+        assert browse != null : "";
+        assert filesAddedBox != null:"";
+        assert ldate != null:"";
+        assert lquantity != null:"";
+        assert lpart != null:"";
+        assert lsource != null:"";
+        assert importTable != null:"";
+    }
 
     private void initSearch(){
         SearchBox = new AutoCompleteTextField();
@@ -222,10 +233,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(3),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(3),0.0);
 
-        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(2),150.0);
-        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),150.0);
-        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),150.0);
-        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),150.0);
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(2),140.0);
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),140.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),140.0);
+        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),140.0);
 
         /*ObservableList<Items> items = FXCollections.observableArrayList();
         items.add(new Items("example",4,false,false,false,new Date(0),"somenotes"));
@@ -368,6 +379,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 return null;
             }
         };
+
         filesAddedBox.setConverter(sc);
 
         importText.setFont(Font.font("Ariel",16));
@@ -395,9 +407,26 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     Sales sales = new Sales(file);
                     filesAddedBox.getItems().add(sales);
                 }
+                filesAddedBox.setTooltip(new Tooltip("Select a file from list"));
             }
             fileLocationTextField.clear();
             FileList.clear();
+        });
+
+        filesAddedBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                Sales entity = filesAddedBox.getItems().get(newValue.intValue());
+                System.out.println("Viewing: " + entity.getFile().getName().toString());
+                lsource.setText(entity.getSource());
+                ldate.setText(entity.getDate());
+                lpart.setText(entity.getPart()+"");
+                lquantity.setText(entity.getAllQuantity()+"");
+
+                importTable.setEditable(false);
+                importTable.getColumns().addAll(entity.setSalesTable());
+                importTable.getItems().addAll(entity.addTableData());
+            }
         });
 
 

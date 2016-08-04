@@ -1,8 +1,12 @@
 package inventory;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -41,7 +45,11 @@ public class Sales extends ListCell<Sales>{
     }
 
     public Sales(File file){
-        firstname = lastname = itemCode = country =  information = new ArrayList<String>();
+        firstname = new ArrayList<String>();
+        lastname = new ArrayList<String>();
+        itemCode = new ArrayList<String>();
+        country =  new ArrayList<String>();
+        information = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
         setFile(file);
         importToSales(file);
@@ -50,7 +58,11 @@ public class Sales extends ListCell<Sales>{
     public Sales(String _date,String _source, int _quantity,boolean _verified){
         date = _date;
         source = _source;
-        firstname = lastname = itemCode = country = information = new ArrayList<String>();
+        firstname = new ArrayList<String>();
+        lastname = new ArrayList<String>();
+        itemCode = new ArrayList<String>();
+        country =  new ArrayList<String>();
+        information = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
         verified = _verified;
     }
@@ -83,8 +95,8 @@ public class Sales extends ListCell<Sales>{
         this.source = source;
     }
 
-    public ArrayList<Integer> getAllQuantity() {
-        return quantity;
+    public int getAllQuantity() {
+        return quantity.stream().mapToInt(Integer::intValue).sum();
     }
 
     public boolean isVerified() {
@@ -123,7 +135,7 @@ public class Sales extends ListCell<Sales>{
             String imageName;
 
             if(item.isVerified()){
-                imageName="drawable/verified_image1.png";
+                imageName="drawable/verified_image3.png";
                 Image image = new Image(Sales.class.getResourceAsStream(imageName));
                 l.setImage(image);
                 l.setStyle("-fx-background-color: #FFFF66");
@@ -183,12 +195,12 @@ public class Sales extends ListCell<Sales>{
 
             }
 
-
+            String savedfirst="",savedlast="";
             while (rowIterator.hasNext()) {
                 nextRow = rowIterator.next();
                 cellIterator = nextRow.cellIterator();
 
-                String savedfirst="",savedlast="";
+
                 while (cellIterator.hasNext()) {
 
                     Cell cell = cellIterator.next();
@@ -243,17 +255,17 @@ public class Sales extends ListCell<Sales>{
                                     if (lastname.size() > 0 && temp.equals(" ")) {
                                         //Name repeat case
                                         if(savedlast.equals(lastname.get(lastname.size()-1)) && savedfirst.equals("-"))
-                                        {
+                                        {//case when last name had no first
                                             firstname.add("");
                                             lastname.add(lastname.get(lastname.size()-1));
                                         }
                                         else if(savedlast.equals(lastname.get(lastname.size()-1))  && savedfirst.equals(firstname.get(firstname.size()-1)))
-                                        {
+                                        {//normal repetition
                                             firstname.add(firstname.get(firstname.size()-1));
                                             lastname.add(lastname.get(lastname.size()-1));
                                         }
 
-                                        System.out.println("FirstNames: " + "repeat" + "\nLastName: " + "repeat");
+                                        System.out.println("FirstNames: " + firstname.get(firstname.size()-1) + "\nLastName: " + lastname.get(lastname.size()-1));
                                     }else{
                                         //Most common case
                                         String allfirstnames = "";
@@ -266,7 +278,7 @@ public class Sales extends ListCell<Sales>{
                                         savedfirst = allfirstnames;
                                         savedlast = arr[arr.length-1];
 
-                                        System.out.println("FirstNames: " + allfirstnames + "\nLastName" + arr[arr.length-1]);
+                                        System.out.println("FirstNames: " + allfirstnames + "\nLastName: " + arr[arr.length-1]);
                                     }
                                 }else{
                                     //case without spaces in name
@@ -274,31 +286,40 @@ public class Sales extends ListCell<Sales>{
                                     savedlast=temp;
                                     firstname.add("");
                                     lastname.add(temp);
-                                    System.out.println("FirstNames: "+ "" + "\nLastName" + temp);
+                                    System.out.println("FirstNames: "+ "" + "\nLastName: " + temp);
                                 }
 
                             } else if(cell.getColumnIndex()+1 == 2){
-                                country.add(temp);
-                                System.out.println("country: " + temp);
+                                if(temp.equals(" ")){
+                                    country.add(new String(country.get(country.size()-1)));
+                                }else{
+                                    country.add(temp);
+                                }
+                                System.out.println("country: " + country.get(country.size()-1));
                             }else if(cell.getColumnIndex()+1 == 3){
+                                //Check label they're disappearing
                                 String BoxAndWeight="", label = "";
 
                                 label = temp.substring(0,temp.lastIndexOf("-"));//custom label
                                 //figuring out if 100% and getting rid of instructions or other strange things
                                 if(label.contains("(")){
                                     String[] arr = label.split("\\(",2);
-                                    if(arr[1].equals("100%) ")){
-                                        label = label + " (100%)";
+                                    if(arr[1].length()> 4 && arr[1].substring(0,5).equals("100%)")){
+                                        label = arr[0] + "(100%)";
                                         itemCode.add(label);
+                                    }else{
+                                        itemCode.add(arr[0]);
                                     }
+                                }else{
+                                    itemCode.add(label);
                                 }
-
-                                System.out.println("label :  " + label);
+                                System.out.println("Label: " + itemCode.get(itemCode.size()-1));
 
                                 BoxAndWeight = temp.substring(temp.lastIndexOf("-")+2,temp.length());//weight and box size
                                 BoxAndWeight = BoxAndWeight.replaceAll("\\p{Punct}*","");
 
                                 // BoxAndWeight = BoxAndWeight.replace("");
+                                information.add(BoxAndWeight);
                                 System.out.println(BoxAndWeight);
 
                                 if(BoxAndWeight.contains("\\d+X\\d+X\\d+")){
@@ -329,4 +350,126 @@ public class Sales extends ListCell<Sales>{
             e.printStackTrace();
         }
     }
+
+    protected ArrayList<TableColumn> setSalesTable(){
+        ArrayList<TableColumn> columns = new ArrayList<>();
+
+        TableColumn<SaleItems,String> NameColumn = new TableColumn<SaleItems,String>("");
+        NameColumn.setCellValueFactory(new PropertyValueFactory<SaleItems,String>("name"));
+        NameColumn.setStyle("-fx-font: 15.5 Ariel;");
+        NameColumn.setMinWidth(200.0);
+        NameColumn.setMaxWidth(300.0);
+        NameColumn.setGraphic(setColumnName("NAME"));
+        columns.add(NameColumn);
+
+        TableColumn<SaleItems,String> countryColumn = new TableColumn<SaleItems,String>("");
+        countryColumn.setCellValueFactory(new PropertyValueFactory<SaleItems,String>("country"));
+        countryColumn.setStyle("-fx-font: 15.5 Ariel;");
+        countryColumn.setMinWidth(200.0);
+        countryColumn.setMaxWidth(300.0);
+        countryColumn.setGraphic(setColumnName("COUNTRY"));
+        columns.add(countryColumn);
+
+
+        TableColumn<SaleItems,String> labelColumn = new TableColumn<SaleItems,String>("");
+        labelColumn.setCellValueFactory(new PropertyValueFactory<SaleItems,String>("customLabel"));
+        labelColumn.setStyle("-fx-font: 15.5 Ariel;");
+        labelColumn.setMinWidth(200.0);
+        labelColumn.setMaxWidth(300.0);
+        labelColumn.setGraphic(setColumnName("CUSTOM LABEL"));
+        columns.add(labelColumn);
+
+        TableColumn<SaleItems,String> packingColumn = new TableColumn<SaleItems,String>("");
+        packingColumn.setCellValueFactory(new PropertyValueFactory<SaleItems,String>("packing"));
+        packingColumn.setStyle("-fx-font: 15.5 Ariel;");
+        packingColumn.setMinWidth(200.0);
+        packingColumn.setMaxWidth(300.0);
+        packingColumn.setGraphic(setColumnName("PACKING"));
+        columns.add(packingColumn);
+
+        TableColumn<SaleItems,Integer> quantityColumn = new TableColumn<SaleItems,Integer>("");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<SaleItems,Integer>("quantity"));
+        quantityColumn.setStyle("-fx-font: 15.5 Ariel; -fx-alignment: CENTER;");
+        quantityColumn.setMinWidth(120);
+        quantityColumn.setMaxWidth(120);
+        quantityColumn.setGraphic(setColumnName("QUANTITY"));
+        columns.add(quantityColumn);
+
+        return columns;
+    }
+
+    protected ObservableList<SaleItems> addTableData(){
+        ObservableList<SaleItems> itemList = FXCollections.observableArrayList();
+
+        for(int i = 0; i < quantity.size(); i++){
+            itemList.add(new SaleItems(firstname.get(i)+" "+lastname.get(i),
+                                        country.get(i),
+                                        itemCode.get(i),
+                                        information.get(i),
+                                        quantity.get(i)));
+
+            System.out.println(firstname.get(i)+" "+lastname.get(i) +"\n"+
+                    country.get(i)+"\n"+
+                    itemCode.get(i)+"\n"+
+                    information.get(i)+"\n"+
+                    quantity.get(i)+" num: "+i+"\n\n");
+        }
+
+        return itemList;
+    }
+
+    private Label setColumnName(String name){
+        Label columnName = new Label();
+        columnName.setText(name);
+        columnName.setStyle("-fx-font: 16 Ariel; -fx-font-weight: bold;");
+        return columnName;
+    }
+
+    public class SaleItems{
+
+        private String name,country,customLabel,packing;
+        private int quantity;
+
+        SaleItems(){}
+
+        public SaleItems(String name, String country, String customLabel, String packing, int quantity) {
+            this.name = name;
+            this.country = country;
+            this.customLabel = customLabel;
+            this.packing = packing;
+            this.quantity = quantity;
+        }
+
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public String getCountry() {
+            return country;
+        }
+        public void setCountry(String country) {
+            this.country = country;
+        }
+        public String getCustomLabel() {
+            return customLabel;
+        }
+        public void setCustomLabel(String customLabel) {
+            this.customLabel = customLabel;
+        }
+        public String getPacking() {
+            return packing;
+        }
+        public void setPacking(String packing) {
+            this.packing = packing;
+        }
+        public int getQuantity() {
+            return quantity;
+        }
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+    }
+
 }
