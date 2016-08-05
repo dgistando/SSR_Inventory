@@ -24,6 +24,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.ShortStringConverter;
 import org.junit.FixMethodOrder;
@@ -169,7 +170,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         radioNewInventory.setToggleGroup(group);
         radioReceiving.setToggleGroup(group);
 
-
+        radioSales.requestFocus();//test if this works////////////////////////////////////////////////////////////////////////////
 
         group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
@@ -400,6 +401,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         };
 
         filesAddedBox.setConverter(sc);
+        confirmAndSave.setDisable(true);
+        confirmAndSave.setVisible(false);
 
         importText.setFont(Font.font("Ariel",16));
         final FileChooser fileChooser = new FileChooser();
@@ -427,6 +430,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     filesAddedBox.getItems().add(sales);
                 }
                 filesAddedBox.setTooltip(new Tooltip("Select a file from list"));
+                confirmAndSave.setVisible(true);
+                confirmAndSave.setDisable(false);
             }
             fileLocationTextField.clear();
             FileList.clear();
@@ -449,7 +454,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });
 
         confirmAndSave.setOnAction(event -> {
-            ArrayList<String> newInventory = new ArrayList<String>();
+            ObservableList<String> newInventory = FXCollections.observableArrayList();
             SortedSet<String> currentInventory = SearchBox.getEntries();
 
             for(int i=0;i<filesAddedBox.getItems().size();i++){
@@ -461,14 +466,46 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             }
 
             //set messagebox with list of new inventory(dont forget add all button)
+            if(newInventory.size() > 0){
 
-            //then remove the rejected 'news'
+                //show messagebox
+                //then remove the rejected 'news'
+                //insert new ones into inventory and information
+            }
 
             //insert the rest of the information into the database
+            for(Sales sheet : filesAddedBox.getItems()) {
+                dbHelper.addSalesSheet(sheet);
+            }
+
         });
 
 
         getReviewListContent();
+    }
+
+    public ObservableList<String> confirmNewInventory(ObservableList<String> newInventory){
+        Dialog<Pair<String,String>> dialog = new Dialog<>();
+        dialog.setTitle("Confirm new Inventory");
+        dialog.setHeaderText("Select to remove");
+
+        ButtonType AddAll = new ButtonType("Add All", ButtonBar.ButtonData.OK_DONE);
+        VBox vBox = new VBox();
+        ListView<String> list = new ListView<>();
+        list.setItems(newInventory);
+        list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                list.getItems().remove(newValue);
+            }
+        });
+
+        vBox.getChildren().addAll(list);
+
+
+        dialog.getDialogPane().setContent(vBox);
+
+        return newInventory;
     }
 
     private void getReviewListContent(){
