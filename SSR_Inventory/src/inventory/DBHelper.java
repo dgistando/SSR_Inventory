@@ -27,7 +27,7 @@ public class DBHelper{
     private static String USERNAME = "";
     private static String PASSWORD = "";
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
     public DBHelper() {
@@ -52,13 +52,14 @@ public class DBHelper{
             if (!conn.isClosed()) {
                 System.out.println("The Connection is opened and you are logged in " + attempts);
 
-                /*int j=0;
+                /*
+                int j=0;
                 int k=0;
-                for(int i=0;i<200;i++) {
+                for(int i=0;i<5;i++) {
                     j = new Random().nextInt(55);
                     k = new Random().nextInt(55);
                     //sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+j+","+k+","+(i%2)+",0,'These are some notes about the example,"+(j+k+(i%2))+",'"+(new Random().nextInt(50)+2012)+"0619');";
-                    sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+j+","+k+","+(i%2)+",1,'These are some notes aboouhut the example part',"+(j+k+(i%2))+",convert(date,'"+(new Random().nextInt(10)+1)+"-14-"+(new Random().nextInt(40)+2000)+"',101));";
+                    sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+j+","+k+","+(i%2)+",1,'These are some notes aboouhut the example part',"+(j+k+(i%2))+",'',convert(date,'"+(new Random().nextInt(10)+1)+"-14-"+(new Random().nextInt(40)+2000)+"',101));";
                     stat.executeUpdate(sql);
                 }*/
 
@@ -89,8 +90,8 @@ public class DBHelper{
                 rs = stat.executeQuery(sql);
 
                 while(rs.next()){
-                    list.add(new Items(rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getInt(7),rs.getDate(8)));
-                    System.out.println(rs.getString(1)+" "+rs.getInt(2));
+                    list.add(new Items(rs.getString(1),rs.getInt(2),rs.getInt(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getInt(7),rs.getString(8),rs.getDate(9)));
+                    //System.out.println(rs.getString(1)+" "+rs.getInt(2));
                 }
 
 
@@ -102,6 +103,43 @@ public class DBHelper{
 
         SearchBox.setSearchContent(list);
         return list;
+    }
+
+    public ObservableList<Sales> getSalesSheets(){
+        ObservableList<Sales> list = FXCollections.observableArrayList();
+
+        try {
+            sql = "SELECT * FROM SalesSheets;";
+            rs = stat.executeQuery(sql);
+
+            while(rs.next()){
+               list.add(new Sales(rs.getString(1),rs.getDate(2).toString(),rs.getString(3).charAt(0),rs.getInt(4)));
+                //System.out.println(rs.getString(1)+" "+rs.getInt(2));
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
+        return list;
+    }
+
+    public void addSalesSheet(Sales sheet){
+
+        try{
+            sql = "INSERT INTO SalesSheets VALUE('"+sheet.getSource()+"',CONVERT(date,'"+sheet.getDate().replaceAll("\\.","-")+"',101),'"+sheet.getPart()+"',"+sheet.getAllQuantity()+");";
+            stat.executeUpdate(sql);
+
+            for(int i=0;i<sheet.getAllQuantity();i++){
+                sql = "INSERT INTO Sales VALUES('"+sheet.getFirstname().get(i) +"','"+sheet.getLastname().get(i) +"','"+sheet.getCountry().get(i)+"','"+sheet.getItemCode().get(i)+"',"+sheet.getQuantity().get(i)+",'"+sheet.getPart()+"',CONVERT(date,'"+sheet.getDate().replaceAll("\\.","-")+"',101));";
+                stat.executeUpdate(sql);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
 }

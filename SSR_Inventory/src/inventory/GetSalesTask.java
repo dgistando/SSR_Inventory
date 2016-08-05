@@ -17,9 +17,6 @@ public class GetSalesTask extends Task<ObservableList<Sales>> {
             Thread.sleep(5);
         }
 
-        ObservableList<Sales> data = FXCollections.observableArrayList();
-        data.add(new Sales("07/04/2016","EBAY",1,true));
-
-        return data;
+        return dbHelper.getSalesSheets();
     }
 }

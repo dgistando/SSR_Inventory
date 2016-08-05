@@ -148,7 +148,7 @@
                                                    <URL value="@stylesheets/Import_common_font.css" />
                                                </stylesheets>
                                            </Label>
-                                           <ChoiceBox fx:id="filesAddedBox" layoutX="4.0" layoutY="144.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" />
+                                           <ChoiceBox fx:id="filesAddedBox" layoutX="4.0" layoutY="144.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="5.0" />
                                            <Label layoutY="6.0" text="Import Type">
                                                <stylesheets>
                                                    <URL value="@stylesheets/Import_common_font.css" />
@@ -181,16 +181,19 @@
                                            </Label>
 
 
-                                           <TableView fx:id="importTable" layoutX="272.0" layoutY="179.0" maxHeight="210" prefHeight="200.0" prefWidth="451.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="25.0">
+                                           <TableView fx:id="importTable" layoutX="272.0" layoutY="179.0" maxHeight="300" prefHeight="250.0" prefWidth="451.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="175.0">
 
                                            </TableView>
 
+                                            <Button fx:id="confirmAndSave" layoutX="272" text="Confirm and Continue" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="5.0">
+
+                                            </Button>
 
                                         </children>
                                      </AnchorPane>
                                     <AnchorPane fx:id="listReviewPane" prefHeight="300.0" prefWidth="600.0">
                                        <children>
-                                               <Label text="Record of Sales">
+                                               <Label  fx:id="record_label" text="Record of Sales" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <stylesheets>
                                                        <URL value="@stylesheets/Import_common_font.css" />
                                                    </stylesheets>

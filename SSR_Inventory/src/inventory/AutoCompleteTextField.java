@@ -162,4 +162,8 @@ public class AutoCompleteTextField extends TextField
             }
         }
     }
+
+    public ObservableList<Items> getItems() {
+        return items;
+    }
 }

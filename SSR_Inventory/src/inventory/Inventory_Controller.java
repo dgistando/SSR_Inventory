@@ -33,10 +33,7 @@ import java.io.File;
 import java.net.URL;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static inventory.Controller.dbHelper;
 
@@ -64,11 +61,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private AnchorPane listReviewPane;
     @FXML
-    private Button browse,addButton;
+    private Button browse,addButton,confirmAndSave;
     @FXML
     private ChoiceBox<Sales> filesAddedBox;
     @FXML
-    private Label lquantity,ldate,lsource,lpart;
+    private Label lquantity,ldate,lsource,lpart, record_label;
     @FXML
     private TableView importTable;
 
@@ -137,7 +134,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert lquantity != null:"";
         assert lpart != null:"";
         assert lsource != null:"";
+        assert record_label != null :"";
+        assert reviewList != null:"";
         assert importTable != null:"";
+        assert confirmAndSave != null :"";
     }
 
     private void initSearch(){
@@ -165,21 +165,34 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
     private void initRadio(){
         final ToggleGroup group = new ToggleGroup();
-        radioSales.setToggleGroup(group);;
+        radioSales.setToggleGroup(group);
         radioNewInventory.setToggleGroup(group);
         radioReceiving.setToggleGroup(group);
+
+
 
         group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                if(newValue == radioSales){
-                    System.out.print("\n radio initialized and selectd");
-                    getReviewListContent();
+                if (newValue == radioSales && oldValue != radioSales)
+                {
+                    record_label.setText("Record of Sales");
+                    System.out.print("\n radio initialized and selectd ");
+                    reloadSalesList();
+                }
+                else if (newValue == radioNewInventory && oldValue != radioNewInventory)
+                {
+                    record_label.setText("Past Uploads");
+
+                }
+                else if (newValue == radioReceiving && oldValue != radioReceiving)
+                {
+                    record_label.setText("Receiving");
+
                 }
             }
         });
 
-        radioSales.setSelected(true);
     }
 
     private MenuBar getMenuContent(){
@@ -201,6 +214,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
 
     private void getInventoryContent(int i){
+
         AnchorPane InventoryPane = new AnchorPane();
         InventoryTable table = new InventoryTable();
         table.setEditable(true);
@@ -211,7 +225,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
         ProgressIndicator p = new ProgressIndicator();
         //p.setPrefSize(150,150);
-        p.setMaxSize(100,100);
+        p.setMaxSize(50,50);
 
         table.getAllInventory();
 
@@ -237,6 +251,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),140.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),140.0);
         AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),140.0);
+
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(1),100.0);
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(1),0.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(1),0.0);
+        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(1),0.0);
 
         /*ObservableList<Items> items = FXCollections.observableArrayList();
         items.add(new Items("example",4,false,false,false,new Date(0),"somenotes"));
@@ -429,7 +448,27 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             }
         });
 
+        confirmAndSave.setOnAction(event -> {
+            ArrayList<String> newInventory = new ArrayList<String>();
+            SortedSet<String> currentInventory = SearchBox.getEntries();
 
+            for(int i=0;i<filesAddedBox.getItems().size();i++){
+                for(String item: filesAddedBox.getItems().get(i).getItemCode()){
+                    if(!currentInventory.contains(item)){
+                        newInventory.add(item);
+                    }
+                }
+            }
+
+            //set messagebox with list of new inventory(dont forget add all button)
+
+            //then remove the rejected 'news'
+
+            //insert the rest of the information into the database
+        });
+
+
+        getReviewListContent();
     }
 
     private void getReviewListContent(){
@@ -447,8 +486,15 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         reviewList.itemsProperty().bind(task.valueProperty());
 
 
+        listReviewPane.getChildren().add(2,veil);
+        listReviewPane.getChildren().add(3,p);
 
-        listReviewPane.getChildren().addAll(veil,p);
+        AnchorPane.setTopAnchor(listReviewPane.getChildren().get(2),0.0);
+        AnchorPane.setRightAnchor(listReviewPane.getChildren().get(2),0.0);
+        AnchorPane.setLeftAnchor(listReviewPane.getChildren().get(2),0.0);
+        AnchorPane.setBottomAnchor(listReviewPane.getChildren().get(2),0.0);
+
+
 
         reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
                 @Override
@@ -482,8 +528,34 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 };
             }
         });*/
-        new Thread(task).start();
+
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
+
+    private void reloadSalesList(){
+        if(reviewList.getItems() == null || reviewList.getItems().size() < 1){
+            return;
+        }
+
+        reviewList.getItems().removeAll();
+
+        Region veil = (Region) listReviewPane.getChildren().get(2);
+        ProgressIndicator p = (ProgressIndicator) listReviewPane.getChildren().get(3);
+
+        Task<ObservableList<Sales>> task = new GetSalesTask();
+        p.progressProperty().bind(task.progressProperty());
+        veil.visibleProperty().bind(task.runningProperty());
+        p.visibleProperty().bind(task.runningProperty());
+        reviewList.itemsProperty().bind(task.valueProperty());
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
 
     @Override
     public void handle(ActionEvent event) {

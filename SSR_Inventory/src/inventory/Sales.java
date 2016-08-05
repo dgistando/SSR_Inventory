@@ -38,10 +38,11 @@ public class Sales extends ListCell<Sales>{
     private ArrayList<String> firstname,lastname,itemCode,country,information;
     private ArrayList<Integer> quantity;
     private boolean verified;
+    private int total;
     private File file;
 
     public Sales(){
-        this("","",0,false);
+        this("","",'Z',0);
     }
 
     public Sales(File file){
@@ -55,16 +56,17 @@ public class Sales extends ListCell<Sales>{
         importToSales(file);
     }
 
-    public Sales(String _date,String _source, int _quantity,boolean _verified){
+    public Sales(String _source, String _date, char _part, int _total){
         date = _date;
         source = _source;
+        part = _part;
+        total = _total;
         firstname = new ArrayList<String>();
         lastname = new ArrayList<String>();
         itemCode = new ArrayList<String>();
         country =  new ArrayList<String>();
         information = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
-        verified = _verified;
     }
 
     public String getDate(){
@@ -123,33 +125,57 @@ public class Sales extends ListCell<Sales>{
         this.part = part;
     }
 
+    public ArrayList<String> getFirstname() {
+        return firstname;
+    }
+
+    public ArrayList<String> getLastname() {
+        return lastname;
+    }
+
+    public ArrayList<String> getItemCode() {
+        return itemCode;
+    }
+
+    public ArrayList<String> getCountry() {
+        return country;
+    }
+
+    public ArrayList<Integer> getQuantity() {
+        return quantity;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
     @Override
     protected void updateItem(Sales item, boolean empty) {
         super.updateItem(item, empty);
-        Rectangle rect = new Rectangle(100, 20);
         if(item != null){
-            VBox vBox = new VBox(new Text(item.getDate()), new Text("grjijr"));
+            Label label = new Label("  SSR "+item.getSource()+" "+item.getDate()+" "+item.getPart());
+            label.setStyle("-fx-font:28 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
+
+            VBox vbox = new VBox();
+            Label itemssold = new Label("ITEMS\nSOLD");
+            Label numSold = new Label(item.getTotal()+"    ");
+            itemssold.setStyle("-fx-font:14 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
+            numSold.setStyle("-fx-font:14 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
+
+            numSold.setAlignment(Pos.CENTER);
+            vbox.getChildren().addAll(itemssold,numSold);
+            vbox.setAlignment(Pos.CENTER_RIGHT);
+
             HBox hBox = new HBox();
-            ImageView l = new ImageView();
 
-            String imageName;
-
-            if(item.isVerified()){
-                imageName="drawable/verified_image3.png";
-                Image image = new Image(Sales.class.getResourceAsStream(imageName));
-                l.setImage(image);
-                l.setStyle("-fx-background-color: #FFFF66");
-                hBox.setStyle("-fx-background-color: #FFFF66");
-            }else{
-                l.setVisible(false);
-            }
-
-
-
-            //l.setAlignment(Pos.CENTER_RIGHT);
-            hBox.getChildren().addAll(vBox, l);
+            hBox.getChildren().addAll(label, vbox);
             hBox.setSpacing(10);
             hBox.setHgrow(hBox.getChildren().get(0), Priority.ALWAYS);
+            hBox.setHgrow(hBox.getChildren().get(1), Priority.ALWAYS);
             setGraphic(hBox);
         }
     }
@@ -190,7 +216,7 @@ public class Sales extends ListCell<Sales>{
                     setPart(getDate().charAt(getDate().length()-1));
                     setDate(date.substring(0,date.length()-1));
 
-                    System.out.println(getSource() + " then " + getDate() + " part " + getPart());
+                    //System.out.println(getSource() + " then " + getDate() + " part " + getPart());
                 }
 
             }
@@ -228,7 +254,7 @@ public class Sales extends ListCell<Sales>{
 
 
                     while (cell.getColumnIndex() - 1 > i && i != -9999) {
-                        System.out.print(" \n ");
+                       // System.out.print(" \n ");
                         i++;
                     }
 
@@ -265,7 +291,7 @@ public class Sales extends ListCell<Sales>{
                                             lastname.add(lastname.get(lastname.size()-1));
                                         }
 
-                                        System.out.println("FirstNames: " + firstname.get(firstname.size()-1) + "\nLastName: " + lastname.get(lastname.size()-1));
+                                       // System.out.println("FirstNames: " + firstname.get(firstname.size()-1) + "\nLastName: " + lastname.get(lastname.size()-1));
                                     }else{
                                         //Most common case
                                         String allfirstnames = "";
@@ -278,7 +304,7 @@ public class Sales extends ListCell<Sales>{
                                         savedfirst = allfirstnames;
                                         savedlast = arr[arr.length-1];
 
-                                        System.out.println("FirstNames: " + allfirstnames + "\nLastName: " + arr[arr.length-1]);
+                                       // System.out.println("FirstNames: " + allfirstnames + "\nLastName: " + arr[arr.length-1]);
                                     }
                                 }else{
                                     //case without spaces in name
@@ -286,7 +312,7 @@ public class Sales extends ListCell<Sales>{
                                     savedlast=temp;
                                     firstname.add("");
                                     lastname.add(temp);
-                                    System.out.println("FirstNames: "+ "" + "\nLastName: " + temp);
+                                  //  System.out.println("FirstNames: "+ "" + "\nLastName: " + temp);
                                 }
 
                             } else if(cell.getColumnIndex()+1 == 2){
@@ -295,7 +321,7 @@ public class Sales extends ListCell<Sales>{
                                 }else{
                                     country.add(temp);
                                 }
-                                System.out.println("country: " + country.get(country.size()-1));
+                              //  System.out.println("country: " + country.get(country.size()-1));
                             }else if(cell.getColumnIndex()+1 == 3){
                                 //Check label they're disappearing
                                 String BoxAndWeight="", label = "";
@@ -313,20 +339,20 @@ public class Sales extends ListCell<Sales>{
                                 }else{
                                     itemCode.add(label);
                                 }
-                                System.out.println("Label: " + itemCode.get(itemCode.size()-1));
+                              //  System.out.println("Label: " + itemCode.get(itemCode.size()-1));
 
                                 BoxAndWeight = temp.substring(temp.lastIndexOf("-")+2,temp.length());//weight and box size
                                 BoxAndWeight = BoxAndWeight.replaceAll("\\p{Punct}*","");
 
                                 // BoxAndWeight = BoxAndWeight.replace("");
                                 information.add(BoxAndWeight);
-                                System.out.println(BoxAndWeight);
+                              //  System.out.println(BoxAndWeight);
 
                                 if(BoxAndWeight.contains("\\d+X\\d+X\\d+")){
                                     System.out.print("There is a box");
                                 }
                             }else{
-                                System.out.print(cell.getStringCellValue()+"");
+                             //   System.out.print(cell.getStringCellValue()+"");
                             }
 
                             break;

@@ -1,0 +1,1 @@
+insert into Sales Values('newfirstname','newlastnam','United States','#Example102',1,'A',CONVERT(date,'07-04-2011',101));

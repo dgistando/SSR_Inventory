@@ -18,14 +18,15 @@ public class Items {
     private final StringProperty notes; //= new SimpleStringProperty("");
 
     private final IntegerProperty quantity;// = new SimpleIntegerProperty(0);
+    private final StringProperty packingInformation;
     private Date date = new Date(0);
 
 
     protected Items(){
-        this("",0,0,0,0,"",0,new java.sql.Date(0));
+        this("",0,0,0,0,"",0,"",new java.sql.Date(0));
     }
 
-    protected Items(String _custom_label, Integer net_saleable, int _returns, int _defective, int _incomplete, String _notes, Integer _quantity, java.sql.Date _date){
+    protected Items(String _custom_label, Integer net_saleable, int _returns, int _defective, int _incomplete, String _notes, Integer _quantity, String _packingInformation, java.sql.Date _date){
          this.customLabel = new SimpleStringProperty(_custom_label);
          this.netSaleable = new SimpleIntegerProperty(net_saleable);
          this.returns = new SimpleIntegerProperty(_returns);
@@ -34,6 +35,7 @@ public class Items {
          this.notes = new SimpleStringProperty(_notes);
 
         //setDate(_date);//
+        this.packingInformation = new SimpleStringProperty(_packingInformation);
         try{setDate(_date);}catch(ParseException e){e.printStackTrace();}
         this.quantity = new SimpleIntegerProperty(_quantity);
     }
@@ -70,6 +72,18 @@ public class Items {
 
     public Integer getNetSaleable(){
         return netSaleable.get();
+    }
+
+    public String getPackingInformation() {
+        return packingInformation.get();
+    }
+
+    public StringProperty packingInformationProperty() {
+        return packingInformation;
+    }
+
+    public void setPackingInformation(String packingInformation) {
+        this.packingInformation.set(packingInformation);
     }
 
     public void setCustomLabel(String input){
