@@ -24,7 +24,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.Iterator;
 
 /**
@@ -147,6 +152,20 @@ public class Sales extends ListCell<Sales>{
 
     public int getTotal() {
         return total;
+    }
+
+    public Date getDateInFormat(){
+
+        Date newdate = new Date();
+
+        try {
+            DateFormat df = new SimpleDateFormat("MM/dd/yyy");
+            newdate = df.parse(getDate());
+
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return newdate;
     }
 
     public void setTotal(int total) {
@@ -326,13 +345,15 @@ public class Sales extends ListCell<Sales>{
                                 //Check label they're disappearing
                                 String BoxAndWeight="", label = "";
 
-                                label = temp.substring(0,temp.lastIndexOf("-"));//custom label
+                                label = temp.substring(0,temp.lastIndexOf("-")-1);//custom label
                                 //figuring out if 100% and getting rid of instructions or other strange things
                                 if(label.contains("(")){
                                     String[] arr = label.split("\\(",2);
                                     if(arr[1].length()> 4 && arr[1].substring(0,5).equals("100%)")){
                                         label = arr[0] + "(100%)";
                                         itemCode.add(label);
+                                    }else if(arr[1].contains("-")){
+                                        itemCode.add(arr[0]+ arr[1].substring(arr[1].indexOf("-"),arr[1].length()));
                                     }else{
                                         itemCode.add(arr[0]);
                                     }

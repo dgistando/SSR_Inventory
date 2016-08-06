@@ -189,11 +189,19 @@
 
                                             </Button>
 
+                                            <Button fx:id="removeImports" layoutX="272" text="Remove" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0">
+
+                                            </Button>
+
+                                            <Button fx:id="removeAllImports" layoutX="272" text="Remove All" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="75.0">
+
+                                            </Button>
+
                                         </children>
                                      </AnchorPane>
                                     <AnchorPane fx:id="listReviewPane" prefHeight="300.0" prefWidth="600.0">
                                        <children>
-                                               <Label  fx:id="record_label" text="Record of Sales" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                               <Label fx:id="record_label" text="Record of Sales" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <stylesheets>
                                                        <URL value="@stylesheets/Import_common_font.css" />
                                                    </stylesheets>

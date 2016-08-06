@@ -1,6 +1,7 @@
 package inventory;
 
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,6 +31,7 @@ import javafx.util.converter.ShortStringConverter;
 import org.junit.FixMethodOrder;
 
 
+import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.net.URL;
 
@@ -62,7 +64,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private AnchorPane listReviewPane;
     @FXML
-    private Button browse,addButton,confirmAndSave;
+    private Button browse,addButton,confirmAndSave, removeImports, removeAllImports;
     @FXML
     private ChoiceBox<Sales> filesAddedBox;
     @FXML
@@ -139,6 +141,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert reviewList != null:"";
         assert importTable != null:"";
         assert confirmAndSave != null :"";
+        assert removeImports != null : "";
+        assert removeAllImports != null : "";
     }
 
     private void initSearch(){
@@ -170,13 +174,15 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         radioNewInventory.setToggleGroup(group);
         radioReceiving.setToggleGroup(group);
 
-        radioSales.requestFocus();//test if this works////////////////////////////////////////////////////////////////////////////
+
+        //test if this works////////////////////////////////////////////////////////////////////////////
 
         group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 if (newValue == radioSales && oldValue != radioSales)
                 {
+                    reviewList.getItems().removeAll();
                     record_label.setText("Record of Sales");
                     System.out.print("\n radio initialized and selectd ");
                     reloadSalesList();
@@ -212,8 +218,6 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         return menuBar;
     }
 
-
-
     private void getInventoryContent(int i){
 
         AnchorPane InventoryPane = new AnchorPane();
@@ -228,6 +232,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         //p.setPrefSize(150,150);
         p.setMaxSize(50,50);
 
+        //adding columns to table
         table.getAllInventory();
 
         Task<ObservableList<Items>> task = new GetInventoryTask();
@@ -248,10 +253,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(3),0.0);
         AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(3),0.0);
 
-        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(2),140.0);
-        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),140.0);
-        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),140.0);
-        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),140.0);
+        AnchorPane.setTopAnchor(InventoryPane.getChildren().get(2),200.0);
+        AnchorPane.setRightAnchor(InventoryPane.getChildren().get(2),180.0);
+        AnchorPane.setLeftAnchor(InventoryPane.getChildren().get(2),180.0);
+        AnchorPane.setBottomAnchor(InventoryPane.getChildren().get(2),160.0);
 
         AnchorPane.setTopAnchor(InventoryPane.getChildren().get(1),100.0);
         AnchorPane.setRightAnchor(InventoryPane.getChildren().get(1),0.0);
@@ -270,7 +275,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         final int NUMBER_OF_COLUMNS = 6;
 
         GridPane filters = new GridPane();
-        filters.setGridLinesVisible(true);
+        filters.setGridLinesVisible(false);
         filters.setMaxHeight(100.0);
         filters.setPrefHeight(100.0);
         filters.setMinHeight(100.0);
@@ -344,6 +349,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Button refresh = new Button("refresh");
         filters.setRowIndex(refresh,0);
         filters.setColumnIndex(refresh,10);
+        refresh.setOnAction(event -> reloadInventoryList());
 
         Label changesMade = new Label("# Unsaved Changes!");
         filters.setRowIndex(changesMade,1);
@@ -403,6 +409,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filesAddedBox.setConverter(sc);
         confirmAndSave.setDisable(true);
         confirmAndSave.setVisible(false);
+        removeImports.setDisable(true);
+        removeImports.setVisible(false);
+        removeAllImports.setDisable(true);
+        removeAllImports.setVisible(false);
 
         importText.setFont(Font.font("Ariel",16));
         final FileChooser fileChooser = new FileChooser();
@@ -415,6 +425,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         browse.setOnAction(event -> {
             FileList.addAll(fileChooser.showOpenMultipleDialog(splitPane.getScene().getWindow()));
             if (FileList != null) {
+                fileLocationTextField.setText("");
                 for (File file : FileList) {
                     System.out.println("browsed for: "+ file.getAbsolutePath().toString());
                     fileLocationTextField.appendText("\""+file.getName().toString()+"\" , ");
@@ -424,15 +435,24 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });
 
         addButton.setOnAction(event -> {
-            if(FileList != null) {
+            if(FileList != null && FileList.size()>0) {
                 for (File file : FileList) {
                     Sales sales = new Sales(file);
                     filesAddedBox.getItems().add(sales);
                 }
                 filesAddedBox.setTooltip(new Tooltip("Select a file from list"));
+
                 confirmAndSave.setVisible(true);
                 confirmAndSave.setDisable(false);
+                removeImports.setVisible(true);
+                removeImports.setDisable(false);
+                removeAllImports.setVisible(true);
+                removeAllImports.setDisable(false);
+
+            }else{
+                return;
             }
+
             fileLocationTextField.clear();
             FileList.clear();
         });
@@ -448,65 +468,155 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 lquantity.setText(entity.getAllQuantity()+"");
 
                 importTable.setEditable(false);
-                importTable.getColumns().addAll(entity.setSalesTable());
-                importTable.getItems().addAll(entity.addTableData());
+
+                if(importTable.getItems() == null || importTable.getItems().size() <= 0) {
+                    //new Table
+                    importTable.getColumns().addAll(entity.setSalesTable());
+                    importTable.setItems(entity.addTableData());
+                }else{
+                    importTable.getItems().removeAll();
+                    importTable.setItems(entity.addTableData());
+                }
+
+
             }
         });
 
         confirmAndSave.setOnAction(event -> {
-            ObservableList<String> newInventory = FXCollections.observableArrayList();
-            SortedSet<String> currentInventory = SearchBox.getEntries();
+            ObservableList<String> newInventory = FXCollections.observableArrayList();//sales list
+            ObservableList<String> newInformation = FXCollections.observableArrayList();
+            SortedSet<String> currentInventory = SearchBox.getEntries();//all inventory
 
-            for(int i=0;i<filesAddedBox.getItems().size();i++){
-                for(String item: filesAddedBox.getItems().get(i).getItemCode()){
-                    if(!currentInventory.contains(item)){
-                        newInventory.add(item);
+            HashSet<String> set = new HashSet<String>();;
+            HashMap<String,String> Set = new HashMap<String, String>();
+
+
+            for(int i=0;i<filesAddedBox.getItems().size();i++){//Sales sheet
+                for(int j=0; j < filesAddedBox.getItems().get(i).getItemCode().size();j++){//Strings for customlabel
+                    if(!currentInventory.contains(filesAddedBox.getItems().get(i).getItemCode().get(j))){//part exists in inventory
+                        //removing duplicates.
+                        Set.put(filesAddedBox.getItems().get(i).getItemCode().get(j), filesAddedBox.getItems().get(i).getInformation().get(j));
+
+                        //set.add(filesAddedBox.getItems().get(i).getItemCode().get(j));
+                        //newInformation.add(filesAddedBox.getItems().get(i).getInformation().get(j));
                     }
                 }
             }
 
-            //set messagebox with list of new inventory(dont forget add all button)
-            if(newInventory.size() > 0){
+            //newInventory.addAll(Set.keySet());
 
-                //show messagebox
-                //then remove the rejected 'news'
-                //insert new ones into inventory and information
+            //newInventory.addAll(set);
+
+            Set = confirmNewInventory(Set);
+            //set messagebox with list of new inventory(dont forget add all button)
+            if(Set != null && Set.size() > 0){
+                newInventory = FXCollections.observableArrayList(Set.keySet());
+                //insert new ones into inventory with information
             }
 
-            //insert the rest of the information into the database
-            for(Sales sheet : filesAddedBox.getItems()) {
-                dbHelper.addSalesSheet(sheet);
+            if(Set == null){
+                return;
+            }else{
+                removeAllImports.fire();
+                for(String s : newInventory){
+                    System.out.println(s + " will be new inventory");
+                }
+
+                dbHelper.newAutoInventory(Set);
+
+                //inserting sheets into database
+                for (Sales sheet : filesAddedBox.getItems()) {
+                    dbHelper.addSalesSheet(sheet);
+                }
             }
 
         });
 
+        removeImports.setOnAction(event -> {
+            filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
+
+            if(filesAddedBox.getItems().size() <= 0){
+                confirmAndSave.setDisable(true);
+                confirmAndSave.setVisible(false);
+                removeImports.setDisable(true);
+                removeImports.setVisible(false);
+                removeAllImports.setDisable(true);
+                removeAllImports.setVisible(false);
+                filesAddedBox.getSelectionModel().clearSelection();
+            }else{
+                filesAddedBox.getSelectionModel().select(0);
+            }
+
+        });
+
+        removeAllImports.setOnAction(event -> {
+            while(filesAddedBox.getItems().size() > 0){
+                filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
+            }
+
+            confirmAndSave.setDisable(true);
+            confirmAndSave.setVisible(false);
+            removeImports.setDisable(true);
+            removeImports.setVisible(false);
+            removeAllImports.setDisable(true);
+            removeAllImports.setVisible(false);
+
+            filesAddedBox.getSelectionModel().clearSelection();
+        });
 
         getReviewListContent();
     }
 
-    public ObservableList<String> confirmNewInventory(ObservableList<String> newInventory){
-        Dialog<Pair<String,String>> dialog = new Dialog<>();
+    public HashMap<String,String> confirmNewInventory(HashMap<String,String> newInventory){
+        Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Confirm new Inventory");
         dialog.setHeaderText("Select to remove");
 
-        ButtonType AddAll = new ButtonType("Add All", ButtonBar.ButtonData.OK_DONE);
+        ButtonType AddAll = new ButtonType("Done", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(AddAll,ButtonType.CANCEL);
+
+        BorderPane pane = new BorderPane();
         VBox vBox = new VBox();
-        ListView<String> list = new ListView<>();
-        list.setItems(newInventory);
+        ListView<String> list = new ListView<>(FXCollections.observableArrayList(newInventory.keySet()));
+        Button del = new Button("remove");
+        del.setVisible(false);
+        //list.setItems(newInventory);
         list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                list.getItems().remove(newValue);
+                del.setDisable(false);
             }
         });
 
         vBox.getChildren().addAll(list);
+        pane.setCenter(vBox);
 
 
-        dialog.getDialogPane().setContent(vBox);
 
-        return newInventory;
+        del.setOnAction(event -> {
+            System.out.println("removed " + list.getSelectionModel().getSelectedIndex());
+            list.getItems().remove(list.getSelectionModel().getSelectedIndex());
+            list.getSelectionModel().clearSelection();
+            del.setDisable(true);
+        });
+
+        pane.setBottom(del);
+
+
+
+        dialog.getDialogPane().setContent(pane);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if(result.get() == ButtonType.CANCEL){
+            return null;
+        }else{
+            confirmAndSave.setVisible(false);
+            confirmAndSave.setDisable(true);
+            return newInventory;
+        }
     }
+
 
     private void getReviewListContent(){
 
@@ -591,6 +701,23 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private void reloadInventoryList(){
+        AnchorPane pane = (AnchorPane)TPinventory.getTabs().get(0).getContent();
+
+        InventoryTable table = (InventoryTable)pane.getChildren().get(0);
+
+        Region veil = (Region)pane.getChildren().get(1);
+        ProgressIndicator p = (ProgressIndicator) pane.getChildren().get(2);
+
+        Task<ObservableList<Items>> task = new GetInventoryTask();
+        p.progressProperty().bind(task.progressProperty());
+        veil.visibleProperty().bind(task.runningProperty());
+        p.visibleProperty().bind(task.runningProperty());
+        table.itemsProperty().bind(task.valueProperty());
+
+        new Thread(task).start();
     }
 
 
