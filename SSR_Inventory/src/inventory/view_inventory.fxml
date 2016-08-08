@@ -268,13 +268,16 @@
     </TabPane>!-->
 
     </center>
+   <bottom>
+      <AnchorPane prefHeight="25.0" maxHeight="25.0">
+         <children>
+            <HBox fx:id="status" prefHeight="25.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" BorderPane.alignment="CENTER" >
+                <stylesheets>
+                    <URL value="@stylesheets/bottom.css" />
+                </stylesheets>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </bottom>
 
-   <!--<bottom>
-       <HBox>
-           <children>
-               <ComboBox fx:id="SearchBox" minWidth="Infinity" promptText="testtext">
-               </ComboBox>
-           </children>
-       </HBox>
-   </bottom>!-->
 </BorderPane>

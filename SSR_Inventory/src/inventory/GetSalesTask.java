@@ -12,8 +12,8 @@ import static inventory.Controller.dbHelper;
 public class GetSalesTask extends Task<ObservableList<Sales>> {
     @Override
     protected ObservableList<Sales> call() throws Exception {
-        for (int i = 0; i < 250; i++) {
-            updateProgress(i, 250);
+        for (int i = 0; i < 230; i++) {
+            updateProgress(i, 230);
             Thread.sleep(5);
         }
 

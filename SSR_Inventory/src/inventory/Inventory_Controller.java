@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Menu;
@@ -29,8 +30,11 @@ import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.ShortStringConverter;
 import org.junit.FixMethodOrder;
+import sun.nio.ch.Net;
+import sun.nio.ch.Util;
 
 
+import java.awt.geom.Arc2D;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
 import java.net.URL;
@@ -71,8 +75,14 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private Label lquantity,ldate,lsource,lpart, record_label;
     @FXML
     private TableView importTable;
+    @FXML
+    private HBox status;
 
+    public static Label changesMade,currentUser, programInfo;
+    public static HBox save;
     public static AutoCompleteTextField SearchBox;
+    private final GetInventoryService InventoryService = new GetInventoryService();
+    private final GetSalesService SaelsService = new GetSalesService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -80,7 +90,14 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         initSearch();
         initTabPane();
 
+        currentUser.setMaxWidth(Double.MAX_VALUE);
+        programInfo.setMaxWidth(Double.MAX_VALUE);
 
+        currentUser.setAlignment(Pos.CENTER_RIGHT);
+        status.getChildren().addAll(programInfo,currentUser);
+        status.setSpacing(10);
+        status.setHgrow(status.getChildren().get(0), Priority.ALWAYS);
+        status.setHgrow(status.getChildren().get(1), Priority.ALWAYS);
 
         TPinventory.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
@@ -143,6 +160,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert confirmAndSave != null :"";
         assert removeImports != null : "";
         assert removeAllImports != null : "";
+        assert status != null:"";
+        programInfo = new Label("program info");
+        currentUser = new Label("Current User: " + dbHelper.getUSERNAME()+" ");
     }
 
     private void initSearch(){
@@ -185,11 +205,12 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     reviewList.getItems().removeAll();
                     record_label.setText("Record of Sales");
                     System.out.print("\n radio initialized and selectd ");
-                    reloadSalesList();
+                    SaelsService.restart();
                 }
                 else if (newValue == radioNewInventory && oldValue != radioNewInventory)
                 {
                     record_label.setText("Past Uploads");
+
 
                 }
                 else if (newValue == radioReceiving && oldValue != radioReceiving)
@@ -235,11 +256,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         //adding columns to table
         table.getAllInventory();
 
-        Task<ObservableList<Items>> task = new GetInventoryTask();
-        p.progressProperty().bind(task.progressProperty());
-        veil.visibleProperty().bind(task.runningProperty());
-        p.visibleProperty().bind(task.runningProperty());
-        table.itemsProperty().bind(task.valueProperty());
+        p.progressProperty().bind(InventoryService.progressProperty());
+        veil.visibleProperty().bind(InventoryService.runningProperty());
+        p.visibleProperty().bind(InventoryService.runningProperty());
+        table.itemsProperty().bind(InventoryService.valueProperty());
 
 
         InventoryPane.getChildren().addAll(table,veil,p,getInventoryFilters());
@@ -268,14 +288,15 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         table.setItems(items);*/
         Inventorytb.setContent(InventoryPane);
-        new Thread(task).start();
+        InventoryService.start();
+        programInfo.setText("Done.");
     }
 
     private GridPane getInventoryFilters(){
         final int NUMBER_OF_COLUMNS = 6;
 
         GridPane filters = new GridPane();
-        filters.setGridLinesVisible(false);
+        filters.setGridLinesVisible(true);
         filters.setMaxHeight(100.0);
         filters.setPrefHeight(100.0);
         filters.setMinHeight(100.0);
@@ -327,6 +348,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Button newItemButton = new Button("Add New Items");
         filters.setRowIndex(newItemButton,1);
         filters.setColumnIndex(newItemButton,4);
+        newItemButton.setOnAction(event -> addNewItem());
 
         //dont change anything after this.
         HBox emptySpace = new HBox();
@@ -349,20 +371,39 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Button refresh = new Button("refresh");
         filters.setRowIndex(refresh,0);
         filters.setColumnIndex(refresh,10);
-        refresh.setOnAction(event -> reloadInventoryList());
+        refresh.setOnAction(event -> InventoryService.restart());
 
-        Label changesMade = new Label("# Unsaved Changes!");
+        changesMade = new Label("# Unsaved Changes!");
         filters.setRowIndex(changesMade,1);
         filters.setColumnIndex(changesMade,0);
         changesMade.setStyle("-fx-text-fill:#FF3200;-fx-font-weight: bold");
         changesMade.setVisible(false);
 
-        Button save = new Button("save");
+        Button savebtn = new Button("save");
+        savebtn.setOnAction(event -> {
+            dbHelper.commitChanges();
+            dbHelper.removeEditor();
+            save.setVisible(false);
+            changesMade.setVisible(false);
+        });
+
+        Button discardbtn = new Button("discard changes");
+        discardbtn.setOnAction(event -> {
+            dbHelper.discardChanges();
+            dbHelper.removeEditor();
+            save.setVisible(false);
+            changesMade.setVisible(false);
+            InventoryService.restart();
+        });
+
+
+        save = new HBox(savebtn,discardbtn);
         filters.setRowIndex(save,1);
         filters.setColumnIndex(save,1);
-        save.setPrefWidth(50);
+        save.setHgrow(save.getChildren().get(0),Priority.ALWAYS);
+        save.setHgrow(discardbtn,Priority.ALWAYS);
+        save.setSpacing(15);
         save.setVisible(false);
-
 
         ColumnConstraints col6 = new ColumnConstraints();
         col6.setHgrow(Priority.ALWAYS);
@@ -460,6 +501,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         filesAddedBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(filesAddedBox.getItems() == null || filesAddedBox.getItems().size() <= 0){
+                    return;
+                }
+
                 Sales entity = filesAddedBox.getItems().get(newValue.intValue());
                 System.out.println("Viewing: " + entity.getFile().getName().toString());
                 lsource.setText(entity.getSource());
@@ -550,9 +595,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });
 
         removeAllImports.setOnAction(event -> {
-            while(filesAddedBox.getItems().size() > 0){
-                filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
-            }
+            //while(filesAddedBox.getItems().size() > 0){
+            //    filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
+            //}
+
+            filesAddedBox.getItems().removeAll();
 
             confirmAndSave.setDisable(true);
             confirmAndSave.setVisible(false);
@@ -626,11 +673,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         //p.setPrefSize(150,150);
         p.setMaxSize(100,100);
 
-       Task<ObservableList<Sales>> task = new GetSalesTask();
-        p.progressProperty().bind(task.progressProperty());
-        veil.visibleProperty().bind(task.runningProperty());
-        p.visibleProperty().bind(task.runningProperty());
-        reviewList.itemsProperty().bind(task.valueProperty());
+        p.progressProperty().bind(SaelsService.progressProperty());
+        veil.visibleProperty().bind(SaelsService.runningProperty());
+        p.visibleProperty().bind(SaelsService.runningProperty());
+        reviewList.itemsProperty().bind(SaelsService.valueProperty());
 
 
         listReviewPane.getChildren().add(2,veil);
@@ -677,9 +723,45 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });*/
 
 
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        SaelsService.start();
+    }
+
+    public void addNewItem(){
+
+        programInfo.setText("Adding new Item");
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Add new Inventory");
+        dialog.setHeaderText("Input Information");
+
+        ButtonType AddAll = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(AddAll,ButtonType.CANCEL);
+
+        BorderPane pane = new BorderPane();
+        HBox hBox = new HBox();
+
+        final TextField CustomLabel = new TextField();
+        CustomLabel.setPromptText("Custom Label");
+        CustomLabel.setMinWidth(50.0);
+        final TextField NetSelable = new TextField();
+        NetSelable.setPromptText("NetSaleable");
+        NetSelable.setMinWidth(50.0);
+
+        hBox.getChildren().addAll(CustomLabel,NetSelable);
+        pane.getChildren().add(hBox);
+
+        dialog.getDialogPane().setContent(pane);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if(result.get() == ButtonType.CANCEL){
+            dialog.close();
+        }else if(result.get() == ButtonType.OK && CustomLabel.getText().equals("") || NetSelable.equals("")){
+            dialog.showAndWait();
+        }else {
+            dbHelper.insertIntoInventory(new Items(CustomLabel.getText(),Integer.parseInt(NetSelable.getText()),0,0,0,"",0,"",new java.sql.Date(Calendar.getInstance().getTime().getTime())));
+            InventoryService.restart();
+        }
     }
 
     private void reloadSalesList(){
@@ -702,24 +784,6 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         thread.setDaemon(true);
         thread.start();
     }
-
-    private void reloadInventoryList(){
-        AnchorPane pane = (AnchorPane)TPinventory.getTabs().get(0).getContent();
-
-        InventoryTable table = (InventoryTable)pane.getChildren().get(0);
-
-        Region veil = (Region)pane.getChildren().get(1);
-        ProgressIndicator p = (ProgressIndicator) pane.getChildren().get(2);
-
-        Task<ObservableList<Items>> task = new GetInventoryTask();
-        p.progressProperty().bind(task.progressProperty());
-        veil.visibleProperty().bind(task.runningProperty());
-        p.visibleProperty().bind(task.runningProperty());
-        table.itemsProperty().bind(task.valueProperty());
-
-        new Thread(task).start();
-    }
-
 
     @Override
     public void handle(ActionEvent event) {

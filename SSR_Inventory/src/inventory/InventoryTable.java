@@ -3,11 +3,16 @@ package inventory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import org.apache.xmlbeans.impl.xb.xmlconfig.NamespaceList;
 
 import java.sql.Date;
@@ -15,6 +20,9 @@ import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 
 import static inventory.Controller.dbHelper;
+import static inventory.Inventory_Controller.changesMade;
+import static inventory.Inventory_Controller.programInfo;
+import static inventory.Inventory_Controller.save;
 
 /**
  * This table class gives the possibility of adding dynamic instances
@@ -70,9 +78,33 @@ public class InventoryTable extends TableView{
         netSaleableColumn.setMaxWidth(120.0);
         netSaleableColumn.setMinWidth(120.0);
         netSaleableColumn.setGraphic(setColumnName("NET SALEABLE"));
+        netSaleableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        netSaleableColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Items, Integer>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Items, Integer> event) {
+                if(event.getNewValue() != event.getOldValue()){//changes made
+                    System.out.println("changes wer made");
+                    if(dbHelper.isUserEditing()){
+                        //set status bar to who is editing in red
+                        //System.out.println(dbHelper.whoEditing());
+                        programInfo.setText(dbHelper.whoEditing());
+                        return;
+                    }else{
+                        dbHelper.recordChange("UPDATE Inventory SET net_saleable=" + event.getNewValue() + " WHERE custom_label='" + event.getRowValue().getCustomLabel() + "';");
+                        dbHelper.setUserEditing();
+                        changesMade.setText(dbHelper.getNumChanges()+" UNSAVED CHANGES");
+                        changesMade.setVisible(true);
+                        save.setVisible(true);
+                    }
+                }
+
+                ((Items) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())).setNetSaleable(event.getNewValue());
+
+            }
+        });
         return netSaleableColumn;
     }
-
 
     private TableColumn<Items,Integer> getDefectiveColumn(){
         TableColumn<Items,Integer> defectiveColumn = new TableColumn<Items,Integer>("");
@@ -81,6 +113,30 @@ public class InventoryTable extends TableView{
         defectiveColumn.setMinWidth(120);
         defectiveColumn.setMaxWidth(120);
         defectiveColumn.setGraphic(setColumnName("DEFECTIVE"));
+        defectiveColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        defectiveColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Items, Integer>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Items, Integer> event) {
+
+                if(event.getNewValue() != event.getOldValue()){//changes made
+                    System.out.println("changes wer made");
+                    if(dbHelper.isUserEditing()){
+                        //set status bar to who is editing
+                        programInfo.setText(dbHelper.whoEditing());
+                        return;
+                    }else {
+                        dbHelper.recordChange("UPDATE Inventory SET defective=" + event.getNewValue() + " WHERE custom_label='" + event.getRowValue().getCustomLabel() + "';");
+                        dbHelper.setUserEditing();
+                        changesMade.setText(dbHelper.getNumChanges()+" UNSAVED CHANGES");
+                        changesMade.setVisible(true);
+                        save.setVisible(true);
+                    }
+                }
+
+                ((Items) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())).setNetSaleable(event.getNewValue());
+            }
+        });
         return defectiveColumn;
     }
 
@@ -91,6 +147,31 @@ public class InventoryTable extends TableView{
         incompleteColumn.setMinWidth(120);
         incompleteColumn.setMaxWidth(120);
         incompleteColumn.setGraphic(setColumnName("INCOMPLETE"));
+        incompleteColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        incompleteColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Items, Integer>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Items, Integer> event) {
+
+                if(event.getNewValue() != event.getOldValue()){//changes made
+                    System.out.println("changes wer made");
+                    if(dbHelper.isUserEditing()){
+                        //set status bar to who is editing
+                        programInfo.setText(dbHelper.whoEditing());
+                        return;
+                    }else {
+                        dbHelper.recordChange("UPDATE Inventory SET incomplete=" + event.getNewValue() + " WHERE custom_label='" + event.getRowValue().getCustomLabel() + "';");
+                        dbHelper.setUserEditing();
+                        changesMade.setText(dbHelper.getNumChanges()+" UNSAVED CHANGES");
+                        changesMade.setVisible(true);
+                        save.setVisible(true);
+                    }
+
+                }
+
+                ((Items) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())).setNetSaleable(event.getNewValue());
+            }
+        });
         return incompleteColumn;
     }
 
@@ -101,6 +182,32 @@ public class InventoryTable extends TableView{
         returnsColumn.setMinWidth(120);
         returnsColumn.setMaxWidth(120);
         returnsColumn.setGraphic(setColumnName("RETURNS"));
+        returnsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        returnsColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Items, Integer>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Items, Integer> event) {
+
+                System.out.println("inside handle false " + event.getNewValue());
+
+                if(event.getNewValue() != event.getOldValue()){//changes made
+                    System.out.println("changes wer made");
+                    if(dbHelper.isUserEditing()){
+                        //set status bar to who is editing
+                        programInfo.setText(dbHelper.whoEditing());
+                        return;
+                    }else {
+                        dbHelper.recordChange("UPDATE Inventory SET returns=" + event.getNewValue() + " WHERE custom_label='" + event.getRowValue().getCustomLabel() + "';");
+                        dbHelper.setUserEditing();
+                        changesMade.setText(dbHelper.getNumChanges()+" UNSAVED CHANGES");
+                        changesMade.setVisible(true);
+                        save.setVisible(true);
+                    }
+                }
+
+                ((Items) event.getTableView().getItems().get(
+                        event.getTablePosition().getRow())).setNetSaleable(event.getNewValue());
+            }
+        });
         return returnsColumn;
     }
 
@@ -130,4 +237,31 @@ public class InventoryTable extends TableView{
         columnName.setStyle("-fx-font: 16 Ariel; -fx-font-weight: bold;");
         return columnName;
     }
+
+    private boolean isInteger(String s){
+        return s.matches("^-?\\d+$");
+    }
+
+    private StringConverter<Integer> toInt1(){
+        StringConverter<Integer> sc = new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                    System.out.println("inside toString" + object);
+                    return String.valueOf(object);
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                if(isInteger(string)){
+                    return Integer.parseInt(string);
+                }else{
+                    System.out.println("inside fromString" + string);
+                    return -1846;
+                }
+            }
+        };
+
+        return sc;
+    }
+
 }

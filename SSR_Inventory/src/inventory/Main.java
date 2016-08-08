@@ -16,6 +16,7 @@ public class Main extends Application {
         root.setStyle("-fx-background-color: white;");
         primaryStage.setTitle("SSR Inventory");
         primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
