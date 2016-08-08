@@ -155,8 +155,8 @@
                                                </stylesheets>
                                            </Label>
                                            <RadioButton fx:id="radioSales" layoutX="4.0" layoutY="32.0" mnemonicParsing="false" text="Sales" />
-                                           <RadioButton fx:id="radioNewInventory" layoutX="61.0" layoutY="32.0" mnemonicParsing="false" text="New Inventory" />
-                                           <RadioButton fx:id="radioReceiving" layoutX="169.0" layoutY="32.0" mnemonicParsing="false" text="Receiving" />
+                                           <RadioButton fx:id="radioReceiving" layoutX="61.0" layoutY="32.0" mnemonicParsing="false" text="Receiving" />
+                                           <RadioButton fx:id="radioReturns" layoutX="143.0" layoutY="32.0" mnemonicParsing="false" text="Returns" />
                                            <Text fx:id="importText" fontSmoothingType="LCD" layoutX="17.0" layoutY="197.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity&#9;:&#10;Source&#9;:&#10;Date&#9;&#9;:&#10;Part&#9;&#9;:" wrappingWidth="85.13671875" />
 
                                            <Label fx:id="lquantity" layoutX="110.0" layoutY="179.0" text="N/A">
@@ -269,9 +269,9 @@
 
     </center>
    <bottom>
-      <AnchorPane prefHeight="25.0" maxHeight="25.0">
+      <AnchorPane maxHeight="25.0" prefHeight="25.0">
          <children>
-            <HBox fx:id="status" prefHeight="25.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" BorderPane.alignment="CENTER" >
+            <HBox fx:id="status" prefHeight="25.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" BorderPane.alignment="CENTER">
                 <stylesheets>
                     <URL value="@stylesheets/bottom.css" />
                 </stylesheets>

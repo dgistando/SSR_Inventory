@@ -29,7 +29,7 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
 
@@ -60,24 +60,28 @@ public class DBHelper{
             USERNAME = _username;
             PASSWORD = _password;
 
-        Connection conn = null;
+        Connection dbConnection = null;
+        Statement stat = null;
         try {
-            conn = getConn();
-            if (!conn.isClosed()) {
-                System.out.println("The Connection is opened and you are logged in " + attempts);
+            Class.forName(JDBC_DRIVER);
+            dbConnection = DriverManager.getConnection(DB_URL,"loginManager","testlogin#3");
+            stat = dbConnection.createStatement();
 
-                /*
-                int j=0;
-                int k=0;
-                for(int i=0;i<5;i++) {
-                    j = new Random().nextInt(55);
-                    k = new Random().nextInt(55);
-                    //sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+j+","+k+","+(i%2)+",0,'These are some notes about the example,"+(j+k+(i%2))+",'"+(new Random().nextInt(50)+2012)+"0619');";
-                    sql = "INSERT INTO Inventory VALUES('#Example"+(100+i)+"',"+j+","+k+","+(i%2)+",1,'These are some notes aboouhut the example part',"+(j+k+(i%2))+",'',convert(date,'"+(new Random().nextInt(10)+1)+"-14-"+(new Random().nextInt(40)+2000)+"',101));";
-                    stat.executeUpdate(sql);
-                }*/
-                conn.close();
-                return true;
+            if (!dbConnection.isClosed()) {
+                System.out.println("The Connection is opened " + attempts);
+
+                rs = stat.executeQuery("SELECT * FROM Users WHERE username='" + _username + "';");
+                while (rs.next()) {
+
+                    if (_password.equals(rs.getString(3))) {
+                        System.out.println("Password match" + attempts);
+                        dbConnection.close();
+                        return true;
+                    }
+
+                    dbConnection.close();
+                    return false;
+                }
             }
 
         } catch (SQLException e) {
@@ -85,6 +89,8 @@ public class DBHelper{
             e.printStackTrace();
             return false;
             //e.printStackTrace();
+        }catch(ClassNotFoundException e){
+            e.printStackTrace();
         }finally {
             attempts++;
         }
@@ -198,6 +204,7 @@ public class DBHelper{
             preparedStatement.setString(3,String.valueOf(sheet.getPart()));
             preparedStatement.setInt(4,sheet.getTotal());
 
+
             preparedStatement.executeUpdate();
 
 
@@ -221,6 +228,38 @@ public class DBHelper{
         }catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<NewInventory> getReceivingSheets(){
+        ObservableList<NewInventory> list = FXCollections.observableArrayList();
+
+        Connection conn = null;
+        Statement stat = null;
+
+        try {
+            conn = getConn();
+            stat = conn.createStatement();
+
+            sql = "SELECT * FROM ReceivingSheets;";
+            rs = stat.executeQuery(sql);
+
+            while(rs.next()){
+                list.add(new NewInventory(rs.getString(1), rs.getDate(2).toString(), rs.getString(3), rs.getBoolean(4)));
+                //System.out.println(rs.getString(1)+" "+rs.getInt(2));
+            }
+
+            conn.close();
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
+        return list;
+    }
+
+    public void addReceivingSheet(){
+
     }
 
     public void newAutoInventory(HashMap<String, String> inventoryPair){
@@ -323,7 +362,7 @@ public class DBHelper{
             java.sql.Date DateNow = new java.sql.Date(Calendar.getInstance().getTime().getTime());
             conn = getConn();
 
-            sql = "UPDATE Editing SET usern=?, edits=?, changetime=? WHERE changing = 0;";
+            sql = "UPDATE Editing SET usern=?, edits=? WHERE changing = 0;";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1,USERNAME);
 
@@ -334,7 +373,6 @@ public class DBHelper{
                     preparedStatement.setString(2,"Inventory");
                 }
 
-                preparedStatement.setDate(3,DateNow);
                 preparedStatement.executeUpdate();
 
             //Set chaging to used
@@ -378,7 +416,7 @@ public class DBHelper{
         return true;
     }
 
-   public String whoEditing(){
+    public String whoEditing(){
         //if someone is editing the items are made read only
 
         Connection conn = null;
@@ -407,6 +445,35 @@ public class DBHelper{
        return str;
     }
 
+    public String usernameOfEditor(){
+        //if someone is editing the items are made read only
+
+        Connection conn = null;
+        Statement stat = null;
+        String str = "null";
+
+        try {
+            conn = getConn();
+            stat = conn.createStatement();
+
+            sql = "SELECT * FROM Editing;";
+            rs = stat.executeQuery(sql);
+
+            rs.next();
+            if(rs.getBoolean(4)){
+                str=rs.getString(0);
+            }else{
+                str="null";
+            }
+
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+
+       return str;
+    }
+
     private String convertTime(long timeInMillis){
         Calendar cal1 = Calendar.getInstance();
         cal1.setTimeInMillis(timeInMillis);
@@ -414,6 +481,7 @@ public class DBHelper{
                 "dd/MM/yyyy hh:mm:ss a");
         return dateFormat.format(cal1.getTime()).substring(dateFormat.format(cal1.getTime()).indexOf(" "));
     }
+
 
 
 }

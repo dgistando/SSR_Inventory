@@ -14,11 +14,34 @@ import javafx.scene.text.Text;
  */
 public class NewInventory extends ListCell<NewInventory> {
 
+    private String supplier,date,invoice;
     private boolean verified;
-    private String date;
 
     NewInventory(){
+        this("","","",false);
+    }
 
+    public NewInventory(String supplier, String date, String invoice, boolean verified) {
+        this.supplier = supplier;
+        this.date = date;
+        this.invoice = invoice;
+        this.verified = verified;
+    }
+
+    public String getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(String invoice) {
+        this.invoice = invoice;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
     }
 
     public String getDate() {
@@ -37,12 +60,19 @@ public class NewInventory extends ListCell<NewInventory> {
         this.verified = verified;
     }
 
+
+
     @Override
     protected void updateItem(NewInventory item, boolean empty) {
         super.updateItem(item, empty);
         Rectangle rect = new Rectangle(100, 20);
         if(item != null){
-            VBox vBox = new VBox(new Text(item.getDate()), new Text("grjijr"));
+            Text text = new Text(item.getDate() + "\n" + item.getInvoice());
+            text.setStyle("-fx-font:13 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
+            Text text1 = new Text(item.getSupplier());
+            text.setStyle("-fx-font:16 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
+
+            VBox vBox = new VBox(text1, text);
             HBox hBox = new HBox();
             ImageView l = new ImageView();
 

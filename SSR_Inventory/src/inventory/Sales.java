@@ -168,9 +168,10 @@ public class Sales extends ListCell<Sales>{
         return newdate;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setTotal() {
+        this.total = getAllQuantity();
     }
+
 
     @Override
     protected void updateItem(Sales item, boolean empty) {
@@ -392,6 +393,8 @@ public class Sales extends ListCell<Sales>{
                 }
                 System.out.println("");
             }
+
+            setTotal();
 
         }catch(IOException e){
             e.printStackTrace();

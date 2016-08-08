@@ -10,13 +10,13 @@ import static inventory.Controller.dbHelper;
  * Created by SSR on 7/28/2016.
  */
 public class GetSalesTask extends Task<ObservableList<Sales>> {
-    @Override
-    protected ObservableList<Sales> call() throws Exception {
-        for (int i = 0; i < 230; i++) {
-            updateProgress(i, 230);
-            Thread.sleep(5);
-        }
+        @Override
+        protected ObservableList<Sales> call() throws Exception {
+            for (int i = 0; i < 230; i++) {
+                updateProgress(i, 230);
+                Thread.sleep(5);
+            }
 
-        return dbHelper.getSalesSheets();
-    }
+            return dbHelper.getSalesSheets();
+        }
 }

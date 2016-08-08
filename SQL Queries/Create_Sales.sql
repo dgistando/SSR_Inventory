@@ -6,4 +6,5 @@ custom_label varchar(50) NOT NULL,
 sold_qty int NOT NULL,
 part char(2),
 date_sold DATE,
+PRIMARY KEY(firstname,lastname,custom_label,sold_qty,date_sold)
 );

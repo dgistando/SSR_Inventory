@@ -1,12 +1,15 @@
 package inventory;
 
 
+import com.sun.jnlp.ApiDialog;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -64,7 +67,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private ListView reviewList;
     @FXML
-    private RadioButton radioSales,radioNewInventory,radioReceiving;
+    private RadioButton radioSales,radioReturns,radioReceiving;
     @FXML
     private AnchorPane listReviewPane;
     @FXML
@@ -81,8 +84,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     public static Label changesMade,currentUser, programInfo;
     public static HBox save;
     public static AutoCompleteTextField SearchBox;
+
     private final GetInventoryService InventoryService = new GetInventoryService();
-    private final GetSalesService SaelsService = new GetSalesService();
+    private final GetSalesService SalesService = new GetSalesService();
+    private final GetReceivingService ReceivingService = new GetReceivingService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -161,6 +166,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert removeImports != null : "";
         assert removeAllImports != null : "";
         assert status != null:"";
+        assert radioSales != null:"";
+        assert radioReturns != null:"";
+        assert radioReceiving != null:"";
         programInfo = new Label("program info");
         currentUser = new Label("Current User: " + dbHelper.getUSERNAME()+" ");
     }
@@ -191,7 +199,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private void initRadio(){
         final ToggleGroup group = new ToggleGroup();
         radioSales.setToggleGroup(group);
-        radioNewInventory.setToggleGroup(group);
+        radioReturns.setToggleGroup(group);
         radioReceiving.setToggleGroup(group);
 
 
@@ -205,18 +213,17 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     reviewList.getItems().removeAll();
                     record_label.setText("Record of Sales");
                     System.out.print("\n radio initialized and selectd ");
-                    SaelsService.restart();
+                    getReviewListContent(SalesService);
                 }
-                else if (newValue == radioNewInventory && oldValue != radioNewInventory)
+                else if (newValue == radioReturns && oldValue != radioReturns)
                 {
-                    record_label.setText("Past Uploads");
-
+                    record_label.setText("Past Returns");
 
                 }
                 else if (newValue == radioReceiving && oldValue != radioReceiving)
                 {
                     record_label.setText("Receiving");
-
+                    getReviewListContent(ReceivingService);
                 }
             }
         });
@@ -551,8 +558,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             //newInventory.addAll(Set.keySet());
 
             //newInventory.addAll(set);
-
+            if(Set.size() > 0){
             Set = confirmNewInventory(Set);
+            }
             //set messagebox with list of new inventory(dont forget add all button)
             if(Set != null && Set.size() > 0){
                 newInventory = FXCollections.observableArrayList(Set.keySet());
@@ -611,7 +619,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             filesAddedBox.getSelectionModel().clearSelection();
         });
 
-        getReviewListContent();
+
     }
 
     public HashMap<String,String> confirmNewInventory(HashMap<String,String> newInventory){
@@ -664,8 +672,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         }
     }
 
-
-    private void getReviewListContent(){
+    private<T> void getReviewListContent(Service service){
 
        Region veil = new Region();
         veil.setStyle("-fx-background-color: rgba(0,0,0,0.4)");
@@ -673,11 +680,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         //p.setPrefSize(150,150);
         p.setMaxSize(100,100);
 
-        p.progressProperty().bind(SaelsService.progressProperty());
-        veil.visibleProperty().bind(SaelsService.runningProperty());
-        p.visibleProperty().bind(SaelsService.runningProperty());
-        reviewList.itemsProperty().bind(SaelsService.valueProperty());
-
+        p.progressProperty().bind(service.progressProperty());
+        veil.visibleProperty().bind(service.runningProperty());
+        p.visibleProperty().bind(service.runningProperty());
+        reviewList.itemsProperty().bind(service.valueProperty());
 
         listReviewPane.getChildren().add(2,veil);
         listReviewPane.getChildren().add(3,p);
@@ -688,21 +694,38 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane.setBottomAnchor(listReviewPane.getChildren().get(2),0.0);
 
 
+        if(radioSales.isSelected()){
+            reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
+                                          @Override
+                                          public ListCell<Sales> call(ListView<Sales> list) {
+                                                return new Sales();
+                                          }
+                                      }
+            );
+        }
+        else if(radioReceiving.isSelected())
+        {
+            reviewList.setCellFactory(new Callback<ListView<NewInventory>, ListCell<NewInventory>>() {
+                                          @Override
+                                          public ListCell<NewInventory> call(ListView<NewInventory> list) {
+                                              return new NewInventory();
+                                          }
+                                      }
+            );
 
-        reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
-                @Override
-                public ListCell<Sales> call(ListView<Sales> list) {
-                    return new Sales();
-                }
-            }
-        );
+        }
+        else
+        {
+            //return Returns();
+        }
 
-        reviewList.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Sales>() {
-                    public void changed(ObservableValue<? extends Sales> ov, Sales old_val, Sales new_val) {
-                        System.out.println("old val: "+ old_val + "new val: "+ new_val);
-                    }
-                });
+
+            reviewList.getSelectionModel().selectedItemProperty().addListener(
+                    new ChangeListener<T>() {
+                        public void changed(ObservableValue<? extends T> ov, T old_val, T new_val) {
+                            System.out.println("old val: " + old_val + "new val: " + new_val);
+                        }
+                    });
 
         /*reviewList.setCellFactory(new Callback<ListView<Sales>, ListCell<Sales>>() {
             @Override
@@ -721,9 +744,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 };
             }
         });*/
-
-
-        SaelsService.start();
+        if(service.getState() == Worker.State.SUCCEEDED){
+            service.restart();
+        }else{
+            service.start();
+        }
     }
 
     public void addNewItem(){
@@ -783,6 +808,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    public void shutdown() {
+        //future dialog box for exiting
     }
 
     @Override

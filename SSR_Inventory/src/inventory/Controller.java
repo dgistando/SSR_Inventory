@@ -1,5 +1,6 @@
 package inventory;
 
+import com.sun.glass.ui.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -18,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.poi.ss.formula.functions.T;
 import sun.security.util.Password;
 
@@ -55,6 +57,7 @@ public class Controller implements Initializable{
         dbHelper = new DBHelper();
 
 
+
         Btnlogin.setOnAction(e-> {
             try {
 
@@ -63,7 +66,7 @@ public class Controller implements Initializable{
                 }
 
                 //if(!LoginPass(username.getText(),password.getText())) {
-                if(!LoginPass("testlogin" ,"Register#2")) {
+                if(!LoginPass(username.getText() ,password.getText())) {
                         System.out.print("failed to login");
                         return;
                 }else {
@@ -71,17 +74,26 @@ public class Controller implements Initializable{
 
                     Parent root = FXMLLoader.load(getClass().getResource("view_inventory.fxml"));
                     //Scene scene = new Scene(root,450,450);
-
+                    final Inventory_Controller IC = (Inventory_Controller) new FXMLLoader(getClass().getResource("view_inventory.fxml")).getController();
                     //TPinventory.getTabs().addAll(InventoryTable, InventoryTable1);
 
                     Stage stage = new Stage();
                     stage.setTitle("SSR_Inventory");
-                    stage.setScene(new Scene(root, 750, 600));
+                    Scene scene = new Scene(root, 750, 600);
+                    stage.setScene(scene);
                     stage.show();
 
 
                     //hide this current window
                     ((Node) (e.getSource())).getScene().getWindow().hide();
+
+
+                    /*scene.getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+
+                        }
+                    });*/
                 }
             }catch (IOException err){
                 err.printStackTrace();
@@ -101,13 +113,19 @@ public class Controller implements Initializable{
         password.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode().equals(KeyCode.ENTER) && !username.getText().equals("") || !password.getText().equals("")){
-                    Btnlogin.fire();
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    if(!username.getText().equals("") || !password.getText().equals("")) {
+                        Btnlogin.fire();
+                    }
+                }else{
+                    return;
                 }
             }
         });
 
     }
+
+
 
     private boolean LoginPass(String u, String p){
         return dbHelper.credentialLogin(u,p);
