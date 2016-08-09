@@ -35,7 +35,7 @@ import java.util.Iterator;
 /**
  * Created by SSR on 7/28/2016.
  */
-public class Sales extends ListCell<Sales>{
+public class Sales extends ImportList{
     private String date,source;
     private char part;
     //plaanignng to put the Strings in order of the columns in table ie. first column in first name.
@@ -172,12 +172,15 @@ public class Sales extends ListCell<Sales>{
         this.total = getAllQuantity();
     }
 
+    public String getTitle(){
+       return title + "" + String.valueOf(getPart());
+    }
 
     @Override
-    protected void updateItem(Sales item, boolean empty) {
+    protected void updateItem(ImportList item, boolean empty) {
         super.updateItem(item, empty);
         if(item != null){
-            Label label = new Label("  SSR "+item.getSource()+" "+item.getDate()+" "+item.getPart());
+            Label label = new Label("  SSR "+item.getSource()+" "+item.getDate()+" "+item.getTitle());
             label.setStyle("-fx-font:28 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
 
             VBox vbox = new VBox();
@@ -197,6 +200,8 @@ public class Sales extends ListCell<Sales>{
             hBox.setHgrow(hBox.getChildren().get(0), Priority.ALWAYS);
             hBox.setHgrow(hBox.getChildren().get(1), Priority.ALWAYS);
             setGraphic(hBox);
+        }else{
+            setGraphic(null);
         }
     }
 
@@ -475,7 +480,7 @@ public class Sales extends ListCell<Sales>{
         return columnName;
     }
 
-    public class SaleItems{
+    public class SaleItems {
 
         private String name,country,customLabel,packing;
         private int quantity;

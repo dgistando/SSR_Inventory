@@ -29,7 +29,7 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SQLEXPRESS//:1433;"
             + "databaseName=testdb;";
 
 
@@ -258,8 +258,44 @@ public class DBHelper{
         return list;
     }
 
-    public void addReceivingSheet(){
+    public void addReceivingSheet(NewInventory sheet){
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
 
+        try {
+            //adding individual sheet
+            sql="INSERT INTO ReceivingSheets VALUES(?,?,?,?);";
+            conn = getConn();
+            preparedStatement = conn.prepareStatement(sql);
+
+            java.sql.Date added = new java.sql.Date(sheet.getDateInFormat().getTime());
+
+            preparedStatement.setString(1,sheet.getSupplier());
+            preparedStatement.setDate(2,added);
+            preparedStatement.setString(3,String.valueOf(sheet.getInvoice()));
+            preparedStatement.setBoolean(4,sheet.isVerified());
+            preparedStatement.executeUpdate();
+
+
+            for(int i=0;i<sheet.getCustomLabel().size();i++){
+                sql = "INSERT INTO Receiving VALUES(?,?,?,?,?,?,?);";
+                preparedStatement = conn.prepareStatement(sql);
+
+                preparedStatement.setString(1,sheet.getSupplier());
+                preparedStatement.setString(2,sheet.getCustomLabel().get(i));
+                preparedStatement.setDate(3,added);
+                preparedStatement.setInt(4,sheet.getQuantity().get(i));
+                preparedStatement.setInt(5,sheet.getNetSaleable().get(i));
+                preparedStatement.setInt(6,sheet.getIncomplete().get(i));
+                preparedStatement.setInt(7,sheet.getDefective().get(i));
+
+                preparedStatement.executeUpdate();
+            }
+
+            conn.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public void newAutoInventory(HashMap<String, String> inventoryPair){

@@ -1,6 +1,11 @@
 package inventory;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -17,18 +22,22 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
  * Created by SSR on 8/4/2016.
  */
-public class NewInventory extends ListCell<NewInventory> {
+public class NewInventory extends ImportList{
 
     private String supplier,date,invoice;
     private boolean verified;
     private ArrayList<String> customLabel;
-    private ArrayList<Integer> quantity;
+    private ArrayList<Integer> quantity,netSaleable,incomplete,defective;
     private File file;
 
     NewInventory(){
@@ -38,6 +47,9 @@ public class NewInventory extends ListCell<NewInventory> {
     public NewInventory(File file){
         customLabel = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
+        netSaleable = new ArrayList<Integer>();
+        incomplete = new ArrayList<Integer>();
+        defective = new ArrayList<Integer>();
         setFile(file);
         importToReceiving(file);
     }
@@ -49,6 +61,9 @@ public class NewInventory extends ListCell<NewInventory> {
         this.verified = verified;
         customLabel = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
+        netSaleable = new ArrayList<Integer>();
+        incomplete = new ArrayList<Integer>();
+        defective = new ArrayList<Integer>();
     }
 
     public File getFile() {
@@ -91,6 +106,74 @@ public class NewInventory extends ListCell<NewInventory> {
         this.verified = verified;
     }
 
+
+
+    public String getTitle(){
+        return this.title = invoice;
+    }
+
+    public String getSource(){
+        return getSupplier();
+    }
+
+    public int getAllQuantity() {
+        return quantity.stream().mapToInt(Integer::intValue).sum();
+    }
+
+    public Date getDateInFormat(){
+
+        Date newdate = new Date();
+
+        try {
+            DateFormat df = new SimpleDateFormat("MM/dd/yyy");
+            newdate = df.parse(getDate());
+
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return newdate;
+    }
+
+    public ArrayList<String> getCustomLabel() {
+        return customLabel;
+    }
+
+    public void setCustomLabel(ArrayList<String> customLabel) {
+        this.customLabel = customLabel;
+    }
+
+    public ArrayList<Integer> getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(ArrayList<Integer> quantity) {
+        this.quantity = quantity;
+    }
+
+    public ArrayList<Integer> getNetSaleable() {
+        return netSaleable;
+    }
+
+    public void setNetSaleable(ArrayList<Integer> netSaleable) {
+        this.netSaleable = netSaleable;
+    }
+
+    public ArrayList<Integer> getIncomplete() {
+        return incomplete;
+    }
+
+    public void setIncomplete(ArrayList<Integer> incomplete) {
+        this.incomplete = incomplete;
+    }
+
+    public ArrayList<Integer> getDefective() {
+        return defective;
+    }
+
+    public void setDefective(ArrayList<Integer> defective) {
+        this.defective = defective;
+    }
+
     public void importToReceiving(File file){
 
         try {
@@ -102,8 +185,6 @@ public class NewInventory extends ListCell<NewInventory> {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
 
-            //int i = -9999;
-            String temp="";
 
             Row nextRow = rowIterator.next();
             Iterator<Cell> cellIterator = nextRow.cellIterator();
@@ -121,7 +202,7 @@ public class NewInventory extends ListCell<NewInventory> {
                     setSupplier(arr[1]);
 
                     if(arr.length > 2){
-                        setInvoice(arr[3]);
+                        setInvoice(arr[2]);
                     }
 
                     System.out.println(getSupplier() + " then " + getDate() + " part " + getInvoice());
@@ -131,6 +212,7 @@ public class NewInventory extends ListCell<NewInventory> {
 
             }
 
+
             while (rowIterator.hasNext()) {
                 nextRow = rowIterator.next();
                 cellIterator = nextRow.cellIterator();
@@ -139,42 +221,66 @@ public class NewInventory extends ListCell<NewInventory> {
                     int i=0; boolean bool=false; String str="";
                     Cell cell = cellIterator.next();
 
+
                     // System.out.print(cell.getCellType());
                     switch (cell.getCellType()) {
                         case Cell.CELL_TYPE_NUMERIC:
                             i = (int)cell.getNumericCellValue();
-                            //System.out.print(cell.getNumericCellValue());
+                            System.out.print(cell.getNumericCellValue());
                             break;
                         case Cell.CELL_TYPE_BOOLEAN:
-                           // System.out.print(cell.getBooleanCellValue());
+                            // System.out.print(cell.getBooleanCellValue());
                             break;
                         case Cell.CELL_TYPE_FORMULA:
-                           // System.out.print(cell.getCellFormula());
+                            // System.out.print(cell.getCellFormula());
                             break;
                         case Cell.CELL_TYPE_STRING:
                             str = cell.getStringCellValue();
-                            temp = cell.getStringCellValue();
-
-                           // System.out.print(temp);
-
-                            if(cell.getColumnIndex()+1 == 1)
-                            {
-                                System.out.print("custom label: " + str.replaceAll("\\p{Space}",""));
-                                customLabel.add(str);
-                            }
-                            else if(cell.getColumnIndex()+1 == 2)
-                            {
-                                System.out.print("quantity: " + i);
-                                quantity.add(0);
-                            }
-
                             break;
                         default:
                     }
 
+
+                    if(cell.getColumnIndex()+1 == 1)
+                    {
+                        if(incomplete.size() < quantity.size()){
+                            incomplete.add(0);
+                        }
+
+                        if(defective.size() < quantity.size()){
+                            defective.add(0);
+                        }
+
+                        System.out.print("custom label: " + str.replaceAll("\\p{Space}",""));
+                        customLabel.add(str);
+                        quantity.add(0);
+                    }
+                    else if(cell.getColumnIndex()+1 == 2)
+                    {
+                        System.out.print("quantity: " + i);
+                        netSaleable.add(i);
+                        quantity.add(netSaleable.size()-1,i);
+                    }else if(cell.getColumnIndex()+1 == 3){
+                        incomplete.add(i);
+                        quantity.add(netSaleable.size()-1, netSaleable.get(netSaleable.size()-1)+i);
+                    }else if(cell.getColumnIndex()+1 == 4){
+                        defective.add(i);
+                        quantity.add(netSaleable.size()-1, netSaleable.get(netSaleable.size()-1) + incomplete.get(incomplete.size()-1) + i);
+                    }
+
+
+
                     System.out.print(" ");
                 }
                 System.out.println("");
+            }
+
+            if(incomplete.size() < quantity.size()){
+                incomplete.add(0);
+            }
+
+            if(defective.size() < quantity.size()){
+                defective.add(0);
             }
 
         }catch(IOException e){
@@ -183,13 +289,13 @@ public class NewInventory extends ListCell<NewInventory> {
     }
 
     @Override
-    protected void updateItem(NewInventory item, boolean empty) {
+    protected void updateItem(ImportList item, boolean empty) {
         super.updateItem(item, empty);
         Rectangle rect = new Rectangle(100, 20);
         if(item != null){
-            Text text = new Text(item.getDate() + "\n" + item.getInvoice());
+            Text text = new Text(item.getDate() + "\n" + item.getTitle());
             text.setStyle("-fx-font:13 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
-            Text text1 = new Text(item.getSupplier());
+            Text text1 = new Text(item.getSource());
             text.setStyle("-fx-font:16 Ariel;-fx-font-weight: bold;-fx-text-fill:#010101;");
 
             VBox vBox = new VBox(text1, text);
@@ -208,13 +314,137 @@ public class NewInventory extends ListCell<NewInventory> {
                 l.setVisible(false);
             }
 
-
-
             //l.setAlignment(Pos.CENTER_RIGHT);
             hBox.getChildren().addAll(vBox, l);
             hBox.setSpacing(10);
             hBox.setHgrow(hBox.getChildren().get(0), Priority.ALWAYS);
             setGraphic(hBox);
+        }else {
+            setGraphic(null);
+        }
+    }
+
+    public ArrayList<TableColumn> setNewInventoryTable(){
+        ArrayList<TableColumn> columns = new ArrayList<>();
+        TableColumn<newInventoryItems,String> labelColumn = new TableColumn<newInventoryItems,String>("");
+        labelColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,String>("label"));
+        labelColumn.setStyle("-fx-font: 15.5 Ariel;");
+        labelColumn.setMinWidth(200.0);
+        labelColumn.setMaxWidth(300.0);
+        labelColumn.setGraphic(setColumnName("CUSTOM LABEL"));
+        columns.add(labelColumn);
+
+        TableColumn<newInventoryItems,Integer> quantityColumn = new TableColumn<newInventoryItems,Integer>("");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,Integer>("qty"));
+        quantityColumn.setStyle("-fx-font: 15.5 Ariel; -fx-alignment: CENTER;");
+        quantityColumn.setMinWidth(120);
+        quantityColumn.setMaxWidth(120);
+        quantityColumn.setGraphic(setColumnName("QUANTITY"));
+        columns.add(quantityColumn);
+
+        TableColumn<newInventoryItems,Integer> netColumn = new TableColumn<newInventoryItems,Integer>("");
+        netColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,Integer>("net"));
+        netColumn.setStyle("-fx-font: 15.5 Ariel; -fx-alignment: CENTER;");
+        netColumn.setMinWidth(120);
+        netColumn.setMaxWidth(120);
+        netColumn.setGraphic(setColumnName("NET SALEABLE"));
+        columns.add(netColumn);
+
+        TableColumn<newInventoryItems,Integer> incompleteColumn = new TableColumn<newInventoryItems,Integer>("");
+        incompleteColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,Integer>("incomplete"));
+        incompleteColumn.setStyle("-fx-font: 15.5 Ariel; -fx-alignment: CENTER;");
+        incompleteColumn.setMinWidth(120);
+        incompleteColumn.setMaxWidth(120);
+        incompleteColumn.setGraphic(setColumnName("INCOMPLETE"));
+        columns.add(incompleteColumn);
+
+        TableColumn<newInventoryItems,Integer> defectiveColumn = new TableColumn<newInventoryItems,Integer>("");
+        defectiveColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,Integer>("defective"));
+        defectiveColumn.setStyle("-fx-font: 15.5 Ariel; -fx-alignment: CENTER;");
+        defectiveColumn.setMinWidth(120);
+        defectiveColumn.setMaxWidth(120);
+        defectiveColumn.setGraphic(setColumnName("DEFECTIVE"));
+        columns.add(defectiveColumn);
+
+        return columns;
+    }
+
+    private Label setColumnName(String name){
+        Label columnName = new Label();
+        columnName.setText(name);
+        columnName.setStyle("-fx-font: 16 Ariel; -fx-font-weight: bold;");
+        return columnName;
+    }
+
+    protected ObservableList<newInventoryItems> addTableData(){
+        ObservableList<newInventoryItems> itemList = FXCollections.observableArrayList();
+
+        for(int i = 0; i < customLabel.size(); i++){
+            itemList.add(new newInventoryItems(customLabel.get(i),quantity.get(i), netSaleable.get(i),incomplete.get(i),defective.get(i)));
+
+            System.out.println(customLabel.get(i)+" "+quantity.get(i)+ " num: " + i + "\n\n");
+        }
+
+        return itemList;
+    }
+
+    public class newInventoryItems{
+        String label;
+        int qty,net,incomplete,defective;
+
+        public newInventoryItems(){this("",0);}
+
+        public newInventoryItems(String label, int qty) {
+            this.label = label;
+            this.qty = qty;
+        }
+
+        public newInventoryItems(String label, int qty, int net, int incomplete, int defective) {
+            this.label = label;
+            this.qty = qty;
+            this.net = net;
+            this.incomplete = incomplete;
+            this.defective = defective;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public int getQty() {
+            return qty;
+        }
+
+        public void setQty(int qty) {
+            this.qty = qty;
+        }
+
+        public int getNet() {
+            return net;
+        }
+
+        public void setNet(int net) {
+            this.net = net;
+        }
+
+        public int getIncomplete() {
+            return incomplete;
+        }
+
+        public void setIncomplete(int incomplete) {
+            this.incomplete = incomplete;
+        }
+
+        public int getDefective() {
+            return defective;
+        }
+
+        public void setDefective(int defective) {
+            this.defective = defective;
         }
     }
 }
