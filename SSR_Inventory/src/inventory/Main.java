@@ -34,9 +34,7 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        if(!dbHelper.getUSERNAME().equals("") && dbHelper.usernameOfEditor().equals(dbHelper.getUSERNAME()) ){
-            dbHelper.commitChanges();
-        }
+
     }
 
     public static void main(String[] args) {

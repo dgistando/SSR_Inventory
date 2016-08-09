@@ -8,6 +8,17 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by SSR on 8/4/2016.
@@ -16,9 +27,19 @@ public class NewInventory extends ListCell<NewInventory> {
 
     private String supplier,date,invoice;
     private boolean verified;
+    private ArrayList<String> customLabel;
+    private ArrayList<Integer> quantity;
+    private File file;
 
     NewInventory(){
         this("","","",false);
+    }
+
+    public NewInventory(File file){
+        customLabel = new ArrayList<String>();
+        quantity = new ArrayList<Integer>();
+        setFile(file);
+        importToReceiving(file);
     }
 
     public NewInventory(String supplier, String date, String invoice, boolean verified) {
@@ -26,6 +47,16 @@ public class NewInventory extends ListCell<NewInventory> {
         this.date = date;
         this.invoice = invoice;
         this.verified = verified;
+        customLabel = new ArrayList<String>();
+        quantity = new ArrayList<Integer>();
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     public String getInvoice() {
@@ -60,7 +91,96 @@ public class NewInventory extends ListCell<NewInventory> {
         this.verified = verified;
     }
 
+    public void importToReceiving(File file){
 
+        try {
+            FileInputStream inputStream = new FileInputStream(file);
+
+            System.out.println("READING FILE: "+file.getName().toString());
+
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            //int i = -9999;
+            String temp="";
+
+            Row nextRow = rowIterator.next();
+            Iterator<Cell> cellIterator = nextRow.cellIterator();
+
+            //gathering beginning information for each file.
+            if(cellIterator.hasNext()){
+                Cell cell = cellIterator.next();
+
+                if(cell.getCellType() == Cell.CELL_TYPE_STRING){
+                    //String[] arr = cell.getStringCellValue().split("\\p{Upper}\\p{Space}0|1",2);
+
+                    String[] arr  = cell.getStringCellValue().split(" ");
+
+                    setDate(arr[0]);
+                    setSupplier(arr[1]);
+
+                    if(arr.length > 2){
+                        setInvoice(arr[3]);
+                    }
+
+                    System.out.println(getSupplier() + " then " + getDate() + " part " + getInvoice());
+                }else{
+                    //Not a new Inventory File
+                }
+
+            }
+
+            while (rowIterator.hasNext()) {
+                nextRow = rowIterator.next();
+                cellIterator = nextRow.cellIterator();
+
+                while (cellIterator.hasNext()) {
+                    int i=0; boolean bool=false; String str="";
+                    Cell cell = cellIterator.next();
+
+                    // System.out.print(cell.getCellType());
+                    switch (cell.getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            i = (int)cell.getNumericCellValue();
+                            //System.out.print(cell.getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_BOOLEAN:
+                           // System.out.print(cell.getBooleanCellValue());
+                            break;
+                        case Cell.CELL_TYPE_FORMULA:
+                           // System.out.print(cell.getCellFormula());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            str = cell.getStringCellValue();
+                            temp = cell.getStringCellValue();
+
+                           // System.out.print(temp);
+
+                            if(cell.getColumnIndex()+1 == 1)
+                            {
+                                System.out.print("custom label: " + str.replaceAll("\\p{Space}",""));
+                                customLabel.add(str);
+                            }
+                            else if(cell.getColumnIndex()+1 == 2)
+                            {
+                                System.out.print("quantity: " + i);
+                                quantity.add(0);
+                            }
+
+                            break;
+                        default:
+                    }
+
+                    System.out.print(" ");
+                }
+                System.out.println("");
+            }
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void updateItem(NewInventory item, boolean empty) {

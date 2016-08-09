@@ -73,7 +73,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private Button browse,addButton,confirmAndSave, removeImports, removeAllImports;
     @FXML
-    private ChoiceBox<Sales> filesAddedBox;
+    private ChoiceBox filesAddedBox1;
     @FXML
     private Label lquantity,ldate,lsource,lpart, record_label;
     @FXML
@@ -154,7 +154,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert splitPane != null : "";
         assert importText != null : "";
         assert browse != null : "";
-        assert filesAddedBox != null:"";
+        assert filesAddedBox1 != null:"";
         assert ldate != null:"";
         assert lquantity != null:"";
         assert lpart != null:"";
@@ -203,17 +203,15 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         radioReceiving.setToggleGroup(group);
 
 
-        //test if this works////////////////////////////////////////////////////////////////////////////
-
         group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 if (newValue == radioSales && oldValue != radioSales)
                 {
-                    reviewList.getItems().removeAll();
                     record_label.setText("Record of Sales");
                     System.out.print("\n radio initialized and selectd ");
                     getReviewListContent(SalesService);
+                    setSalesImport(filesAddedBox1);
                 }
                 else if (newValue == radioReturns && oldValue != radioReturns)
                 {
@@ -454,7 +452,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             }
         };
 
-        filesAddedBox.setConverter(sc);
+        filesAddedBox1.setConverter(sc);
         confirmAndSave.setDisable(true);
         confirmAndSave.setVisible(false);
         removeImports.setDisable(true);
@@ -486,9 +484,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             if(FileList != null && FileList.size()>0) {
                 for (File file : FileList) {
                     Sales sales = new Sales(file);
-                    filesAddedBox.getItems().add(sales);
+                    filesAddedBox1.getItems().add(sales);
                 }
-                filesAddedBox.setTooltip(new Tooltip("Select a file from list"));
+                filesAddedBox1.setTooltip(new Tooltip("Select a file from list"));
 
                 confirmAndSave.setVisible(true);
                 confirmAndSave.setDisable(false);
@@ -503,9 +501,10 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
             fileLocationTextField.clear();
             FileList.clear();
+
         });
 
-        filesAddedBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+       /* filesAddedBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if(filesAddedBox.getItems() == null || filesAddedBox.getItems().size() <= 0){
@@ -619,8 +618,131 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             filesAddedBox.getSelectionModel().clearSelection();
         });
 
+        */
+    }
+
+    public void setNewInventoryImports(ChoiceBox<NewInventory> filesAddedBox){
 
     }
+
+    public void setSalesImport(ChoiceBox<Sales> filesAddedBox){
+        filesAddedBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(filesAddedBox.getItems() == null || filesAddedBox.getItems().size() <= 0){
+                    return;
+                }
+
+                Sales entity = filesAddedBox.getItems().get(newValue.intValue());
+                System.out.println("Viewing: " + entity.getFile().getName().toString());
+                lsource.setText(entity.getSource());
+                ldate.setText(entity.getDate());
+                lpart.setText(entity.getPart()+"");
+                lquantity.setText(entity.getAllQuantity()+"");
+
+                importTable.setEditable(false);
+
+                if(importTable.getItems() == null || importTable.getItems().size() <= 0) {
+                    //new Table
+                    importTable.getColumns().addAll(entity.setSalesTable());
+                    importTable.setItems(entity.addTableData());
+                }else{
+                    importTable.getItems().removeAll();
+                    importTable.setItems(entity.addTableData());
+                }
+
+
+            }
+        });
+
+        confirmAndSave.setOnAction(event -> {
+            ObservableList<String> newInventory = FXCollections.observableArrayList();//sales list
+            ObservableList<String> newInformation = FXCollections.observableArrayList();
+            SortedSet<String> currentInventory = SearchBox.getEntries();//all inventory
+
+            HashSet<String> set = new HashSet<String>();;
+            HashMap<String,String> Set = new HashMap<String, String>();
+
+
+            for(int i=0;i<filesAddedBox.getItems().size();i++){//Sales sheet
+                for(int j=0; j < filesAddedBox.getItems().get(i).getItemCode().size();j++){//Strings for customlabel
+                    if(!currentInventory.contains(filesAddedBox.getItems().get(i).getItemCode().get(j))){//part exists in inventory
+                        //removing duplicates.
+                        Set.put(filesAddedBox.getItems().get(i).getItemCode().get(j), filesAddedBox.getItems().get(i).getInformation().get(j));
+
+                        //set.add(filesAddedBox.getItems().get(i).getItemCode().get(j));
+                        //newInformation.add(filesAddedBox.getItems().get(i).getInformation().get(j));
+                    }
+                }
+            }
+
+            //newInventory.addAll(Set.keySet());
+
+            //newInventory.addAll(set);
+            if(Set.size() > 0){
+                Set = confirmNewInventory(Set);
+            }
+            //set messagebox with list of new inventory(dont forget add all button)
+            if(Set != null && Set.size() > 0){
+                newInventory = FXCollections.observableArrayList(Set.keySet());
+                //insert new ones into inventory with information
+            }
+
+            if(Set == null){
+                return;
+            }else{
+                removeAllImports.fire();
+                for(String s : newInventory){
+                    System.out.println(s + " will be new inventory");
+                }
+
+                dbHelper.newAutoInventory(Set);
+
+                //inserting sheets into database
+                for (Sales sheet : filesAddedBox.getItems()) {
+                    dbHelper.addSalesSheet(sheet);
+                }
+            }
+
+        });
+
+        removeImports.setOnAction(event -> {
+            filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
+
+            if(filesAddedBox.getItems().size() <= 0){
+                confirmAndSave.setDisable(true);
+                confirmAndSave.setVisible(false);
+                removeImports.setDisable(true);
+                removeImports.setVisible(false);
+                removeAllImports.setDisable(true);
+                removeAllImports.setVisible(false);
+                filesAddedBox.getSelectionModel().clearSelection();
+            }else{
+                filesAddedBox.getSelectionModel().select(0);
+            }
+
+        });
+
+        removeAllImports.setOnAction(event -> {
+            //while(filesAddedBox.getItems().size() > 0){
+            //    filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
+            //}
+
+            filesAddedBox.getItems().clear();
+
+            confirmAndSave.setDisable(true);
+            confirmAndSave.setVisible(false);
+            removeImports.setDisable(true);
+            removeImports.setVisible(false);
+            removeAllImports.setDisable(true);
+            removeAllImports.setVisible(false);
+
+            filesAddedBox.getSelectionModel().clearSelection();
+        });
+
+
+    }
+
 
     public HashMap<String,String> confirmNewInventory(HashMap<String,String> newInventory){
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -705,6 +827,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         }
         else if(radioReceiving.isSelected())
         {
+            reviewList = new ListView<NewInventory>();
             reviewList.setCellFactory(new Callback<ListView<NewInventory>, ListCell<NewInventory>>() {
                                           @Override
                                           public ListCell<NewInventory> call(ListView<NewInventory> list) {
@@ -745,7 +868,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             }
         });*/
         if(service.getState() == Worker.State.SUCCEEDED){
-            service.restart();
+                service.restart();
         }else{
             service.start();
         }
