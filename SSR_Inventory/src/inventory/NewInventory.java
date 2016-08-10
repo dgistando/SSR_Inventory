@@ -2,6 +2,7 @@ package inventory;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
@@ -51,7 +52,7 @@ public class NewInventory extends ImportList{
         incomplete = new ArrayList<Integer>();
         defective = new ArrayList<Integer>();
         setFile(file);
-        importToReceiving(file);
+        if(!importToReceiving(file)){showAlert();}
     }
 
     public NewInventory(String supplier, String date, String invoice, boolean verified) {
@@ -174,7 +175,7 @@ public class NewInventory extends ImportList{
         this.defective = defective;
     }
 
-    public void importToReceiving(File file){
+    public boolean importToReceiving(File file){
 
         try {
             FileInputStream inputStream = new FileInputStream(file);
@@ -208,6 +209,7 @@ public class NewInventory extends ImportList{
                     System.out.println(getSupplier() + " then " + getDate() + " part " + getInvoice());
                 }else{
                     //Not a new Inventory File
+                    return false;
                 }
 
             }
@@ -286,6 +288,7 @@ public class NewInventory extends ImportList{
         }catch(IOException e){
             e.printStackTrace();
         }
+        return true;
     }
 
     @Override
@@ -324,7 +327,7 @@ public class NewInventory extends ImportList{
         }
     }
 
-    public ArrayList<TableColumn> setNewInventoryTable(){
+    protected ArrayList<TableColumn> setNewInventoryTable(){
         ArrayList<TableColumn> columns = new ArrayList<>();
         TableColumn<newInventoryItems,String> labelColumn = new TableColumn<newInventoryItems,String>("");
         labelColumn.setCellValueFactory(new PropertyValueFactory<newInventoryItems,String>("label"));
@@ -388,18 +391,18 @@ public class NewInventory extends ImportList{
         return itemList;
     }
 
-    public class newInventoryItems{
+    private class newInventoryItems{
         String label;
         int qty,net,incomplete,defective;
 
         public newInventoryItems(){this("",0);}
 
-        public newInventoryItems(String label, int qty) {
+        private newInventoryItems(String label, int qty) {
             this.label = label;
             this.qty = qty;
         }
 
-        public newInventoryItems(String label, int qty, int net, int incomplete, int defective) {
+        private newInventoryItems(String label, int qty, int net, int incomplete, int defective) {
             this.label = label;
             this.qty = qty;
             this.net = net;
@@ -446,5 +449,14 @@ public class NewInventory extends ImportList{
         public void setDefective(int defective) {
             this.defective = defective;
         }
+    }
+
+    private void showAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Incorrect File");
+        alert.setContentText("Ooops, there was an error!\nPlease upload a New Inventory Document");
+
+        alert.showAndWait();
     }
 }

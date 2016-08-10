@@ -3,6 +3,7 @@ package inventory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TableColumn;
@@ -58,7 +59,7 @@ public class Sales extends ImportList{
         information = new ArrayList<String>();
         quantity = new ArrayList<Integer>();
         setFile(file);
-        importToSales(file);
+        if(!importToSales(file)){showAlert();}
     }
 
     public Sales(String _source, String _date, char _part, int _total){
@@ -205,7 +206,7 @@ public class Sales extends ImportList{
         }
     }
 
-    private void importToSales(File file){
+    private boolean importToSales(File file){
         try {
             FileInputStream inputStream = new FileInputStream(file);
 
@@ -242,6 +243,8 @@ public class Sales extends ImportList{
                     setDate(date.substring(0,date.length()-1));
 
                     //System.out.println(getSource() + " then " + getDate() + " part " + getPart());
+                }else{
+                    return false;
                 }
 
             }
@@ -404,6 +407,7 @@ public class Sales extends ImportList{
         }catch(IOException e){
             e.printStackTrace();
         }
+        return true;
     }
 
     protected ArrayList<TableColumn> setSalesTable(){
@@ -525,6 +529,15 @@ public class Sales extends ImportList{
         public void setQuantity(int quantity) {
             this.quantity = quantity;
         }
+    }
+
+    public void showAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("Incorrect File");
+        alert.setContentText("Ooops, there was an error!\nPlease upload a Sales Document");
+
+        alert.showAndWait();
     }
 
 }

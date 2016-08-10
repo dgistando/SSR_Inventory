@@ -29,7 +29,7 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SQLEXPRESS//:1433;"
+    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS/:1433;"
             + "databaseName=testdb;";
 
 
@@ -340,7 +340,7 @@ public class DBHelper{
     }
 
     public boolean areChangesMade(){
-        return changes.isEmpty();
+        return !changes.isEmpty();
     }
 
     public void discardChanges(){

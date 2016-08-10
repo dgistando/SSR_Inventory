@@ -1,9 +1,14 @@
 package inventory;
 
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
+import com.sun.javafx.scene.control.skin.TableCellSkin;
 import com.sun.jnlp.ApiDialog;
+import com.sun.org.apache.bcel.internal.classfile.Node;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -13,17 +18,23 @@ import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -33,18 +44,25 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.ShortStringConverter;
+import org.apache.xmlbeans.impl.xb.xmlconfig.NamespaceList;
 import org.junit.FixMethodOrder;
 import sun.nio.ch.Net;
 import sun.nio.ch.Util;
 
 
-import java.awt.geom.Arc2D;
-import java.awt.image.RGBImageFilter;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.activation.*;
+
 import java.io.File;
 import java.net.URL;
 
 import java.sql.Date;
 import java.util.*;
+import java.util.List;
 
 import static inventory.Controller.dbHelper;
 
@@ -81,6 +99,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     private TableView importTable;
     @FXML
     private HBox status;
+    @FXML
+    private MenuItem MILogout, MIRAI;
 
     public static Label changesMade,currentUser, programInfo;
     public static HBox save;
@@ -97,6 +117,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         initThings();
         initSearch();
         initTabPane();
+        getMenuContent();
 
         currentUser.setMaxWidth(Double.MAX_VALUE);
         programInfo.setMaxWidth(Double.MAX_VALUE);
@@ -240,20 +261,12 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
     }
 
-    private MenuBar getMenuContent(){
-        MenuBar menuBar = new MenuBar();
-        menuBar.setMinWidth(Integer.MAX_VALUE);
+    private void getMenuContent(){
+        assert MILogout != null : "";
+        assert MIRAI != null : "";
 
-        Menu File = new Menu("File");
-        MenuItem Exit = new MenuItem("Exit");
-        File.getItems().addAll(Exit);
-
-        Menu Edit = new Menu("Edit");
-        Menu View = new Menu("View");
-
-        menuBar.getMenus().addAll(File,Edit,View);
-
-        return menuBar;
+        MILogout.setOnAction(event -> Platform.exit());
+        MIRAI.setOnAction(event -> sendFeedback("this is the message"));
     }
 
     private void getInventoryContent(int i){
@@ -272,6 +285,67 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         //adding columns to table
         table.getAllInventory();
+
+        table.setRowFactory(new Callback<TableView, TableRow>() {
+            @Override
+            public TableRow call(TableView param) {
+                final TableRow<Items> row = new TableRow<>();
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem removeMenuItem = new MenuItem("Remove");
+                removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if(!dbHelper.isUserEditing()){
+                        dbHelper.recordChange("DELETE FROM Inventory WHERE custom_label='"+row.getItem().getCustomLabel()+"';");
+                        programInfo.setText("You wanted to remove "+ row.getItem().getCustomLabel());
+                        changesMade.setText(dbHelper.getNumChanges()+" UNSAVED CHANGES");
+                        changesMade.setVisible(true);
+                        save.setVisible(true);
+                        table.getItems().remove(row.getItem());
+                        }else{
+                            programInfo.setText(dbHelper.whoEditing());
+                        }
+                    }
+                });
+                contextMenu.getItems().add(removeMenuItem);
+                // Set context menu on row, but use a binding to make it only show for non-empty rows:
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null)
+                                .otherwise(contextMenu));
+                return row;
+            }
+        });
+
+
+
+        /*ContextMenu menu = new ContextMenu();
+        MenuItem item = new MenuItem("Remove");
+        item.setOnAction(event -> {
+            System.out.print("trying to remove : "+event.getTarget());
+
+        });
+        menu.getItems().add(item);
+
+        table.setContextMenu(menu);
+
+        table.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getButton() == MouseButton.SECONDARY){
+                    EventTarget target = event.getTarget();
+                    if (target instanceof TableCellSkin) {
+                        System.out.print("item reight clicked");
+
+                        // do your stuff. Context menu will be displayed by default
+                    } else {
+                        // hide the context menu when click event is outside table row
+
+                    }
+                }
+            }
+        });*/
+
 
         p.progressProperty().bind(InventoryService.progressProperty());
         veil.visibleProperty().bind(InventoryService.runningProperty());
@@ -455,7 +529,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         StringConverter<File> sc = new StringConverter<File>() {
             @Override
             public String toString(File object) {
-                return object.getName().substring(0,object.getName().toString().lastIndexOf('.'));
+                return object.getName().substring(0,object.getName().lastIndexOf('.'));
             }
 
             @Override
@@ -644,7 +718,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 importTable.setEditable(false);
 
                 if(importTable.getColumns().size()>0){
-                    importTable.getColumns().removeAll();
+                    importTable.getColumns().clear();
                 }
 
                 if(importTable.getItems().size()>0){
@@ -852,10 +926,12 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         Optional<ButtonType> result = dialog.showAndWait();
 
-        if(result.get() == ButtonType.CANCEL){
+        if(result.isPresent() && result.get() == ButtonType.CANCEL){
             dialog.close();
-        }else if(result.get() == ButtonType.OK && CustomLabel.getText().equals("") || NetSelable.equals("")){
-            dialog.showAndWait();
+            programInfo.setText("canceled new Item");
+        }else if(result.isPresent() && result.get() == ButtonType.OK && CustomLabel.getText().equals("") || NetSelable.getText().equals("")){
+            programInfo.setText("You missed a field");
+            dialog.close();
         }else {
             dbHelper.insertIntoInventory(new Items(CustomLabel.getText(),Integer.parseInt(NetSelable.getText()),0,0,0,"",0,"",new java.sql.Date(Calendar.getInstance().getTime().getTime())));
             InventoryService.restart();
@@ -892,4 +968,72 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     public void handle(ActionEvent event) {
         System.out.print("rg");
     }
+
+    public void reportAnIssue(){
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Report an Issue");
+        dialog.setHeaderText("Please give information about what happened and what you were doing when it happened. Thank You.");
+
+        ButtonType AddAll = new ButtonType("Done", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(AddAll,ButtonType.CANCEL);
+
+        GridPane pane = new GridPane();
+
+
+
+        dialog.getDialogPane().setContent(pane);
+
+        Optional<ButtonType> result = dialog.showAndWait();
+
+        if(result.get() == ButtonType.CANCEL){
+            dialog.close();
+        }else{
+            dialog.close();
+        }
+    }
+
+    public void sendFeedback(String mess){
+// Recipient's email ID needs to be mentioned.
+        String to = "davidgistando@gmail.com";
+
+        // Sender's email ID needs to be mentioned
+        String from = "to@gmail.com";
+
+        // Assuming you are sending email from localhost
+        String host = "localhost";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.setProperty("mail.smtp.host", host);
+
+        // Get the default Session object.
+        Session session = Session.getDefaultInstance(properties);
+
+        try{
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(to));
+
+            // Set Subject: header field
+            message.setSubject("SSR Error");
+
+            // Now set the actual message
+            message.setText(mess);
+
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        }catch (javax.mail.MessagingException mex) {
+            mex.printStackTrace();
+        }
+
+    }
+
 }

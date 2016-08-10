@@ -46,6 +46,8 @@ public class Controller implements Initializable{
     TextField username;
     @FXML
     PasswordField password;
+    @FXML
+    Label incorrect;
 
     public static DBHelper dbHelper;
 
@@ -54,6 +56,8 @@ public class Controller implements Initializable{
         assert Btnlogin != null : "Button Btnlogin not found";
         assert username != null : "username texfield not found in FXML";
         assert password != null : "password passwordfield not found";
+        assert incorrect != null : "Label not found";
+        incorrect.setVisible(false);
         dbHelper = new DBHelper();
 
 
@@ -62,11 +66,13 @@ public class Controller implements Initializable{
             try {
 
                 if(username.getText().equals("") || password.getText().equals("")){
+                    incorrect.setVisible(true);
                     return;
                 }
 
-                if(!LoginPass("SSR_Janet","Password#2")) {
+                if(!LoginPass("testlogin","Register#2")) {
                 //if(!LoginPass(username.getText() ,password.getText())) {
+                    incorrect.setVisible(true);
                         System.out.print("failed to login");
                         return;
                 }else {

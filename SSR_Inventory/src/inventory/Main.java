@@ -4,10 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -34,6 +31,32 @@ public class Main extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        if(dbHelper != null && dbHelper.areChangesMade()){
+            System.out.print("db not null and there are still unsaves");
+            ExitDialog();
+        }
+    }
+
+    public void ExitDialog(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exiting");
+        alert.setHeaderText("There are still unsaved changes");
+        alert.setContentText("Choose your option.");
+
+        ButtonType SaveAndExit = new ButtonType("Save and Exit");
+        ButtonType ExitWithoutSaving = new ButtonType("Exit Without Saving");
+
+        alert.getButtonTypes().setAll(SaveAndExit, ExitWithoutSaving);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == SaveAndExit) {
+           dbHelper.commitChanges();
+            dbHelper.removeEditor();
+        } else if (result.get() == ExitWithoutSaving) {
+            // ... user chose "Three"
+            dbHelper.discardChanges();
+            dbHelper.removeEditor();
+        }
 
     }
 

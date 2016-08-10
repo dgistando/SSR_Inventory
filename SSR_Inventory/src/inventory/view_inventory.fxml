@@ -77,13 +77,13 @@
 
 
     <top>
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
                 <MenuItem mnemonicParsing="false" text="Settings" />
                 <MenuItem mnemonicParsing="false" text="Print..." />
-                <MenuItem mnemonicParsing="false" text="Logout" />
+                <MenuItem  fx:id="MILogout" mnemonicParsing="false" text="Logout" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="View">
@@ -105,7 +105,7 @@
             <items>
                 <MenuItem mnemonicParsing="false" text="About" />
                 <MenuItem mnemonicParsing="false" text="FAQs" />
-                <MenuItem mnemonicParsing="false" text="Report an issue" />
+                <MenuItem fx:id="MIRAI" mnemonicParsing="false" text="Report an issue" />
             </items>
           </Menu>
 

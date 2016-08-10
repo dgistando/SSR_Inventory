@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
+<?import java.net.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -14,9 +16,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-
 <?import java.net.URL?>
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Controller" style="-fx-colo">
+
+<GridPane alignment="center" hgap="10" style="-fx-colo" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Controller">
    <children>
 
        <ImageView id="logo" fitHeight="80.0" fitWidth="216.0" layoutX="14.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
@@ -31,9 +33,10 @@
        <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
        <HBox alignment="BOTTOM_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
           <children>
-              <Button text="Sign In" fx:id="Btnlogin"/>
+              <Button fx:id="Btnlogin" text="Sign In" />
           </children>
        </HBox>
+      <Label fx:id="incorrect" text="Incorrect &#10;Field" textFill="RED" GridPane.rowIndex="3" />
    </children>
    <columnConstraints>
       <ColumnConstraints />
@@ -47,6 +50,6 @@
    </rowConstraints>
 
     <stylesheets>
-        <URL value="@stylesheets/login.css"/>
+        <URL value="@stylesheets/login.css" />
     </stylesheets>
 </GridPane>
