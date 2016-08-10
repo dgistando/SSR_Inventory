@@ -3,6 +3,11 @@ package inventory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.apache.poi.hssf.record.DVALRecord;
 import org.apache.poi.hssf.record.PrecisionRecord;
 
@@ -16,6 +21,8 @@ import static inventory.Inventory_Controller.SearchBox;
 import static inventory.Inventory_Controller.programInfo;
 
 /**
+ * This class is for connecting to the SSR SQL Server. The
+ *
  * Created by SSR on 6/30/2016.
  */
 
@@ -29,8 +36,8 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://LAPTOP-3G1FS1AP\\SQLEXPRESS/:1433;"
-            + "databaseName=testdb;";
+    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS/:1433;"
+            + "databaseName=SSRInventory;";
 
 
     public DBHelper() {
@@ -516,6 +523,41 @@ public class DBHelper{
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "dd/MM/yyyy hh:mm:ss a");
         return dateFormat.format(cal1.getTime()).substring(dateFormat.format(cal1.getTime()).indexOf(" "));
+    }
+
+    private void alertDialog(Exception e){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Exception Dialog");
+        alert.setHeaderText("Error");
+        alert.setContentText("Database access error!");
+
+
+// Create expandable Exception.
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        String exceptionText = sw.toString();
+
+        Label label = new Label("Stacktrace :");
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(label, 0, 0);
+        expContent.add(textArea, 0, 1);
+
+// Set expandable Exception into the dialog pane.
+        alert.getDialogPane().setExpandableContent(expContent);
+
+        alert.showAndWait();
     }
 
 

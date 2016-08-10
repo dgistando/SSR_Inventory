@@ -266,7 +266,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert MIRAI != null : "";
 
         MILogout.setOnAction(event -> Platform.exit());
-        MIRAI.setOnAction(event -> sendFeedback("this is the message"));
+        //MIRAI.setOnAction(event -> sendFeedback("this is the message"));
     }
 
     private void getInventoryContent(int i){
@@ -387,7 +387,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         final int NUMBER_OF_COLUMNS = 6;
 
         GridPane filters = new GridPane();
-        filters.setGridLinesVisible(true);
+        filters.setGridLinesVisible(false);
         filters.setMaxHeight(100.0);
         filters.setPrefHeight(100.0);
         filters.setMinHeight(100.0);
@@ -462,7 +462,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         Button refresh = new Button("refresh");
         filters.setRowIndex(refresh,0);
         filters.setColumnIndex(refresh,10);
-        refresh.setOnAction(event -> InventoryService.restart());
+        refresh.setOnAction(event -> {InventoryService.restart(); programInfo.setText("Done.");});
 
         changesMade = new Label("# Unsaved Changes!");
         filters.setRowIndex(changesMade,1);
@@ -792,7 +792,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
 
 
-    public HashMap<String,String> confirmNewInventory(HashMap<String,String> newInventory){
+    private HashMap<String,String> confirmNewInventory(HashMap<String,String> newInventory){
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Confirm new Inventory");
         dialog.setHeaderText("Select to remove");
@@ -898,7 +898,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     }
 
 
-    public void addNewItem(){
+    private void addNewItem(){
 
         programInfo.setText("Adding new Item");
 
@@ -909,18 +909,18 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         ButtonType AddAll = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(AddAll,ButtonType.CANCEL);
 
-        BorderPane pane = new BorderPane();
+        GridPane pane = new GridPane();
         HBox hBox = new HBox();
 
         final TextField CustomLabel = new TextField();
         CustomLabel.setPromptText("Custom Label");
-        CustomLabel.setMinWidth(50.0);
+        CustomLabel.setMinWidth(100.0);
         final TextField NetSelable = new TextField();
         NetSelable.setPromptText("NetSaleable");
-        NetSelable.setMinWidth(50.0);
+        NetSelable.setMinWidth(100.0);
 
-        hBox.getChildren().addAll(CustomLabel,NetSelable);
-        pane.getChildren().add(hBox);
+        pane.add(CustomLabel,0,0);
+        pane.add(NetSelable,0,1);
 
         dialog.getDialogPane().setContent(pane);
 
