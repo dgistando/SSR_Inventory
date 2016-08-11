@@ -19,63 +19,6 @@
 <BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="inventory.Inventory_Controller">
 
 
-       <!--<bottom>
-               <TabPane prefHeight="Infinity" prefWidth="Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="25">
-              <tabs>
-
-                <Tab text="Inventory">
-                    <content>
-                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <HBox>
-                                   <children>
-                                       <Label text="Rows Dispayed:   " />
-                                        <ComboBox prefWidth="50.0">
-                                             <contextMenu>
-                                                <ContextMenu>
-                                                  <items>
-                                                    <MenuItem mnemonicParsing="false" text="first Action" />
-                                                      <MenuItem mnemonicParsing="false" text="second Action" />
-                                                  </items>
-                                                </ContextMenu>
-                                             </contextMenu>
-                                        </ComboBox>
-                                   </children>
-                                </HBox>
-
-                               <TableView layoutY="30.0" prefWidth="Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-                                 <columns>
-                                   <TableColumn prefWidth="75.0" text="C1" />
-                                   <TableColumn prefWidth="75.0" text="C2" />
-                                 </columns>
-                               </TableView>
-
-                            </children>
-                         </AnchorPane>
-                  </content>
-
-                </Tab>
-                <Tab fx:id="CMTab" text="Untitled Tab 2">
-                  <content>
-                    <AnchorPane fx:id="pane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                       <children>
-                           <HBox>
-                              <children>
-                                  <Label fx:id="label" text="this is a new tab" />
-                              </children>
-                           </HBox>
-                        <Button fx:id="button" alignment="CENTER" layoutX="-1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="53.0" text="Button" />
-                       </children>
-                    </AnchorPane>
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-       </bottom>
-   !-->
-
-
-
     <top>
       <MenuBar fx:id="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
@@ -247,25 +190,6 @@
          </items>
       </SplitPane>
 
-        <!--<TabPane fx:id="TPinventory" minWidth="Infinity" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-            <Tab fx:id="Inventorytb">
-
-            </Tab>
-
-            <Tab fx:id="Importtb">
-
-            </Tab>
-
-            <Tab fx:id="Salestb">
-
-            </Tab>
-
-            <Tab fx:id="Historytb">
-
-            </Tab>
-        </tabs>
-    </TabPane>!-->
 
     </center>
    <bottom>
