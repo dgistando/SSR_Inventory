@@ -36,8 +36,8 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS/:1433;"
-            + "databaseName=SSRInventory;";
+    static final String DB_URL = "jdbc:sqlserver://######\\######///:1433;"
+            + "databaseName=SSRInventorydb;";
 
 
     public DBHelper() {
@@ -71,7 +71,7 @@ public class DBHelper{
         Statement stat = null;
         try {
             Class.forName(JDBC_DRIVER);
-            dbConnection = DriverManager.getConnection(DB_URL,"loginManager","testlogin#3");
+            dbConnection = DriverManager.getConnection(DB_URL,"######","########");
             stat = dbConnection.createStatement();
 
             if (!dbConnection.isClosed()) {
