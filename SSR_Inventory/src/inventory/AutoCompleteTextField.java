@@ -17,10 +17,7 @@ import javafx.stage.Stage;
 import sun.management.snmp.jvmmib.JvmThreadInstanceTableMeta;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by dgist on 7/17/2016.
@@ -58,7 +55,7 @@ public class AutoCompleteTextField extends TextField
 
                     for(String entity : entries){
                         if(entity.contains(getText())){
-                            searchResult.add(entity);
+
                             //System.out.println(entity);
                         }
                     }
@@ -112,7 +109,7 @@ public class AutoCompleteTextField extends TextField
                 public void handle(ActionEvent actionEvent) {
                     setText(result);
                     System.out.println("You have selected: "+ result);
-                    openProduct(result);
+                    setChosenItem(result);
                     entriesPopup.hide();
                 }
             });
@@ -134,14 +131,14 @@ public class AutoCompleteTextField extends TextField
         this.getEntries().addAll(searchContent);
     }
 
-    public void openProduct(String Product){
+    public void openProduct(Items Product){
         try {
             Parent root = FXMLLoader.load(getClass().getResource("product_information.fxml"));
             //Scene scene = new Scene(root,450,450);
 
-            setChosenItem(Product);
+            setChosenItem(Product.getCustomLabel());
             Stage stage = new Stage();
-            stage.setTitle(Product);
+            stage.setTitle(Product.getCustomLabel());
             stage.setScene(new Scene(root, 390, 505));
             stage.setResizable(false);
             stage.show();
@@ -161,6 +158,9 @@ public class AutoCompleteTextField extends TextField
                 chosenItem = pick;
             }
         }
+    }
+    public void setChosenItem(Items Chosen){
+        chosenItem = Chosen;
     }
 
     public ObservableList<Items> getItems() {

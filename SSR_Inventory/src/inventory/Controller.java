@@ -70,8 +70,8 @@ public class Controller implements Initializable{
                     return;
                 }
 
-                //if(!LoginPass("testlogin","Register#2")) {
-                if(!LoginPass(username.getText() ,password.getText())) {
+                if(!LoginPass("SSR_Janet","Password#2")) {
+                //if(!LoginPass(username.getText() ,password.getText())) {
                     incorrect.setVisible(true);
                         System.out.print("failed to login");
                         return;

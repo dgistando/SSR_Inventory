@@ -20,10 +20,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
@@ -33,6 +36,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -40,6 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
@@ -58,6 +64,7 @@ import javax.mail.internet.MimeMessage;
 import javax.activation.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import java.sql.Date;
@@ -151,6 +158,15 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 System.out.println("old val: " + old_val + "new val: " + new_val);
             }
         };
+
+        SearchBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    requestItemFocus(SearchBox.getChosenItem());
+                }
+            }
+        });
 
         /*pane.getScene().setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
@@ -266,7 +282,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert MIRAI != null : "";
 
         MILogout.setOnAction(event -> Platform.exit());
-        //MIRAI.setOnAction(event -> sendFeedback("this is the message"));
+        MIRAI.setOnAction(event -> sendFeedback("this is the message"));
     }
 
     private void getInventoryContent(int i){
@@ -307,6 +323,16 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                         }
                     }
                 });
+
+                row.setOnMouseClicked(event -> {
+                    if(event.getClickCount() == 2 && !row.isEmpty()){
+                        Items item = row.getItem();
+                        openProduct(item);
+                        System.out.println(item.getCustomLabel());
+                    }
+                });
+
+
                 contextMenu.getItems().add(removeMenuItem);
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:
                 row.contextMenuProperty().bind(
@@ -316,6 +342,8 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 return row;
             }
         });
+
+
 
 
 
@@ -332,15 +360,17 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         table.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(event.getButton() == MouseButton.SECONDARY){
+                if(event.getButton() == MouseButton.PRIMARY){
                     EventTarget target = event.getTarget();
+                    if(event.getClickCount() == 2){
+                        System.out.println("Double clicked: "+ ((Items) target).getCustomLabel());
+                    }
+
+
                     if (target instanceof TableCellSkin) {
                         System.out.print("item reight clicked");
 
                         // do your stuff. Context menu will be displayed by default
-                    } else {
-                        // hide the context menu when click event is outside table row
-
                     }
                 }
             }
@@ -515,12 +545,12 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             filters.getColumnConstraints().add(col);
         }*/
 
-        //                              0           1         2             3       4        5             6        7          8         9         10         11       12
+        //                              0           1                 2       3     4        5             6           7          8         9         10         11       12
         filters.getChildren().addAll(filterLabel, filterCombobox, dateRange, from, to,newItemButton, visibleItems, pageForward, pageBack, refresh, changesMade, save);
 
 
         filters.setMargin(filters.getChildren().get(1),new Insets(0,30,0,0));
-        filters.setMargin(filters.getChildren().get(3),new Insets(0,30,0,0));
+        filters.setMargin(filters.getChildren().get(3),new Insets(0,0,0,0));
         filters.setMargin(filters.getChildren().get(5),new Insets(0,0,0,0));
         return filters;
     }
@@ -734,12 +764,9 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         confirmAndSave.setOnAction(event -> {
             ObservableList<String> newInventory = FXCollections.observableArrayList();//sales list
-            ObservableList<String> newInformation = FXCollections.observableArrayList();
             SortedSet<String> currentInventory = SearchBox.getEntries();//all inventory
 
-            HashSet<String> set = new HashSet<String>();;
             HashMap<String,String> Set = new HashMap<String, String>();
-
 
             for(int i=0;i<SalesList.size();i++){//Sales sheet
                 for(int j=0; j < SalesList.get(i).getItemCode().size();j++){//Strings for customlabel
@@ -753,13 +780,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 }
             }
 
-            //newInventory.addAll(Set.keySet());
 
-            //newInventory.addAll(set);
             if(Set.size() > 0){
                 Set = confirmNewInventory(Set);
             }
-            //set messagebox with list of new inventory(dont forget add all button)
+
             if(Set != null && Set.size() > 0){
                 newInventory = FXCollections.observableArrayList(Set.keySet());
                 //insert new ones into inventory with information
@@ -774,7 +799,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     System.out.println(s + " will be new inventory");
                 }
 
-                if(set.size() > 0){
+                if(Set.size() > 0){
                     dbHelper.newAutoInventory(Set);
                 }
 
@@ -809,6 +834,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                del.setVisible(true);
                 del.setDisable(false);
             }
         });
@@ -897,6 +923,32 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         }
     }
 
+
+    public<T> void requestItemFocus(T item){
+        if(Inventorytb.isSelected()){
+            try{
+            requestInventoryFocus(((Items) item));
+            }catch (ClassCastException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void requestInventoryFocus(Items item){
+        AnchorPane pane= (AnchorPane) Inventorytb.getContent();
+        TableView<Items> table = (TableView<Items>) pane.getChildren().get(0);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int i = table.getItems().indexOf(item);
+                table.scrollTo(item);
+                table.requestFocus();
+                table.getSelectionModel().select(i);
+                table.getFocusModel().focus(i);
+            }
+        });
+    }
 
     private void addNewItem(){
 
@@ -1035,5 +1087,22 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         }
 
     }
+
+    public void openProduct(Items Product){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("product_information.fxml"));
+            //Scene scene = new Scene(root,450,450);
+
+            SearchBox.setChosenItem(Product);
+            Stage stage = new Stage();
+            stage.setTitle(Product.getCustomLabel());
+            stage.setScene(new Scene(root, 390, 505));
+            stage.setResizable(false);
+            stage.show();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 
 }
