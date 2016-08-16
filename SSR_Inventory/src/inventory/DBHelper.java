@@ -36,8 +36,9 @@ public class DBHelper{
     private static String USERNAME;
     private static String PASSWORD;
 
-    static final String DB_URL = "jdbc:sqlserver://SSRSERVER\\SSRSQLEXPRESS//:1433;"
-            + "databaseName=testdb;";
+    //port 1431 in
+    static final String DB_URL = "jdbc:sqlserver://XXXXXX\\XXXXXX//:XXXX;"
+            + "databaseName=XXXX;";
 
 
     public DBHelper() {
@@ -217,22 +218,42 @@ public class DBHelper{
 
             for(int i=0;i<sheet.getItemCode().size();i++){
               //  sql = "INSERT INTO Sales VALUES('"+sheet.getFirstname().get(i) +"','"+sheet.getLastname().get(i) +"','"+sheet.getCountry().get(i)+"','"+sheet.getItemCode().get(i)+"',"+sheet.getQuantity().get(i)+",'"+sheet.getPart()+"',CONVERT(date,'"+sheet.getDate().replaceAll("\\.","-")+"',101));";
-                sql = "INSERT INTO Sales VALUES(?,?,?,?,?,?,?);";
+                //sql = "INSERT INTO Sales VALUES(?,?,?,?,?,?,?);";
+                sql = "INSERT INTO Sales VALUES('"+sheet.getFirstname().get(i)+"','"+sheet.getLastname().get(i)+"','"+sheet.getCountry().get(i)+"','"+sheet.getItemCode().get(i)+"',"+sheet.getQuantity().get(i)+",'"+String.valueOf(sheet.getPart())+"','"+new java.sql.Date(sheet.getDateInFormat().getTime())+"');";
                 preparedStatement = conn.prepareStatement(sql);
-
-                preparedStatement.setString(1,sheet.getFirstname().get(i));
+                System.out.println(sql+" "+sheet.getItemCode().get(i)+" "+ i);
+                RemoveFromInventory(sheet.getItemCode().get(i),sheet.getQuantity().get(i),conn);
+/*                preparedStatement.setString(1,sheet.getFirstname().get(i));
                 preparedStatement.setString(2,sheet.getLastname().get(i));
                 preparedStatement.setString(3,sheet.getCountry().get(i));
                 preparedStatement.setString(4,sheet.getItemCode().get(i));
                 preparedStatement.setInt(5,sheet.getQuantity().get(i));
                 preparedStatement.setString(6,String.valueOf(sheet.getPart()));
                 preparedStatement.setDate(7,new java.sql.Date(sheet.getDateInFormat().getTime()));
+*/
+                preparedStatement.executeUpdate();
 
             }
 
         conn.close();
         }catch (SQLException e){
             e.printStackTrace();
+        }
+    }
+
+    public void RemoveFromInventory(String customLabel,int sold, Connection conn){
+        //prepared statements
+        //Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        String query = "UPDATE Inventory SET net_saleable = net_saleable - "+sold+" WHERE custom_label = '"+customLabel+"';";
+        try {
+                preparedStatement = conn.prepareStatement(query);
+                System.out.println(query);
+                preparedStatement.executeUpdate();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return;
         }
     }
 
@@ -318,6 +339,7 @@ public class DBHelper{
                 //sql = "INSERT INTO Inventory VALUES('"+custom_label.get(i)+"',0,0,0,0,'',0,'"+information.get(i)+"',GETDATE());";
                 sql = "INSERT INTO Inventory VALUES(?,?,?,?,?,?,?,?,?);";
                 preparedStatement = conn.prepareStatement(sql);
+                System.out.println(sql+" "+entry.getKey());
                 preparedStatement.setString(1,entry.getKey());
                 preparedStatement.setInt(2,0);
                 preparedStatement.setInt(3,0);

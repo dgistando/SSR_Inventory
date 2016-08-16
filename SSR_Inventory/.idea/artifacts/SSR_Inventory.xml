@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="SSR_Inventory">
+    <output-path>$PROJECT_DIR$/out/artifacts/SSR_Inventory</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="inventory.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="yet" />
+        <option name="vendor" value="test" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="SSR_Inventory.jar">
+        <element id="module-output" name="SSR_Inventory" />
+        <element id="library" level="project" name="junit-4.12" />
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -101,7 +101,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
     @FXML
     private ChoiceBox<File> filesAddedBox;
     @FXML
-    private Label lquantity,ldate,lsource,lpart, record_label;
+    private Label lquantity,ldate,lsource,lpart, record_label,selectFromList;
     @FXML
     private TableView importTable;
     @FXML
@@ -215,6 +215,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert radioSales != null:"";
         assert radioReturns != null:"";
         assert radioReceiving != null:"";
+        assert selectFromList != null:"";
         programInfo = new Label("program info");
         currentUser = new Label("Current User: " + dbHelper.getUSERNAME()+" ");
         SalesList = new ArrayList<>();
@@ -282,7 +283,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         assert MIRAI != null : "";
 
         MILogout.setOnAction(event -> Platform.exit());
-        MIRAI.setOnAction(event -> sendFeedback("this is the message"));
+       // MIRAI.setOnAction(event -> sendFeedback("this is the message"));
     }
 
     private void getInventoryContent(int i){
@@ -575,6 +576,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         removeImports.setVisible(false);
         removeAllImports.setDisable(true);
         removeAllImports.setVisible(false);
+        selectFromList.setVisible(false);
 
         importText.setFont(Font.font("Ariel",16));
         final FileChooser fileChooser = new FileChooser();
@@ -609,6 +611,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 removeImports.setDisable(false);
                 removeAllImports.setVisible(true);
                 removeAllImports.setDisable(false);
+                selectFromList.setVisible(true);
 
             }else{
                 return;
@@ -627,6 +630,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         });
 
         removeImports.setOnAction(event -> {
+            if(filesAddedBox.getItems().size() == 1){
+                removeAllImports.fire();
+                return;
+            }else{
+                filesAddedBox.getSelectionModel().select(0);
+            }
+
             filesAddedBox.getItems().remove(filesAddedBox.getSelectionModel().getSelectedIndex());
 
             if (SalesList.size() > 0) {
@@ -637,18 +647,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 ReceivingList.remove(filesAddedBox.getSelectionModel().getSelectedIndex());
             }
 
-            if(filesAddedBox.getItems().size() <= 0){
-                confirmAndSave.setDisable(true);
-                confirmAndSave.setVisible(false);
-                removeImports.setDisable(true);
-                removeImports.setVisible(false);
-                removeAllImports.setDisable(true);
-                removeAllImports.setVisible(false);
-                filesAddedBox.getSelectionModel().clearSelection();
-            }else{
-                filesAddedBox.getSelectionModel().select(0);
-            }
-
+            lsource.setText("N/A");
+            ldate.setText("N/A");
+            lpart.setText("N/A");
+            lquantity.setText("N/A");
+            importTable.getItems().clear();
         });
 
         removeAllImports.setOnAction(event -> {
@@ -663,8 +666,16 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
             removeImports.setVisible(false);
             removeAllImports.setDisable(true);
             removeAllImports.setVisible(false);
+            selectFromList.setVisible(false);
 
             filesAddedBox.getSelectionModel().clearSelection();
+
+            //Set everything to defaults
+            lsource.setText("N/A");
+            ldate.setText("N/A");
+            lpart.setText("N/A");
+            lquantity.setText("N/A");
+            importTable.getItems().clear();
         });
     }
 
@@ -698,7 +709,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 }
 
                 if(importTable.getItems().size()>0){
-                    importTable.getItems().removeAll();
+                    importTable.getItems().clear();
                 }
 
                 importTable.getColumns().addAll(entity.setNewInventoryTable());
@@ -726,8 +737,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
         if(filesBox.getItems().size() <= 0 ){return;}
         for(File file : filesBox.getItems()){
-            Sales sales = new Sales(file);
-            SalesList.add(sales);
+            SalesList.add(new Sales(file));
         }
 
 
@@ -752,7 +762,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                 }
 
                 if(importTable.getItems().size()>0){
-                    importTable.getItems().removeAll();
+                    importTable.getItems().clear();
                 }
 
                 importTable.getColumns().addAll(entity.setSalesTable());
@@ -938,16 +948,19 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         AnchorPane pane= (AnchorPane) Inventorytb.getContent();
         TableView<Items> table = (TableView<Items>) pane.getChildren().get(0);
 
-        Platform.runLater(new Runnable() {
+        Platform.runLater(()->{
+            int i = table.getItems().indexOf(item);
+            table.scrollTo(item);
+            table.requestFocus();
+            table.getSelectionModel().select(i);
+            table.getFocusModel().focus(i);
+        });
+        /*Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                int i = table.getItems().indexOf(item);
-                table.scrollTo(item);
-                table.requestFocus();
-                table.getSelectionModel().select(i);
-                table.getFocusModel().focus(i);
+
             }
-        });
+        });*/
     }
 
     private void addNewItem(){
@@ -1046,7 +1059,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
 
     public void sendFeedback(String mess){
 // Recipient's email ID needs to be mentioned.
-        String to = "davidgistando@gmail.com";
+        String to = "ssrroorreports@gmail.com";
 
         // Sender's email ID needs to be mentioned
         String from = "to@gmail.com";

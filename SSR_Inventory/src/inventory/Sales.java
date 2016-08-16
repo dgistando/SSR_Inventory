@@ -324,7 +324,7 @@ public class Sales extends ImportList{
                                         //Most common case
                                         String allfirstnames = "";
                                         for (int j = 0; j < arr.length - 1; j++) {
-                                            allfirstnames = allfirstnames + arr[j] + " ";
+                                            allfirstnames = allfirstnames + arr[j]+" ";
                                         }
                                         firstname.add(allfirstnames);
                                         lastname.add(arr[arr.length-1]);
@@ -364,7 +364,7 @@ public class Sales extends ImportList{
                                     }else if(arr[1].contains("-")){
                                         itemCode.add(arr[0]+ arr[1].substring(arr[1].indexOf("-"),arr[1].length()));
                                     }else{
-                                        itemCode.add(arr[0]);
+                                        itemCode.add(arr[0].substring(0,arr[0].length()-1));
                                     }
                                 }else{
                                     itemCode.add(label);
@@ -399,7 +399,7 @@ public class Sales extends ImportList{
                         break;
                     }
                 }
-                System.out.println("");
+                //System.out.println("");
             }
 
             setTotal();
@@ -461,7 +461,7 @@ public class Sales extends ImportList{
         ObservableList<SaleItems> itemList = FXCollections.observableArrayList();
 
         for(int i = 0; i < quantity.size(); i++){
-            itemList.add(new SaleItems(firstname.get(i)+" "+lastname.get(i),
+            itemList.add(new SaleItems(firstname.get(i)+lastname.get(i),
                                         country.get(i),
                                         itemCode.get(i),
                                         information.get(i),

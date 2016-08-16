@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="SSR_Inventory.jnlp">
+  <information>
+    <title>yet</title>
+    <vendor>test</vendor>
+    <description>SSR_Inventory</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="SSR_Inventory.jar" size="522382" download="eager" />
+    <jar href="javax.mail-1.4.4.jar" size="495041" download="eager" />
+    <jar href="junit-4.12.jar" size="314932" download="eager" />
+    <jar href="lib\javax.mail-1.4.4.jar" size="495041" download="eager" />
+    <jar href="lib\junit-4.12.jar" size="314932" download="eager" />
+    <jar href="lib\poi-3.14-20160307.jar" size="2528204" download="eager" />
+    <jar href="lib\poi-excelant-3.14-20160307.jar" size="30562" download="eager" />
+    <jar href="lib\poi-ooxml-3.14-20160307.jar" size="1286511" download="eager" />
+    <jar href="lib\poi-scratchpad-3.14-20160307.jar" size="1316029" download="eager" />
+    <jar href="lib\sqljdbc42.jar" size="891084" download="eager" />
+    <jar href="lib\xmlbeans-2.6.0.jar" size="2730866" download="eager" />
+    <jar href="poi-3.14-20160307.jar" size="2528204" download="eager" />
+    <jar href="poi-excelant-3.14-20160307.jar" size="30562" download="eager" />
+    <jar href="poi-ooxml-3.14-20160307.jar" size="1286511" download="eager" />
+    <jar href="poi-scratchpad-3.14-20160307.jar" size="1316029" download="eager" />
+    <jar href="sqljdbc42.jar" size="891084" download="eager" />
+    <jar href="xmlbeans-2.6.0.jar" size="2730866" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="inventory.Main"  name="SSR_Inventory" />
+  <update check="background"/>
+</jnlp>

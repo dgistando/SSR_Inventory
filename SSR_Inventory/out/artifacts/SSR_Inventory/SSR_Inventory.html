@@ -1,0 +1,43 @@
+<html><head>
+  <SCRIPT src="http://java.com/js/dtjava.js"></SCRIPT>
+<script>
+    function launchApplication(jnlpfile) {
+        dtjava.launch(            {
+                url : 'SSR_Inventory.jnlp'
+            },
+            {
+                javafx : '8.0+'
+            },
+            {}
+        );
+        return false;
+    }
+</script>
+
+<script>
+    function javafxEmbedSSR_Inventory_id() {
+        dtjava.embed(
+            {
+                id : 'SSR_Inventory_id',
+                url : 'SSR_Inventory.jnlp',
+                placeholder : 'javafx-app-placeholder',
+                width : '600',
+                height : '400'
+            },
+            {
+                javafx : '8.0+'
+            },
+            {}
+        );
+    }
+    <!-- Embed FX application into web page once page is loaded -->
+    dtjava.addOnloadCallback(javafxEmbedSSR_Inventory_id);
+</script>
+
+</head><body>
+<h2>Test page for <b>SSR_Inventory</b></h2>
+  <b>Webstart:</b> <a href='SSR_Inventory.jnlp' onclick="return launchApplication('SSR_Inventory.jnlp');">click to launch this app as webstart</a><br><hr><br>
+
+  <!-- Applet will be inserted here -->
+  <div id='javafx-app-placeholder'></div>
+</body></html>
