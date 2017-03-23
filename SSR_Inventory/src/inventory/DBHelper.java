@@ -195,6 +195,7 @@ public class DBHelper{
         return list;
     }
 
+    //Need to add a transaction here to keep load off of server.
     public void addSalesSheet(Sales sheet){
         //prepared statements
         Connection conn = null;
@@ -414,6 +415,7 @@ public class DBHelper{
         }
     }
 
+    //Add transaction and change permissions to user instead of boolean. However, this does work.
     public boolean setUserEditing(){
         if(isUserEditing()){
             return false;
