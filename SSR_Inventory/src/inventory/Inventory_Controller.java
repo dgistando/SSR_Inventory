@@ -371,7 +371,7 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
                     if (target instanceof TableCellSkin) {
                         System.out.print("item reight clicked");
 
-                        // do your stuff. Context menu will be displayed by default
+                        // code goes here. Context menu will be displayed by default
                     }
                 }
             }
@@ -414,6 +414,11 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         programInfo.setText("Done.");
     }
 
+    /**
+        Inventory filters sit at the top of the invetnory table and help sift the data
+        This was done manually (outside of an fxml) to make functionality easier
+        without having to link a ton of buttons and boxes.
+     */
     private GridPane getInventoryFilters(){
         final int NUMBER_OF_COLUMNS = 6;
 
@@ -1057,6 +1062,13 @@ public class Inventory_Controller implements Initializable,EventHandler<ActionEv
         }
     }
 
+
+    /**
+        This is ia an incomplete method for sending error reports to
+        through email. The javax.mail class needs an smtp mail server 
+        to bounce messages off. 
+    
+     */
     public void sendFeedback(String mess){
 // Recipient's email ID needs to be mentioned.
         String to = "ssrroorreports@gmail.com";

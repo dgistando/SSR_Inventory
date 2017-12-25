@@ -21,7 +21,8 @@ import static inventory.Inventory_Controller.SearchBox;
 import static inventory.Inventory_Controller.programInfo;
 
 /**
- * This class is for connecting to the SSR SQL Server. The
+ * This class is for connecting to the SSR SQL Server.
+ * The contact the server admin for credentials to use for testing and production.
  *
  * Created by SSR on 6/30/2016.
  */

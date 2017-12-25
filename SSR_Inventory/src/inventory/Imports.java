@@ -14,6 +14,11 @@ import java.util.Iterator;
 
 /**
  * Created by SSR on 7/8/2016.
+ * 
+ *  This class is designed to read .xls sales sheets from
+ *  SSR. There is currently no standard set in terms of format 
+ *  so you may have decide on one before finishing the class.
+ *
  */
 public class Imports {
     String firstName,lastName,productCode;
